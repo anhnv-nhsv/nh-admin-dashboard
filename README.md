@@ -1,4 +1,4 @@
-# demo1
+# NH Admin Dashboard
 
 ## Project setup
 ```
