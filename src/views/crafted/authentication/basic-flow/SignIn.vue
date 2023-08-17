@@ -49,7 +49,7 @@
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
-            <ErrorMessage name="username"/>
+            <ErrorMessage name="username" />
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@
         <div class="d-flex flex-stack mb-2">
           <!--begin::Label-->
           <label class="form-label fw-bolder text-dark fs-6 mb-0"
-          >Password</label
+            >Password</label
           >
           <!--end::Label-->
 
@@ -83,7 +83,7 @@
         <!--end::Input-->
         <div class="fv-plugins-message-container">
           <div class="fv-help-block">
-            <ErrorMessage name="password"/>
+            <ErrorMessage name="password" />
           </div>
         </div>
       </div>
@@ -162,11 +162,11 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
-import {ErrorMessage, Field, Form} from "vee-validate";
-import {Actions} from "@/store/enums/StoreEnums";
-import {useStore} from "vuex";
-import {useRouter} from "vue-router";
+import { defineComponent, ref } from "vue";
+import { ErrorMessage, Field, Form } from "vee-validate";
+import { Actions } from "@/store/enums/StoreEnums";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import Swal from "sweetalert2/dist/sweetalert2.min.js";
 import * as Yup from "yup";
 
@@ -213,13 +213,13 @@ export default defineComponent({
           },
         }).then(function () {
           // Go to page after successfully login
-          router.push({name: "dashboard"});
+          router.push({ name: "dashboard" });
         });
       } else {
         {
           Swal.fire({
             // text: store.getters.getErrors[0],
-            text: 'Sign in failed. Please contact administrator',
+            text: "Sign in failed. Please contact administrator",
             icon: "error",
             buttonsStyling: false,
             confirmButtonText: "Try again",

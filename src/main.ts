@@ -10,7 +10,7 @@ import ElementPlus from "element-plus";
 import i18n from "@/core/plugins/i18n";
 
 //imports for app initialization
-import MockAdapter from "@/core/mock/MockService";
+// import MockAdapter from "@/core/mock/MockService";
 import ApiService from "@/core/services/ApiService";
 import { initApexCharts } from "@/core/plugins/apexcharts";
 import { initInlineSvg } from "@/core/plugins/inline-svg";

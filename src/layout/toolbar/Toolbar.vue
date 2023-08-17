@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Dropdown1 from "@/components/dropdown/Dropdown1.vue";
+// import Dropdown1 from "@/components/dropdown/Dropdown1.vue";
 import { toolbarWidthFluid } from "@/core/helpers/config";
 
 export default defineComponent({

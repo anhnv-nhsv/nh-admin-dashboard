@@ -33,7 +33,9 @@ class ApiService {
   }
 
   public static clearAuthorizationHeader(): void {
-    delete ApiService.vueInstance.axios.defaults.headers.common["Authorization"];
+    delete ApiService.vueInstance.axios.defaults.headers.common[
+      "Authorization"
+    ];
   }
 
   /**

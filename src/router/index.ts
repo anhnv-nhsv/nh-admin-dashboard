@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
-import { Mutations, Actions } from "@/store/enums/StoreEnums";
+import { Mutations } from "@/store/enums/StoreEnums";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -119,7 +119,7 @@ const routes: Array<RouteRecordRaw> = [
         name: "sign-in",
         component: () =>
           import("@/views/crafted/authentication/basic-flow/SignIn.vue"),
-        beforeEnter:  async (to, from, next) => {
+        beforeEnter: async (to, from, next) => {
           const isLoggedIn = store.getters.isUserAuthenticated;
           if (isLoggedIn) {
             return next({ name: "dashboard" });
@@ -172,7 +172,7 @@ router.beforeEach((to, from, next) => {
   // if (to.name !== 'sign-in' && !store.getters.isUserAuthenticated) {
   //   next({ name: 'sign-in' });
   // } else {
-    next();
+  next();
   // }
   // Scroll page to top on every route change
   setTimeout(() => {

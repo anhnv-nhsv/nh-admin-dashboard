@@ -11,14 +11,11 @@
   <!--  <div id="nh_editor" class="py-6"></div>-->
   <!--end::Editor-->
   {{ test }}
-  <Editor
-      :init="initTinyMCE"
-      v-model="test"
-  />
+  <Editor :init="initTinyMCE" v-model="test" />
 </template>
 
 <script>
-import {defineComponent, onMounted, ref} from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 // import Quill from "quill";
 // import table_icon from "quill/assets/icons/table.svg";
 // import * as QuillTableUI from 'quill-table-ui';
@@ -27,13 +24,13 @@ import {defineComponent, onMounted, ref} from "vue";
 //   'modules/tableUI': QuillTableUI.default
 // }, true);
 
-import Editor from '@tinymce/tinymce-vue';
-import tinymce from 'tinymce';
+import Editor from "@tinymce/tinymce-vue";
+import tinymce from "tinymce";
 
 export default defineComponent({
   name: "nh-editor",
   components: {
-    Editor
+    Editor,
   },
   setup() {
     // const toolbarOptions = [
@@ -92,27 +89,49 @@ export default defineComponent({
       height: 500,
       menubar: false,
       plugins: [
-        'accordion', 'advlist', 'autolink', 'link', 'image', 'lists', 'charmap', 'preview', 'anchor', 'pagebreak',
-        'searchreplace', 'wordcount', 'visualblocks', 'visualchars', 'code', 'fullscreen', 'insertdatetime',
-        'media', 'table', 'emoticons', 'help', 'wordcount', 'tinycomments', 'quickbars'
+        "accordion",
+        "advlist",
+        "autolink",
+        "link",
+        "image",
+        "lists",
+        "charmap",
+        "preview",
+        "anchor",
+        "pagebreak",
+        "searchreplace",
+        "wordcount",
+        "visualblocks",
+        "visualchars",
+        "code",
+        "fullscreen",
+        "insertdatetime",
+        "media",
+        "table",
+        "emoticons",
+        "help",
+        "wordcount",
+        "tinycomments",
+        "quickbars",
       ],
       // toolbar: 'undo redo | styles | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons',
-      toolbar: 'undo redo | fontfamily fontsize fontsizeinput forecolor backcolor formatting heading aligning | bullist numlist outdent indent | table link image media | blockquote accordion anchor searchreplace fullscreen',
+      toolbar:
+        "undo redo | fontfamily fontsize fontsizeinput forecolor backcolor formatting heading aligning | bullist numlist outdent indent | table link image media | blockquote accordion anchor searchreplace fullscreen",
       toolbar_groups: {
         formatting: {
-          icon: 'bold',
-          tooltip: 'Formatting',
-          items: 'bold italic underline strikethrough | superscript subscript'
+          icon: "bold",
+          tooltip: "Formatting",
+          items: "bold italic underline strikethrough | superscript subscript",
         },
         heading: {
-          icon: 'format',
-          tooltip: 'Heading',
-          items: 'h1 h2 h3 h4 h5 h6'
+          icon: "format",
+          tooltip: "Heading",
+          items: "h1 h2 h3 h4 h5 h6",
         },
         aligning: {
-          icon: 'align-left',
-          tooltip: 'Aligning',
-          items: 'alignleft aligncenter alignright alignjustify alignnone'
+          icon: "align-left",
+          tooltip: "Aligning",
+          items: "alignleft aligncenter alignright alignjustify alignnone",
         },
       },
       /* enable title field in the Image dialog*/
@@ -143,7 +162,7 @@ export default defineComponent({
             blobCache.add(blobInfo);
 
             /* call the callback and populate the Title field with the file name */
-            cb(blobInfo.blobUri(), {title: file.name});
+            cb(blobInfo.blobUri(), { title: file.name });
           });
           reader.readAsDataURL(file);
         });
@@ -154,9 +173,9 @@ export default defineComponent({
     const test = ref();
     return {
       initTinyMCE,
-      test
-    }
-  }
+      test,
+    };
+  },
 });
 </script>
 
@@ -165,15 +184,18 @@ export default defineComponent({
   height: 300px;
 }
 
-
-$text-editor-fonts: 'Arial', 'Bahnschrift', 'Calibri', 'Candara', 'Century Gothic', 'Comic Sans MS', 'Consolas', 'Courier', 'Gabriola', 'Gadugi', 'Garamond', 'Georgia', 'Impact', 'Monaco';
+$text-editor-fonts: "Arial", "Bahnschrift", "Calibri", "Candara",
+  "Century Gothic", "Comic Sans MS", "Consolas", "Courier", "Gabriola", "Gadugi",
+  "Garamond", "Georgia", "Impact", "Monaco";
 
 @each $text-editor-font in $text-editor-fonts {
   .ql-font-#{$text-editor-font} {
     font-family: $text-editor-font !important;
   }
 
-  .ql-snow .ql-picker-options .ql-picker-item[data-value='#{$text-editor-font}'] {
+  .ql-snow
+    .ql-picker-options
+    .ql-picker-item[data-value="#{$text-editor-font}"] {
     font-family: $text-editor-font;
 
     &::before {
@@ -181,8 +203,12 @@ $text-editor-fonts: 'Arial', 'Bahnschrift', 'Calibri', 'Candara', 'Century Gothi
     }
   }
 
-  .ql-snow .ql-picker.ql-font .ql-picker-label[data-value='#{$text-editor-font}']::before,
-  .ql-snow .ql-picker.ql-font .ql-picker-item[data-value='#{$text-editor-font}']::before {
+  .ql-snow
+    .ql-picker.ql-font
+    .ql-picker-label[data-value="#{$text-editor-font}"]::before,
+  .ql-snow
+    .ql-picker.ql-font
+    .ql-picker-item[data-value="#{$text-editor-font}"]::before {
     content: $text-editor-font !important;
   }
 }

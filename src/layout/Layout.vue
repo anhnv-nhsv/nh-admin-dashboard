@@ -52,7 +52,7 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import KTAside from "@/layout/aside/Aside.vue";
 import KTHeader from "@/layout/header/Header.vue";
 import KTFooter from "@/layout/footer/Footer.vue";
@@ -62,7 +62,7 @@ import KTScrollTop from "@/layout/extras/ScrollTop.vue";
 import KTUserMenu from "@/layout/header/partials/ActivityDrawer.vue";
 import KTLoader from "@/components/Loader.vue";
 import KTCreateApp from "@/components/modals/wizards/CreateAppModal.vue";
-import KTExplore from "@/layout/extras/Explore.vue";
+// import KTExplore from "@/layout/extras/Explore.vue";
 import { Actions } from "@/store/enums/StoreEnums";
 import {
   MenuComponent,
@@ -97,7 +97,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
+    // const router = useRouter();
 
     // show page loading
     store.dispatch(Actions.ADD_BODY_CLASSNAME, "page-loading");

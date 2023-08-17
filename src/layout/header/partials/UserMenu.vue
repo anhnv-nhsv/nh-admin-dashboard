@@ -363,8 +363,8 @@ export default defineComponent({
     };
 
     const signOut = async () => {
-      await store.dispatch(Actions.LOGOUT)
-      await router.push({name: "sign-in"});
+      await store.dispatch(Actions.LOGOUT);
+      await router.push({ name: "sign-in" });
     };
 
     const setLang = (lang) => {
