@@ -111,7 +111,6 @@ export default defineComponent({
         "emoticons",
         "help",
         "wordcount",
-        "tinycomments",
         "quickbars",
       ],
       // toolbar: 'undo redo | styles | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | print preview media | forecolor backcolor emoticons',
