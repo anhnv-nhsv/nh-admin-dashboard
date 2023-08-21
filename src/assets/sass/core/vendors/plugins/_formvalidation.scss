@@ -3,17 +3,18 @@
 //
 
 .fv-plugins-message-container {
+    --input-invalid-color: var(--#{$prefix}danger);
     margin-top: 0.3rem;
 
     .fv-help-block {
-        color: $danger;
+        color: var(--#{$prefix}danger);
         font-size: 1rem;
-        font-weight: 400;
+        font-weight: $font-weight-normal;
     }
 
     &.valid-feedback,
     &.invalid-feedback {
         display: block;
-        font-weight: 400;
+        font-weight: $font-weight-normal;
     }
 }

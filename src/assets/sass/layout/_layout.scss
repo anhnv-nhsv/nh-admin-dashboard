@@ -1,14 +1,15 @@
 //
-// Layout Initialization
+// Layout
 //
 
-// Import Dependencies
-@import "../core/layout/base";
-@import "print";
-@import "main";
-@import "header";
-@import "toolbar";
-@import "aside/base";
-@import "aside/menu";
+@import "root";
+@import "sidebar/sidebar";
+@import "sidebar/sidebar-minimize";
+@import "sidebar/sidebar-dark";
+@import "sidebar/sidebar-light";
+@import "header/header";
+@import "header/header-dark";
+@import "header/header-sidebar-light";
 @import "content";
-@import "footer";
+@import "toolbar";
+@import "page-title";

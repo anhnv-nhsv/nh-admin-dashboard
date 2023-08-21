@@ -24,10 +24,10 @@
 }
 
 .apexcharts-menu {
-	background: $body-bg;
+	background-color: var(--#{$prefix}body-bg);
 	border: 0 !important;
 	padding: 0.5rem 0 !important;
-	box-shadow: $dropdown-box-shadow;
+	box-shadow: var(--#{$prefix}dropdown-box-shadow);
 	border-radius: $border-radius !important;
 	overflow: hidden;
 	min-width: 10rem !important;
@@ -37,7 +37,7 @@
 		transition: $transition-base;
 
 		&:hover{
-			background-color: $hover-bg !important;
+			background-color: var(--#{$prefix}component-hover-bg) !important;
 		}
 	}
 }
@@ -46,15 +46,16 @@
 .apexcharts-tooltip {
 	&.apexcharts-theme-light {
 		@include border-radius($border-radius);
-		box-shadow: $dropdown-box-shadow;
+		box-shadow: var(--#{$prefix}dropdown-box-shadow);
 		border: 0 !important;
-		background: $body-bg !important;
-		color: $gray-800;
+		background: var(--#{$prefix}body-bg) !important;
+		color: var(--#{$prefix}gray-800);
 
 		.apexcharts-tooltip-title {
-			background: $gray-100 !important;
-			color: $gray-800;
-			border: 0 !important;
+			background: var(--#{$prefix}body-bg) !important;
+			font-weight: $font-weight-semibold;
+			color: var(--#{$prefix}gray-800);
+			border-bottom: 1px solid var(--#{$prefix}gray-100) !important;
 		}
 	}
 
@@ -69,17 +70,17 @@
 .apexcharts-xaxistooltip {
 	&.apexcharts-theme-light {
 		@include border-radius($border-radius !important);
-		box-shadow: $dropdown-box-shadow !important;
+		box-shadow: var(--#{$prefix}dropdown-box-shadow) !important;
 		border: 0 !important;
-		background: $body-bg !important;
-		color: $gray-800;
+		background: var(--#{$prefix}dropdown-box-shadow) !important;
+		color: var(--#{$prefix}gray-800);
 
 		&:before {
 			border-bottom: 0 !important;
 		}
 
 		&:after {
-			border-bottom-color: $body-bg !important;
+			border-bottom-color: var(--#{$prefix}dropdown-box-shadow) !important;
 		}
 	}
 }
@@ -123,15 +124,6 @@
 	.apexcharts-canvas {
 		svg {
 			border-radius: $border-radius-xl !important;
-		}
-	}
-}
-
-// Bar charts hover text colors
-@each $name, $color in $theme-text-colors {
-	.apexcharts-bar-hover-#{$name} {
-		.apexcharts-bar-area:hover {
-			fill: $color !important;
 		}
 	}
 }

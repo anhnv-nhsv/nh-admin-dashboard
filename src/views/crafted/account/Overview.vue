@@ -5,7 +5,7 @@
     <div class="card-header cursor-pointer">
       <!--begin::Card title-->
       <div class="card-title m-0">
-        <h3 class="fw-bolder m-0">Profile Details</h3>
+        <h3 class="fw-bold m-0">Profile Details</h3>
       </div>
       <!--end::Card title-->
 
@@ -24,12 +24,12 @@
       <!--begin::Row-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-bold text-muted">Full Name</label>
+        <label class="col-lg-4 fw-semobold text-muted">Full Name</label>
         <!--end::Label-->
 
         <!--begin::Col-->
         <div class="col-lg-8">
-          <span class="fw-bolder fs-6 text-dark">Max Smith</span>
+          <span class="fw-bold fs-6 text-dark">Max Smith</span>
         </div>
         <!--end::Col-->
       </div>
@@ -38,12 +38,12 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-bold text-muted">Company</label>
+        <label class="col-lg-4 fw-semobold text-muted">Company</label>
         <!--end::Label-->
 
         <!--begin::Col-->
         <div class="col-lg-8 fv-row">
-          <span class="fw-bold fs-6">Keenthemes</span>
+          <span class="fw-semobold fs-6">Keenthemes</span>
         </div>
         <!--end::Col-->
       </div>
@@ -52,11 +52,11 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-bold text-muted">
+        <label class="col-lg-4 fw-semobold text-muted">
           Contact Phone
           <i
             class="fas fa-exclamation-circle ms-1 fs-7"
-            data-bs-toggle="tooltip"
+            v-tooltip
             title="Phone number must be active"
           ></i>
         </label>
@@ -64,7 +64,7 @@
 
         <!--begin::Col-->
         <div class="col-lg-8 d-flex align-items-center">
-          <span class="fw-bolder fs-6 me-2">044 3276 454 935</span>
+          <span class="fw-bold fs-6 me-2">044 3276 454 935</span>
 
           <span class="badge badge-success">Verified</span>
         </div>
@@ -75,12 +75,12 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-bold text-muted">Company Site</label>
+        <label class="col-lg-4 fw-semobold text-muted">Company Site</label>
         <!--end::Label-->
 
         <!--begin::Col-->
         <div class="col-lg-8">
-          <a href="#" class="fw-bold fs-6 text-dark text-hover-primary"
+          <a href="#" class="fw-semobold fs-6 text-dark text-hover-primary"
             >keenthemes.com</a
           >
         </div>
@@ -91,11 +91,11 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-bold text-muted">
+        <label class="col-lg-4 fw-semobold text-muted">
           Country
           <i
             class="fas fa-exclamation-circle ms-1 fs-7"
-            data-bs-toggle="tooltip"
+            v-tooltip
             title="Country of origination"
           ></i>
         </label>
@@ -103,7 +103,7 @@
 
         <!--begin::Col-->
         <div class="col-lg-8">
-          <span class="fw-bolder fs-6 text-dark">Germany</span>
+          <span class="fw-bold fs-6 text-dark">Germany</span>
         </div>
         <!--end::Col-->
       </div>
@@ -112,12 +112,12 @@
       <!--begin::Input group-->
       <div class="row mb-7">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-bold text-muted">Communication</label>
+        <label class="col-lg-4 fw-semobold text-muted">Communication</label>
         <!--end::Label-->
 
         <!--begin::Col-->
         <div class="col-lg-8">
-          <span class="fw-bolder fs-6 text-dark">Email, Phone</span>
+          <span class="fw-bold fs-6 text-dark">Email, Phone</span>
         </div>
         <!--end::Col-->
       </div>
@@ -126,39 +126,33 @@
       <!--begin::Input group-->
       <div class="row mb-10">
         <!--begin::Label-->
-        <label class="col-lg-4 fw-bold text-muted">Allow Changes</label>
+        <label class="col-lg-4 fw-semobold text-muted">Allow Changes</label>
         <!--begin::Label-->
 
         <!--begin::Label-->
         <div class="col-lg-8">
-          <span class="fw-bold fs-6">Yes</span>
+          <span class="fw-semobold fs-6">Yes</span>
         </div>
         <!--begin::Label-->
       </div>
       <!--end::Input group-->
 
       <div
-        class="
-          notice
-          d-flex
-          bg-light-warning
-          rounded
-          border-warning border border-dashed
-          p-6
-        "
+        class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6"
       >
-        <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
-          <inline-svg src="media/icons/duotune/general/gen044.svg" />
-        </span>
+        <KTIcon
+          icon-name="information-5"
+          icon-class="fs-2tx text-warning me-4"
+        />
         <!--begin::Wrapper-->
         <div class="d-flex flex-stack flex-grow-1">
           <!--begin::Content-->
-          <div class="fw-bold">
-            <h4 class="text-gray-800 fw-bolder">We need your attention!</h4>
+          <div class="fw-semobold">
+            <h4 class="text-gray-800 fw-bold">We need your attention!</h4>
 
             <div class="fs-6 text-gray-600">
               Your payment was declined. To start using tools, please
-              <a class="fw-bolder" href="#">Add Payment Method</a>.
+              <a class="fw-bold" href="#">Add Payment Method</a>.
             </div>
           </div>
           <!--end::Content-->
@@ -212,12 +206,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import KTChartWidget1 from "@/components/widgets/charts/Widget1.vue";
 import KTListWidget5 from "@/components/widgets/lists/Widget5.vue";
 import KTTableWidget5 from "@/components/widgets/tables/Widget5.vue";
 import KTListWidget1 from "@/components/widgets/lists/Widget1.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 
 export default defineComponent({
   name: "account-overview",
@@ -228,9 +222,9 @@ export default defineComponent({
     KTListWidget1,
   },
   setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Overview", ["Account"]);
-    });
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

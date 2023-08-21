@@ -1,5 +1,4 @@
 import { computed } from "vue";
-import store from "@/store/index";
 import ClipboardJS from "clipboard";
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
@@ -8,7 +7,7 @@ import ClipboardJS from "clipboard";
  * @returns {string}
  */
 export const themeName = computed(() => {
-  return store.getters.layoutConfig("themeName");
+  return import.meta.env.VITE_APP_NAME;
 });
 
 /**
@@ -16,7 +15,7 @@ export const themeName = computed(() => {
  * @returns {string}
  */
 export const version = computed(() => {
-  return store.getters.layoutConfig("themeVersion");
+  return import.meta.env.VITE_APP_VERSION;
 });
 
 /**
@@ -24,12 +23,12 @@ export const version = computed(() => {
  * @returns {string}
  */
 export const demo = computed(() => {
-  return store.getters.layoutConfig("demo");
+  return import.meta.env.VITE_APP_DEMO;
 });
 
 //code copy button initialization
 export const useCopyClipboard = () => {
-  const _init = (element) => {
+  const _init = (element: any) => {
     let elements = element;
 
     if (typeof elements === "undefined") {
@@ -77,7 +76,7 @@ export const useCopyClipboard = () => {
   };
 
   return {
-    init: (element?) => {
+    init: (element?: any) => {
       _init(element);
     },
   };

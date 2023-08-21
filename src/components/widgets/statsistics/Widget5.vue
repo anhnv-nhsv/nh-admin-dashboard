@@ -3,15 +3,16 @@
   <a href="#" :class="[widgetClasses, `bg-${color}`]" class="card hoverable">
     <!--begin::Body-->
     <div class="card-body">
-      <span :class="`svg-icon-${iconColor}`" class="svg-icon svg-icon-3x mx-n1">
-        <inline-svg :src="svgIcon" />
-      </span>
+      <KTIcon
+        :icon-name="iconName"
+        :icon-class="`text-${iconColor} fs-3x mx-n1`"
+      />
 
-      <div :class="`text-inverse-${color}`" class="fw-bolder fs-2 mb-2 mt-5">
+      <div :class="`text-inverse-${color}`" class="fw-bold fs-2 mb-2 mt-5">
         {{ title }}
       </div>
 
-      <div :class="`text-inverse-${color}`" class="fw-bold fs-7">
+      <div :class="`text-inverse-${color}`" class="fw-semobold fs-7">
         {{ description }}
       </div>
     </div>
@@ -21,6 +22,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -29,10 +31,15 @@ export default defineComponent({
     widgetClasses: String,
     color: String,
     iconColor: String,
-    svgIcon: String,
+    iconName: String,
     title: String,
     description: String,
   },
   components: {},
+  setup() {
+    return {
+      getAssetPath,
+    };
+  },
 });
 </script>

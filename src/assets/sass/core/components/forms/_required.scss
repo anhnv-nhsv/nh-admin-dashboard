@@ -7,8 +7,8 @@
         content: "*";
         position: relative;
         font-size: inherit;
-        color: $danger;
+        color: var(--#{$prefix}danger);
         padding-left: 0.25rem;
-        font-weight: bold;
+        font-weight: $font-weight-bold;
     }
 }

@@ -8,3 +8,16 @@
 		@content;
 	}
 }
+
+@mixin for-safari {
+	.safari {
+		@content;
+	}
+}
+
+@mixin for-firefox {
+	// Firefox
+    @-moz-document url-prefix() {
+		@content;
+	}
+}

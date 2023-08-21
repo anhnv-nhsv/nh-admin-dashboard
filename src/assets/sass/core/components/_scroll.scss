@@ -5,6 +5,7 @@
 
 // Customize native scrollbars only for desktop mode
 @include media-breakpoint-up(lg) {
+    main,
     span,
     ol,
     ul,
@@ -14,17 +15,25 @@
         scrollbar-width: thin;
 
         // Webkit
-        &::-webkit-scrollbar {
-            width: get($scrollbar, width);
-            height: get($scrollbar, height);
+        &::-webkit-scrollbar {            
+            width: var(--#{$prefix}scrollbar-size);
+            height: var(--#{$prefix}scrollbar-size);
+        }
+
+        ::-webkit-scrollbar-track {
+           background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            @include border-radius(var(--#{$prefix}scrollbar-size));
         }
 
         // Default color
-        @include scrollbar-color(get($scrollbar, color), get($scrollbar, hover-color));
+        @include scrollbar-color(var(--#{$prefix}scrollbar-color), var(--#{$prefix}scrollbar-hover-color));
     }
 }
 
-// Overflow scroll
+// Scroll
 .scroll {
     overflow: scroll;
     position: relative;
@@ -55,121 +64,145 @@
     }
 }
 
-// Hover overflow scroll
-.hover-scroll {
+.hover-scroll,
+.hover-scroll-overlay {    
     position: relative;
-
+    
     // Desktop mode
     @include media-breakpoint-up(lg) {
-        overflow: hidden;
+        overflow: hidden;       
 
-        border-right: get($scrollbar, width) solid transparent;
-        border-bottom: get($scrollbar, height) solid transparent;
-        margin-right: -#{get($scrollbar, width)};
-        margin-bottom: -#{get($scrollbar, height)};
-
-        &:hover {
+        @include for-firefox {
             overflow: scroll;
-            border-right: 0;
-            border-bottom: 0;
         }
 
-        // Firefox hack
-        @-moz-document url-prefix() {
+        .safari-mode & {
             overflow: scroll;
-            position: relative;
-            border-right: 0;
-            border-bottom: 0;
+        }
+
+        &::-webkit-scrollbar {
+            width: var(--#{$prefix}scrollbar-overlay-size);
+            height: var(--#{$prefix}scrollbar-overlay-size);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-clip: content-box;
+            border: var(--#{$prefix}scrollbar-overlay-space) solid transparent;
+            @include border-radius(var(--#{$prefix}scrollbar-overlay-size));
+        }
+
+        &:hover {
+            overflow: overlay;
         }
     }
 
     // Tablet & mobile modes
     @include media-breakpoint-down(lg) {
         overflow: auto;
-    }
+    }   
 }
 
-// Hover overflow scroll y
-.hover-scroll-y {
+.hover-scroll-y,
+.hover-scroll-overlay-y {    
     position: relative;
-
+    
     // Desktop mode
     @include media-breakpoint-up(lg) {
-        overflow-y: hidden;
-        border-right: get($scrollbar, width) solid transparent;
-        margin-right: -#{get($scrollbar, width)};
+        overflow-y: hidden;       
 
-        &:hover {
+        @include for-firefox {
             overflow-y: scroll;
-            border-right: 0;
         }
 
-        // Firefox hack
-        @-moz-document url-prefix() {
+        .safari-mode & {
             overflow-y: scroll;
-            position: relative;
-            border-right: 0;
+        }
+
+        &::-webkit-scrollbar {
+            width: var(--#{$prefix}scrollbar-overlay-size);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-clip: content-box;
+            border: var(--#{$prefix}scrollbar-overlay-space) solid transparent;
+            @include border-radius(var(--#{$prefix}scrollbar-overlay-size));
+        }
+
+        &:hover {
+            overflow-y: overlay;
         }
     }
 
     // Tablet & mobile modes
     @include media-breakpoint-down(lg) {
         overflow-y: auto;
-    }
+    }   
 }
 
-// Hover overflow scroll x
-.hover-scroll-x {
+.hover-scroll-x,
+.hover-scroll-overlay-x {    
     position: relative;
-
+    
     // Desktop mode
     @include media-breakpoint-up(lg) {
-        overflow-x: hidden;
-        border-bottom: get($scrollbar, height) solid transparent;
+        overflow-x: hidden;       
 
-        &:hover {
+        @include for-firefox {
             overflow-x: scroll;
-            border-bottom: 0;
         }
 
-        // Firefox hack
-        @-moz-document url-prefix() {
+        .safari-mode & {
             overflow-x: scroll;
-            position: relative;
-            border-bottom: 0;
+        }
+
+        &::-webkit-scrollbar {
+            height: var(--#{$prefix}scrollbar-overlay-size);
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background-clip: content-box;
+            border: var(--#{$prefix}scrollbar-overlay-space) solid transparent;
+            @include border-radius(var(--#{$prefix}scrollbar-overlay-size));
+        }
+
+        &:hover {
+            overflow-x: overlay;
         }
     }
 
     // Tablet & mobile modes
     @include media-breakpoint-down(lg) {
         overflow-x: auto;
-    }
+    }   
 }
 
-// Hover overflow overlay
-.hover-scroll-overlay-y {
-    overflow-y: hidden;
-    position: relative;
+// Utilities  
+.scroll-ps {
+    padding-left: var(--#{$prefix}scrollbar-size) !important;
+}
 
-    --scrollbar-space: #{get($scrollbar, space)};
+.scroll-ms {
+    margin-left: var(--#{$prefix}scrollbar-size) !important;
+}
 
-    // Webkit
-    &::-webkit-scrollbar {
-        width: calc(#{get($scrollbar, width)} + var(--scrollbar-space));
-    }
+.scroll-mb {
+    margin-bottom: var(--#{$prefix}scrollbar-size) !important;
+}
 
-    &::-webkit-scrollbar-thumb {
-        background-clip: content-box;
-        border-right: var(--scrollbar-space) solid transparent;
-    }
+.scroll-pe {
+    padding-right: var(--#{$prefix}scrollbar-size) !important;
+}
 
-    &:hover {
-        overflow-y: overlay;
-    }
+.scroll-me {
+    margin-right: var(--#{$prefix}scrollbar-size) !important;
+}
 
-    // Firefox hack
-    @-moz-document url-prefix() {
-        overflow-y: scroll;
-        position: relative;
-    }
+.scroll-px {
+    padding-left: var(--#{$prefix}scrollbar-size) !important;
+    padding-right: var(--#{$prefix}scrollbar-size) !important;
+}
+
+.scroll-mx {
+    margin-left: var(--#{$prefix}scrollbar-size) !important;
+    margin-right: var(--#{$prefix}scrollbar-size) !important;
 }

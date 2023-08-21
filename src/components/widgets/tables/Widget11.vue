@@ -4,15 +4,15 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">New Arrivals</span>
+        <span class="card-label fw-bold fs-3 mb-1">New Arrivals</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7">Over 500 new products</span>
+        <span class="text-muted mt-1 fw-semobold fs-7"
+          >Over 500 new products</span
+        >
       </h3>
       <div class="card-toolbar">
         <a href="#" class="btn btn-sm btn-light-primary">
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
-          </span>
+          <KTIcon icon-name="plus" icon-class="fs-2" />
           New Member
         </a>
       </div>
@@ -27,7 +27,7 @@
         <table class="table align-middle gs-0 gy-4">
           <!--begin::Table head-->
           <thead>
-            <tr class="fw-bolder text-muted bg-light">
+            <tr class="fw-bold text-muted bg-light">
               <th class="ps-4 min-w-325px rounded-start">Product</th>
               <th class="min-w-125px">Price</th>
               <th class="min-w-125px">Deposit</th>
@@ -51,11 +51,11 @@
                     <div class="d-flex justify-content-start flex-column">
                       <a
                         href="#"
-                        class="text-dark fw-bolder text-hover-primary mb-1 fs-6"
+                        class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                         >{{ item.product.name }}</a
                       >
                       <span
-                        class="text-muted fw-bold text-muted d-block fs-7"
+                        class="text-muted fw-semobold text-muted d-block fs-7"
                         >{{ item.product.specs }}</span
                       >
                     </div>
@@ -65,17 +65,10 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.price }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7"
+                  <span class="text-muted fw-semobold text-muted d-block fs-7"
                     >Paid</span
                   >
                 </td>
@@ -83,17 +76,10 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.deposit }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7"
+                  <span class="text-muted fw-semobold text-muted d-block fs-7"
                     >Rejected</span
                   >
                 </td>
@@ -101,19 +87,13 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.agent.name }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7">{{
-                    item.agent.position
-                  }}</span>
+                  <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ item.agent.position }}</span
+                  >
                 </td>
 
                 <td>
@@ -130,41 +110,23 @@
                 <td class="text-end">
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                      me-1
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg
-                        src="media/icons/duotune/general/gen019.svg"
-                      />
-                    </span>
+                    <KTIcon icon-name="switch" icon-class="fs-3" />
                   </a>
 
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                      me-1
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg src="media/icons/duotune/art/art005.svg" />
-                    </span>
+                    <KTIcon icon-name="pencil" icon-class="fs-3" />
                   </a>
 
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg
-                        src="media/icons/duotune/general/gen027.svg"
-                      />
-                    </span>
+                    <KTIcon icon-name="trash" icon-class="fs-3" />
                   </a>
                 </td>
               </tr>
@@ -182,6 +144,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -194,7 +157,7 @@ export default defineComponent({
     const list = [
       {
         product: {
-          image: "media/stock/600x400/img-26.jpg",
+          image: getAssetPath("media/stock/600x400/img-26.jpg"),
           name: "Sant Extreanet Solution",
           specs: "HTML, JS, ReactJS",
         },
@@ -211,7 +174,7 @@ export default defineComponent({
       },
       {
         product: {
-          image: "media/stock/600x400/img-3.jpg",
+          image: getAssetPath("media/stock/600x400/img-3.jpg"),
           name: "Telegram Development",
           specs: "C#, ASP.NET, MS SQL",
         },
@@ -228,7 +191,7 @@ export default defineComponent({
       },
       {
         product: {
-          image: "media/stock/600x400/img-9.jpg",
+          image: getAssetPath("media/stock/600x400/img-9.jpg"),
           name: "Payroll Application",
           specs: "PHP, Laravel, VueJS",
         },
@@ -245,7 +208,7 @@ export default defineComponent({
       },
       {
         product: {
-          image: "media/stock/600x400/img-18.jpg",
+          image: getAssetPath("media/stock/600x400/img-18.jpg"),
           name: "HR Management System",
           specs: "Python, PostgreSQL, ReactJS",
         },
@@ -262,7 +225,7 @@ export default defineComponent({
       },
       {
         product: {
-          image: "media/stock/600x400/img-8.jpg",
+          image: getAssetPath("media/stock/600x400/img-8.jpg"),
           name: "Telegram Mobile",
           specs: "HTML, JS, ReactJS",
         },
@@ -281,6 +244,7 @@ export default defineComponent({
 
     return {
       list,
+      getAssetPath,
     };
   },
 });

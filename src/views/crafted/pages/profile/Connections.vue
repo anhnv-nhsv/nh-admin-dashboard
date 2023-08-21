@@ -2,9 +2,9 @@
   <!--begin::Followers toolbar-->
   <div class="d-flex flex-wrap flex-stack mb-6">
     <!--begin::Title-->
-    <h3 class="fw-bolder my-2">
+    <h3 class="fw-bold my-2">
       My Connections
-      <span class="fs-6 text-gray-400 fw-bold ms-1">(29)</span>
+      <span class="fs-6 text-gray-400 fw-semobold ms-1">(29)</span>
     </h3>
     <!--end::Title-->
 
@@ -35,7 +35,7 @@
       name="Patric Watson"
       position="Art Director at Novica Co."
       :online="true"
-      avatar="media/avatars/150-12.jpg"
+      :avatar="getAssetPath('media/avatars/300-11.jpg')"
       :connected="true"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -45,7 +45,7 @@
       name="Olivia Larson"
       position="Art Director at Seal Inc."
       :online="false"
-      avatar="media/avatars/150-1.jpg"
+      :avatar="getAssetPath('media/avatars/300-6.jpg')"
       :connected="false"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -99,7 +99,7 @@
       name="Kitona Johnson"
       position="Web Designer at Nextop Ltd."
       :online="false"
-      avatar="media/avatars/150-2.jpg"
+      :avatar="getAssetPath('media/avatars/300-1.jpg')"
       :connected="true"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -109,7 +109,7 @@
       name="Robert Doe"
       position="Marketing Analytic at Avito Ltd."
       :online="false"
-      avatar="media/avatars/150-11.jpg"
+      :avatar="getAssetPath('media/avatars/300-14.jpg')"
       :connected="false"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -119,7 +119,7 @@
       name="Soul Jacob"
       position="Art Director at Novica Co."
       :online="false"
-      avatar="media/avatars/150-7.jpg"
+      :avatar="getAssetPath('media/avatars/300-12.jpg')"
       :connected="false"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -129,7 +129,7 @@
       name="Nina Strong"
       position="CTO at Kilp Ltd."
       :online="true"
-      avatar="media/avatars/150-13.jpg"
+      :avatar="getAssetPath('media/avatars/300-7.jpg')"
       :connected="true"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -139,7 +139,7 @@
       name="Patric Watson"
       position="Art Director at Novica Co."
       :online="true"
-      avatar="media/avatars/150-12.jpg"
+      :avatar="getAssetPath('media/avatars/300-11.jpg')"
       :connected="false"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -149,7 +149,7 @@
       name="Olivia Larson"
       position="Art Director at Seal Inc."
       :online="false"
-      avatar="media/avatars/150-1.jpg"
+      :avatar="getAssetPath('media/avatars/300-6.jpg')"
       :connected="false"
       avg-earnings="$14,560"
       total-sales="$236,400"
@@ -160,19 +160,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import Card3 from "@/components/cards/Card3.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 
 export default defineComponent({
-  name: "connections",
+  name: "profile-connections",
   components: {
     Card3,
   },
   setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Connections", ["Pages", "Profile"]);
-    });
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

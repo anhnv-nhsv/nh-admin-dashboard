@@ -4,13 +4,13 @@
     <!--begin::Heading-->
     <div class="pb-8 pb-lg-10">
       <!--begin::Title-->
-      <h2 class="fw-bolder text-dark">Your Are Done!</h2>
+      <h2 class="fw-bold text-dark">Your Are Done!</h2>
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-bold fs-6">
+      <div class="text-gray-400 fw-semobold fs-6">
         If you need more info, please
-        <router-link to="/sign-in" class="link-primary fw-bolder"
+        <router-link to="/sign-in" class="link-primary fw-bold"
           >Sign In</router-link
         >.
       </div>
@@ -30,28 +30,20 @@
 
       <!--begin::Alert-->
       <div
-        class="
-          notice
-          d-flex
-          bg-light-warning
-          rounded
-          border-warning border border-dashed
-          p-6
-        "
+        class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6"
       >
-        <!--begin::Icon-->
-        <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
-          <inline-svg src="media/icons/duotune/general/gen044.svg" />
-        </span>
-        <!--end::Icon-->
+        <KTIcon
+          icon-name="information-5"
+          icon-class="fs-2tx text-warning me-4"
+        />
         <!--begin::Wrapper-->
         <div class="d-flex flex-stack flex-grow-1">
           <!--begin::Content-->
-          <div class="fw-bold">
-            <h4 class="text-gray-800 fw-bolder">We need your attention!</h4>
+          <div class="fw-semobold">
+            <h4 class="text-gray-800 fw-bold">We need your attention!</h4>
             <div class="fs-6 text-gray-600">
               To start using great tools, please, please
-              <a href="#" class="fw-bolder">Create Team Platform</a>
+              <a href="#" class="fw-bold">Create Team Platform</a>
             </div>
           </div>
           <!--end::Content-->
@@ -66,10 +58,16 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "step-5",
   components: {},
+  setup() {
+    return {
+      getAssetPath,
+    };
+  },
 });
 </script>

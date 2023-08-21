@@ -3,7 +3,7 @@
 //
 
 
-.carousel.carousel-custom {
+.carousel-custom {
     // Indicators
     .carousel-indicators {
         align-items: center;
@@ -23,10 +23,11 @@
             }
         }
 
+        // Dots style
         &.carousel-indicators-dots {
             li {
                 border-radius: 0;
-                background-color: transparent;
+                background-color: transparent !important;
                 height: $carousel-custom-dots-indicator-active-size;
                 width: $carousel-custom-dots-indicator-active-size;
                 display: flex;
@@ -54,6 +55,54 @@
                         background-color: $carousel-custom-indicator-active-bg-color;
                     }
                 }
+            }
+        }
+
+        // Bullet style
+        &.carousel-indicators-bullet {
+            li {
+                transition: all $carousel-custom-indicator-transition-speed ease;
+                background-color: transparent !important;
+                border-radius: $carousel-custom-bullet-indicator-default-size;
+                height: $carousel-custom-bullet-indicator-default-size;
+                width: $carousel-custom-bullet-indicator-default-size;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+
+                &:after {
+                    display: inline-block;
+                    content: " ";
+                    transition: all $carousel-custom-indicator-transition-speed ease;
+                    background-color: $carousel-custom-bullet-indicator-default-bg-color;
+                    border-radius: $carousel-custom-bullet-indicator-default-size;
+                    height: $carousel-custom-bullet-indicator-default-size;
+                    width: $carousel-custom-bullet-indicator-default-size;
+                }
+
+                &.active {
+                    transition: all $carousel-custom-indicator-transition-speed ease;
+                    background-color: transparent;
+                    height: $carousel-custom-bullet-indicator-default-size;
+                    width: $carousel-custom-bullet-indicator-active-width;
+
+                    &:after {
+                        transition: all $carousel-custom-indicator-transition-speed ease;
+                        height: $carousel-custom-bullet-indicator-default-size;
+                        width: $carousel-custom-bullet-indicator-active-width;
+                        background-color: $carousel-custom-bullet-indicator-active-bg-color;
+                    }
+                }
+            }
+        }
+    }
+
+    // Theme colors
+    @each $name, $value in $theme-colors {
+        .carousel-indicators-active-#{$name} {
+            li.active:after {
+                background-color: var(--#{$prefix}#{$name}) !important;
             }
         }
     }

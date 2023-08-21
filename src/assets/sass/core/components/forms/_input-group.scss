@@ -5,8 +5,6 @@
 // Form control
 .input-group {
     &.input-group-solid {
-        background-color: $input-solid-bg;
-		border-color: $input-solid-bg;
         @include border-radius($input-border-radius);
 
         &.input-group-sm {
@@ -18,13 +16,21 @@
         }
 
         .input-group-text {
-            background-color: transparent;
-    		border-color: transparent;
+            background-color: $input-solid-bg;
+		    border-color: $input-solid-bg;
+
+            & + .form-control {
+                border-left-color: $input-border-color;
+            }
         }
 
         .form-control {
-            background-color: transparent;
-    		border-color: transparent;
+            background-color: $input-solid-bg;
+    		border-color: $input-solid-bg;
+
+            & + .input-group-text {
+                border-left-color: $input-border-color;
+            }
         }
     }
 }

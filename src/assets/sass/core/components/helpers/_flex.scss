@@ -33,6 +33,16 @@
     		align-items: center;
     	}
 
+        .flex#{$infix}-start {
+    		justify-content: start;
+    		align-items: start;
+    	}
+
+        .flex#{$infix}-end {
+    		justify-content: flex-end;
+    		align-items: flex-end;
+    	}
+
         .flex#{$infix}-stack {
 			justify-content: space-between;
     		align-items: center;

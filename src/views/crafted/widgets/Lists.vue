@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { defineComponent } from "vue";
 import ListsWidget1 from "@/components/widgets/lists/Widget1.vue";
 import ListsWidget2 from "@/components/widgets/lists/Widget2.vue";
 import ListsWidget3 from "@/components/widgets/lists/Widget3.vue";
@@ -55,8 +55,6 @@ import ListsWidget5 from "@/components/widgets/lists/Widget5.vue";
 import ListsWidget6 from "@/components/widgets/lists/Widget6.vue";
 import ListsWidget7 from "@/components/widgets/lists/Widget7.vue";
 import ListsWidget8 from "@/components/widgets/lists/Widget8.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-import { MenuComponent } from "@/assets/ts/components";
 
 export default defineComponent({
   name: "widgets-lists",
@@ -69,13 +67,6 @@ export default defineComponent({
     ListsWidget6,
     ListsWidget7,
     ListsWidget8,
-  },
-  setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Lists", ["Widgets"]);
-
-      MenuComponent.reinitialization();
-    });
   },
 });
 </script>

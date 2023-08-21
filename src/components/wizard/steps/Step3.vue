@@ -4,13 +4,13 @@
     <!--begin::Heading-->
     <div class="pb-10 pb-lg-12">
       <!--begin::Title-->
-      <h2 class="fw-bolder text-dark">Business Details</h2>
+      <h2 class="fw-bold text-dark">Business Details</h2>
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-bold fs-6">
+      <div class="text-gray-400 fw-semobold fs-6">
         If you need more info, please check out
-        <a href="#" class="link-primary fw-bolder">Help Page</a>.
+        <a href="#" class="link-primary fw-bold">Help Page</a>.
       </div>
       <!--end::Notice-->
     </div>
@@ -124,7 +124,7 @@
     <!--begin::Input group-->
     <div class="fv-row mb-0">
       <!--begin::Label-->
-      <label class="fs-6 fw-bold form-label required">Contact Email</label>
+      <label class="fs-6 fw-semobold form-label required">Contact Email</label>
       <!--end::Label-->
 
       <!--begin::Input-->
@@ -145,14 +145,20 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import { Field, ErrorMessage } from "vee-validate";
+import { ErrorMessage, Field } from "vee-validate";
 
 export default defineComponent({
   name: "step-3",
   components: {
     Field,
     ErrorMessage,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

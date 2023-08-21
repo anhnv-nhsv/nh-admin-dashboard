@@ -25,15 +25,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { defineComponent } from "vue";
 import FeedsWidget1 from "@/components/widgets/feeds/Widget1.vue";
 import FeedsWidget2 from "@/components/widgets/feeds/Widget2.vue";
 import FeedsWidget3 from "@/components/widgets/feeds/Widget3.vue";
 import FeedsWidget4 from "@/components/widgets/feeds/Widget4.vue";
 import FeedsWidget5 from "@/components/widgets/feeds/Widget5.vue";
 import FeedsWidget6 from "@/components/widgets/feeds/Widget6.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-import { MenuComponent } from "@/assets/ts/components";
 
 export default defineComponent({
   name: "widgets-feeds",
@@ -44,13 +42,6 @@ export default defineComponent({
     FeedsWidget4,
     FeedsWidget5,
     FeedsWidget6,
-  },
-  setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Feeds", ["Widgets"]);
-
-      MenuComponent.reinitialization();
-    });
   },
 });
 </script>

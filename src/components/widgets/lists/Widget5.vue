@@ -4,8 +4,8 @@
     <!--begin::Header-->
     <div class="card-header align-items-center border-0 mt-4">
       <h3 class="card-title align-items-start flex-column">
-        <span class="fw-bolder mb-2 text-dark">Activities</span>
-        <span class="text-muted fw-bold fs-7">890,344 Sales</span>
+        <span class="fw-bold mb-2 text-dark">Activities</span>
+        <span class="text-muted fw-semobold fs-7">890,344 Sales</span>
       </h3>
 
       <div class="card-toolbar">
@@ -17,9 +17,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown1></Dropdown1>
         <!--end::Menu-->
@@ -34,7 +32,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">08:42</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">08:42</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -54,7 +52,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">10:00</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">10:00</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -65,7 +63,7 @@
 
           <!--begin::Content-->
           <div class="timeline-content d-flex">
-            <span class="fw-bolder text-gray-800 ps-3">AEOL meeting</span>
+            <span class="fw-bold text-gray-800 ps-3">AEOL meeting</span>
           </div>
           <!--end::Content-->
         </div>
@@ -74,7 +72,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">14:37</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">14:37</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -84,7 +82,7 @@
           <!--end::Badge-->
 
           <!--begin::Desc-->
-          <div class="timeline-content fw-bolder text-gray-800 ps-3">
+          <div class="timeline-content fw-bold text-gray-800 ps-3">
             Make deposit
             <a href="#" class="text-primary">USD 700</a>. to ESL
           </div>
@@ -95,7 +93,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">16:50</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">16:50</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -115,7 +113,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">21:03</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">21:03</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -125,7 +123,7 @@
           <!--end::Badge-->
 
           <!--begin::Desc-->
-          <div class="timeline-content fw-bold text-gray-800 ps-3">
+          <div class="timeline-content fw-semobold text-gray-800 ps-3">
             New order placed <a href="#" class="text-primary">#XF-2356</a>.
           </div>
           <!--end::Desc-->
@@ -135,7 +133,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">16:50</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">16:50</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -155,7 +153,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">21:03</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">21:03</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -165,7 +163,7 @@
           <!--end::Badge-->
 
           <!--begin::Desc-->
-          <div class="timeline-content fw-bold text-gray-800 ps-3">
+          <div class="timeline-content fw-semobold text-gray-800 ps-3">
             New order placed <a href="#" class="text-primary">#XF-2356</a>.
           </div>
           <!--end::Desc-->
@@ -175,7 +173,7 @@
         <!--begin::Item-->
         <div class="timeline-item">
           <!--begin::Label-->
-          <div class="timeline-label fw-bolder text-gray-800 fs-6">10:30</div>
+          <div class="timeline-label fw-bold text-gray-800 fs-6">10:30</div>
           <!--end::Label-->
 
           <!--begin::Badge-->
@@ -200,9 +198,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import Dropdown1 from "@/components/dropdown/Dropdown1.vue";
-import { MenuComponent } from "@/assets/ts/components/MenuComponent";
 
 export default defineComponent({
   name: "kt-widget-5",
@@ -213,9 +211,9 @@ export default defineComponent({
     Dropdown1,
   },
   setup() {
-    onMounted(() => {
-      MenuComponent.reinitialization();
-    });
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

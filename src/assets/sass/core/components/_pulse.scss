@@ -11,7 +11,7 @@
     @each $name, $color in $theme-colors {
         &.pulse-#{$name} {
             .pulse-ring {
-                border-color: $color;
+                border-color: var(--#{$prefix}#{$name});
             }
         }
     }
@@ -28,7 +28,7 @@
     opacity: 0;
     border-width: 3px;
     border-style: solid;
-    border-color: $gray-500;
+    border-color: var(--#{$prefix}gray-500);	
 }
 
 @keyframes animation-pulse {

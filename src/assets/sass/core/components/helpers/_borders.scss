@@ -12,21 +12,21 @@
 }
 
 // Gray border colors
-@each $color, $value in $grays {
+@each $name, $value in $grays {
 	// Initial
-	.border-gray-#{$color} {
-		border-color: $value !important;
+	.border-gray-#{$name} {
+		border-color: var(--#{$prefix}gray-#{$name}) !important;
 	}
 }
 
 // Hover border colors
-@each $color, $value in $theme-colors {
-    .border-hover-#{$color}:hover {
-        border-color: $value !important;
+@each $name, $value in $theme-colors {
+    .border-hover-#{$name}:hover {
+        border-color: var(--#{$prefix}#{$name}) !important;
     }
 
-    .border-active-#{$color}.active {
-        border-color: $value !important;
+    .border-active-#{$name}.active {
+        border-color: var(--#{$prefix}#{$name}) !important;
     }   
 }
 
@@ -38,7 +38,7 @@
 // Dashed style
 .border-dashed {
     border-style: dashed !important;
-    border-color: $border-dashed-color;
+    border-color: var(--#{$prefix}border-dashed-color);
 }
 
 .border-top-dashed {
@@ -81,6 +81,11 @@
 // Border transparent
 .border-transparent {
     border-color: transparent !important;
+}
+
+// Border body
+.border-body {
+    border-color: var(--#{$prefix}body-bg) !important;
 }
 
 // Border radiuses

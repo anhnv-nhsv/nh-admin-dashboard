@@ -9,16 +9,16 @@
         <div class="d-flex align-items-center flex-grow-1">
           <!--begin::Avatar-->
           <div class="symbol symbol-45px me-5">
-            <img src="media/avatars/150-13.jpg" alt="" />
+            <img :src="getAssetPath('media/avatars/300-7.jpg')" alt="" />
           </div>
           <!--end::Avatar-->
 
           <!--begin::Info-->
           <div class="d-flex flex-column">
-            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder"
+            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold"
               >Carles Nilson</a
             >
-            <span class="text-gray-400 fw-bold">Last week at 10:00 PM</span>
+            <span class="text-gray-400 fw-semobold">Last week at 10:00 PM</span>
           </div>
           <!--end::Info-->
         </div>
@@ -28,16 +28,12 @@
         <div class="my-0">
           <button
             type="button"
-            class="
-              btn btn-sm btn-icon btn-color-primary btn-active-light-primary
-            "
+            class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end"
             data-kt-menu-flip="top-end"
           >
-            <span class="svg-icon svg-icon-2">
-              <inline-svg src="media/icons/duotune/general/gen024.svg" />
-            </span>
+            <KTIcon icon-name="category" icon-class="fs-2" />
           </button>
           <Dropdown3></Dropdown3>
         </div>
@@ -59,30 +55,17 @@
         <div class="d-flex align-items-center mb-5">
           <a
             href="#"
-            class="
-              btn btn-sm btn-light btn-color-muted btn-active-light-success
-              px-4
-              py-2
-              me-4
-            "
+            class="btn btn-sm btn-light btn-color-muted btn-active-light-success px-4 py-2 me-4"
           >
-            <span class="svg-icon svg-icon-3">
-              <inline-svg src="media/icons/duotune/communication/com012.svg" />
-            </span>
+            <KTIcon icon-name="message-text-2" icon-class="fs-3" />
             22
           </a>
 
           <a
             href="#"
-            class="
-              btn btn-sm btn-light btn-color-muted btn-active-light-danger
-              px-4
-              py-2
-            "
+            class="btn btn-sm btn-light btn-color-muted btn-active-light-danger px-4 py-2"
           >
-            <span class="svg-icon svg-icon-2">
-              <inline-svg src="media/icons/duotune/general/gen030.svg" />
-            </span>
+            <KTIcon icon-name="heart" icon-class="fs-2" />
             59
           </a>
         </div>
@@ -105,15 +88,11 @@
 
         <div class="position-absolute top-0 end-0 me-n5">
           <span class="btn btn-icon btn-sm btn-active-color-primary pe-0 me-2">
-            <span class="svg-icon svg-icon-3 mb-3">
-              <inline-svg src="media/icons/duotune/communication/com008.svg" />
-            </span>
+            <KTIcon icon-name="paper-clip" icon-class="fs-3 mb-3" />
           </span>
 
           <span class="btn btn-icon btn-sm btn-active-color-primary ps-0">
-            <span class="svg-icon svg-icon-2 mb-3">
-              <inline-svg src="media/icons/duotune/general/gen018.svg" />
-            </span>
+            <KTIcon icon-name="geolocation" icon-class="fs-2 mb-3" />
           </span>
         </div>
       </form>
@@ -125,6 +104,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import Dropdown3 from "@/components/dropdown/Dropdown3.vue";
 
@@ -135,6 +115,11 @@ export default defineComponent({
   },
   components: {
     Dropdown3,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

@@ -4,12 +4,14 @@
 
 // Button
 .btn {
+	--#{$prefix}btn-color: var(--#{$prefix}body-color);
+
 	// Reset outline
 	outline: none !important;	
 
 	// Reset focus shadow
-	&:not(.btn-shadow):not(.shadow):not(.shadow-sm):not(.shadow-lg) {
-		box-shadow: none !important;
+	&:not(.btn-shadow):not(.shadow):not(.shadow-sm):not(.shadow-lg):not(.shadow-xs) {
+		box-shadow: none;
 	}
 
 	// Remove border
@@ -35,10 +37,15 @@
 		text-decoration: none;
 		font-weight: $btn-font-weight;
 	}
+ 
+	// Outline
+	&.btn-outline:not(.btn-outline-dashed) {
+		border: 1px solid $input-border-color;
+	}
 
 	// Outline dashed
 	&.btn-outline-dashed {
-		border: 1px dashed $border-dashed-color;
+		border: 1px dashed $input-border-color;
 	}
 
 	// Flush
@@ -51,17 +58,38 @@
 		display: inline-flex;
 		align-items: center;
 	}
+
+	// Align start
+	&.btn-trim-start {
+		justify-content: flex-start !important;
+		padding-left: 0 !important;		
+	}
+
+	// Align start
+	&.btn-trim-end {
+		justify-content: flex-end !important;
+		padding-right: 0 !important;	
+	} 
+}
+
+// Reset
+.btn-reset {
+	background-color: transparent;
+	border: 0;
+	box-shadow: none;
+	user-select: none;
+	outline: none;
 }
 
 // Icons
 .btn {
 	// Font icon
-	i {
+	> i {
 		display: inline-flex;
 		font-size: $font-size-base;
 		padding-right: 0.35rem;
 		vertical-align: middle;
-		line-height: 0;
+		//line-height: 0;
 	}
 
 	// Svg icon
@@ -89,6 +117,7 @@
 		&.btn-sm {
 			height: $input-height-sm;
 			width: $input-height-sm;
+			 
 		}
 
 		&.btn-lg {

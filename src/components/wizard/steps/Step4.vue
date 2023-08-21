@@ -4,13 +4,13 @@
     <!--begin::Heading-->
     <div class="pb-10 pb-lg-15">
       <!--begin::Title-->
-      <h2 class="fw-bolder text-dark">Billing Details</h2>
+      <h2 class="fw-bold text-dark">Billing Details</h2>
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-bold fs-6">
+      <div class="text-gray-400 fw-semobold fs-6">
         If you need more info, please check out
-        <a href="#" class="text-primary fw-bolder">Help Page</a>.
+        <a href="#" class="text-primary fw-bold">Help Page</a>.
       </div>
       <!--end::Notice-->
     </div>
@@ -20,11 +20,13 @@
       <!--begin::Input group-->
       <div class="d-flex flex-column mb-7 fv-row">
         <!--begin::Label-->
-        <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+        <label
+          class="d-flex align-items-center fs-6 fw-semobold form-label mb-2"
+        >
           <span class="required">Name On Card</span>
           <i
             class="fas fa-exclamation-circle ms-2 fs-7"
-            data-bs-toggle="tooltip"
+            v-tooltip
             title="Specify a card holder's name"
           ></i>
         </label>
@@ -46,7 +48,9 @@
       <!--begin::Input group-->
       <div class="d-flex flex-column mb-7 fv-row">
         <!--begin::Label-->
-        <label class="required fs-6 fw-bold form-label mb-2">Card Number</label>
+        <label class="required fs-6 fw-semobold form-label mb-2"
+          >Card Number</label
+        >
         <!--end::Label-->
 
         <!--begin::Input wrapper-->
@@ -66,14 +70,18 @@
 
           <!--begin::Card logos-->
           <div class="position-absolute translate-middle-y top-50 end-0 me-5">
-            <img src="media/svg/card-logos/visa.svg" alt="" class="h-25px" />
             <img
-              src="media/svg/card-logos/mastercard.svg"
+              :src="getAssetPath('media/svg/card-logos/visa.svg')"
               alt=""
               class="h-25px"
             />
             <img
-              src="media/svg/card-logos/american-express.svg"
+              :src="getAssetPath('media/svg/card-logos/mastercard.svg')"
+              alt=""
+              class="h-25px"
+            />
+            <img
+              :src="getAssetPath('media/svg/card-logos/american-express.svg')"
               alt=""
               class="h-25px"
             />
@@ -89,7 +97,7 @@
         <!--begin::Col-->
         <div class="col-md-8 fv-row">
           <!--begin::Label-->
-          <label class="required fs-6 fw-bold form-label mb-2"
+          <label class="required fs-6 fw-semobold form-label mb-2"
             >Expiration Date</label
           >
           <!--end::Label-->
@@ -104,7 +112,12 @@
                 placeholder="Month"
                 as="select"
               >
-                <option v-for="i in 12" :key="i" :label="i" :value="i"></option>
+                <option
+                  v-for="i in 12"
+                  :key="i"
+                  :label="i.toString()"
+                  :value="i"
+                ></option>
               </Field>
               <ErrorMessage
                 class="fv-plugins-message-container invalid-feedback"
@@ -124,7 +137,7 @@
                 <option
                   v-for="i in 10"
                   :key="i"
-                  :label="i + (new Date().getFullYear() - 1)"
+                  :label="(i + (new Date().getFullYear() - 1)).toString()"
                   :value="i"
                 ></option>
               </Field>
@@ -142,11 +155,13 @@
         <!--begin::Col-->
         <div class="col-md-4 fv-row">
           <!--begin::Label-->
-          <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+          <label
+            class="d-flex align-items-center fs-6 fw-semobold form-label mb-2"
+          >
             <span class="required">CVV</span>
             <i
               class="fas fa-exclamation-circle ms-2 fs-7"
-              data-bs-toggle="tooltip"
+              v-tooltip
               title="Enter a card CVV code"
             ></i>
           </label>
@@ -171,9 +186,7 @@
 
             <!--begin::CVV icon-->
             <div class="position-absolute translate-middle-y top-50 end-0 me-3">
-              <span class="svg-icon svg-icon-2hx">
-                <inline-svg src="media/icons/duotune/finance/fin002.svg" />
-              </span>
+              <KTIcon icon-name="credit-cart" icon-class="fs-2hx" />
             </div>
             <!--end::CVV icon-->
           </div>
@@ -187,10 +200,10 @@
       <div class="d-flex flex-stack">
         <!--begin::Label-->
         <div class="me-5">
-          <label class="fs-6 fw-bold form-label"
+          <label class="fs-6 fw-semobold form-label"
             >Save Card for further billing?</label
           >
-          <div class="fs-7 fw-bold text-gray-400">
+          <div class="fs-7 fw-semobold text-gray-400">
             If you need more info, please check budget planning
           </div>
         </div>
@@ -206,7 +219,7 @@
             name="saveCard"
             value="1"
           />
-          <span class="form-check-label fw-bold text-gray-400">
+          <span class="form-check-label fw-semobold text-gray-400">
             Save Card
           </span>
         </label>
@@ -219,14 +232,20 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import { Field, ErrorMessage } from "vee-validate";
+import { ErrorMessage, Field } from "vee-validate";
 
 export default defineComponent({
   name: "step-4",
   components: {
     Field,
     ErrorMessage,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

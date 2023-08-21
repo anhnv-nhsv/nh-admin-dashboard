@@ -4,9 +4,9 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Latest Arrivals</span>
+        <span class="card-label fw-bold fs-3 mb-1">Latest Arrivals</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7"
+        <span class="text-muted mt-1 fw-semobold fs-7"
           >More than 100 new products</span
         >
       </h3>
@@ -19,9 +19,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown1></Dropdown1>
         <!--end::Menu-->
@@ -65,10 +63,10 @@
                 <td>
                   <a
                     href="#"
-                    class="text-dark fw-bolder text-hover-primary mb-1 fs-6"
+                    class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                     >{{ item.info.title }}</a
                   >
-                  <span class="text-muted fw-bold d-block fs-7">{{
+                  <span class="text-muted fw-semobold d-block fs-7">{{
                     item.info.description
                   }}</span>
                 </td>
@@ -79,26 +77,22 @@
                   >
                     <span
                       :class="`badge-light-${item1.color}`"
-                      class="badge fw-bold me-1"
+                      class="badge fw-semobold me-1"
                       >{{ item1.label }}</span
                     >
                   </template>
                 </td>
                 <td class="text-end">
-                  <span class="text-muted fw-bold">
+                  <span class="text-muted fw-semobold">
                     {{ item.remarks }}
                   </span>
                 </td>
                 <td class="text-end">
                   <a
                     href="#"
-                    class="
-                      btn btn-sm btn-icon btn-bg-light btn-active-color-primary
-                    "
+                    class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary"
                   >
-                    <span class="svg-icon svg-icon-2">
-                      <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
-                    </span>
+                    <KTIcon icon-name="arrow-right" icon-class="fs-2" />
                   </a>
                 </td>
               </tr>
@@ -116,6 +110,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import Dropdown1 from "@/components/dropdown/Dropdown1.vue";
 
@@ -130,7 +125,7 @@ export default defineComponent({
   setup() {
     const items = [
       {
-        image: "media/svg/brand-logos/plurk.svg",
+        image: getAssetPath("media/svg/brand-logos/plurk.svg"),
         info: {
           title: "Top Authors",
           description: "Successful Fellas",
@@ -143,7 +138,7 @@ export default defineComponent({
       },
 
       {
-        image: "media/svg/brand-logos/telegram.svg",
+        image: getAssetPath("media/svg/brand-logos/telegram.svg"),
         info: {
           title: "Popular Authors",
           description: "Most Successful",
@@ -156,7 +151,7 @@ export default defineComponent({
       },
 
       {
-        image: "media/svg/brand-logos/vimeo.svg",
+        image: getAssetPath("media/svg/brand-logos/vimeo.svg"),
         info: {
           title: "New Users",
           description: "Awesome Users",
@@ -169,7 +164,7 @@ export default defineComponent({
       },
 
       {
-        image: "media/svg/brand-logos/bebo.svg",
+        image: getAssetPath("media/svg/brand-logos/bebo.svg"),
         info: {
           title: "Active Customers",
           description: "Best Customers",
@@ -182,7 +177,7 @@ export default defineComponent({
       },
 
       {
-        image: "media/svg/brand-logos/kickstarter.svg",
+        image: getAssetPath("media/svg/brand-logos/kickstarter.svg"),
         info: {
           title: "Bestseller Theme",
           description: "Amazing Templates",
@@ -197,6 +192,7 @@ export default defineComponent({
 
     return {
       items,
+      getAssetPath,
     };
   },
 });

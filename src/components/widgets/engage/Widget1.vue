@@ -8,14 +8,14 @@
         <!--begin::Section-->
         <div class="pt-15 mb-10">
           <!--begin::Title-->
-          <h3 class="text-dark text-center fs-1 fw-bolder lh-lg">
+          <h3 class="text-dark text-center fs-1 fw-bold lh-lg">
             Upgrade to Pro<br />
             For Limitless Features
           </h3>
           <!--end::Title-->
 
           <!--begin::Text-->
-          <div class="text-center text-gray-600 fs-6 fw-bold pt-4 pb-1">
+          <div class="text-center text-gray-600 fs-6 fw-semobold pt-4 pb-1">
             They stoping you from amazing poorly about drive.<br />
             Outlines keep you honest.
           </div>
@@ -37,16 +37,10 @@
 
         <!--begin::Image-->
         <div
-          class="
-            flex-grow-1
-            bgi-no-repeat
-            bgi-size-contain
-            bgi-position-x-center
-            bgi-position-y-bottom
-            card-rounded-bottom
-            h-200px
-          "
-          style="background-image: url('media/illustrations/sketchy-1/8.png')"
+          class="flex-grow-1 bgi-no-repeat bgi-size-contain bgi-position-x-center bgi-position-y-bottom card-rounded-bottom h-200px"
+          :style="{
+            backgroundImage: 'url(' + getIllustrationsPath('8.png') + ')',
+          }"
         ></div>
         <!--end::Image-->
       </div>
@@ -59,11 +53,17 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { getIllustrationsPath } from "@/core/helpers/assets";
 
 export default defineComponent({
   name: "widget-1",
   props: {
     widgetClasses: String,
+  },
+  setup() {
+    return {
+      getIllustrationsPath,
+    };
   },
 });
 </script>

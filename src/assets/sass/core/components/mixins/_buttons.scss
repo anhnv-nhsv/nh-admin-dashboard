@@ -19,12 +19,9 @@
     }
 
     @if ( $icon-color != null ) {
-        i {
+        i,
+        .svg-icon {
     		color: $icon-color;
-    	}
-
-    	.svg-icon {
-    		@include svg-icon-color($icon-color);
     	}
 
         &.dropdown-toggle:after {
@@ -53,12 +50,9 @@
         }
 
         @if ( $icon-color-active != null ) {
-            i {
+            i,
+            .svg-icon {
         		color: $icon-color-active;
-        	}
-
-        	.svg-icon {
-        		@include svg-icon-color($icon-color-active);
         	}
 
             &.dropdown-toggle:after {
@@ -73,5 +67,18 @@
         @if ( $bg-color-active != null ) {
             background-color: $bg-color-active !important;
         }
+    }
+}
+
+@mixin button-active-state() {    
+    .btn-check:checked + &,
+    .btn-check:active + &,
+    &:focus:not(.btn-active),
+    &:hover:not(.btn-active),
+    &:active:not(.btn-active),
+    &.active,
+    &.show,
+    .show > & {
+        @content;
     }
 }

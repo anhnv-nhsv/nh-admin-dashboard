@@ -10,42 +10,18 @@
           <img :src="avatar" alt="image" />
           <div
             v-if="online"
-            class="
-              bg-success
-              position-absolute
-              rounded-circle
-              translate-middle
-              start-100
-              top-100
-              border border-4 border-white
-              h-15px
-              w-15px
-              ms-n3
-              mt-n3
-            "
+            class="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-white h-15px w-15px ms-n3 mt-n3"
           ></div>
         </div>
         <div v-else class="symbol symbol-65px symbol-circle mb-5">
           <span
             :class="`text-${color} bg-light-${color}`"
-            class="symbol-label fs-2x fw-bold"
+            class="symbol-label fs-2x fw-semobold"
             >{{ initials }}</span
           >
           <div
             v-if="online"
-            class="
-              bg-success
-              position-absolute
-              rounded-circle
-              translate-middle
-              start-100
-              top-100
-              border border-4 border-white
-              h-15px
-              w-15px
-              ms-n3
-              mt-n3
-            "
+            class="bg-success position-absolute rounded-circle translate-middle start-100 top-100 border border-4 border-white h-15px w-15px ms-n3 mt-n3"
           ></div>
         </div>
         <!--end::Avatar-->
@@ -53,13 +29,13 @@
         <!--begin::Name-->
         <a
           href="#"
-          class="fs-4 text-gray-800 text-hover-primary fw-bolder mb-0"
+          class="fs-4 text-gray-800 text-hover-primary fw-bold mb-0"
           >{{ name }}</a
         >
         <!--end::Name-->
 
         <!--begin::Position-->
-        <div class="fw-bold text-gray-400 mb-6">{{ position }}</div>
+        <div class="fw-semobold text-gray-400 mb-6">{{ position }}</div>
         <!--end::Position-->
 
         <!--begin::Info-->
@@ -68,8 +44,8 @@
           <div
             class="border border-dashed rounded min-w-125px py-3 px-4 mx-3 mb-3"
           >
-            <div class="fs-6 fw-bolder text-gray-700">{{ avgEarnings }}</div>
-            <div class="fw-bold text-gray-400">Avg. Earnings</div>
+            <div class="fs-6 fw-bold text-gray-700">{{ avgEarnings }}</div>
+            <div class="fw-semobold text-gray-400">Avg. Earnings</div>
           </div>
           <!--end::Stats-->
 
@@ -77,8 +53,8 @@
           <div
             class="border border-dashed rounded min-w-125px py-3 px-4 mx-3 mb-3"
           >
-            <div class="fs-6 fw-bolder text-gray-700">{{ totalSales }}</div>
-            <div class="fw-bold text-gray-400">Total Sales</div>
+            <div class="fs-6 fw-bold text-gray-700">{{ totalSales }}</div>
+            <div class="fw-semobold text-gray-400">Total Sales</div>
           </div>
           <!--end::Stats-->
         </div>
@@ -86,15 +62,11 @@
 
         <!--begin::Follow-->
         <a v-if="connected" href="#" class="btn btn-sm btn-light-primary">
-          <span class="svg-icon svg-icon-3">
-            <inline-svg src="media/icons/duotune/arrows/arr012.svg" />
-          </span>
+          <KTIcon icon-name="check" icon-class="fs-3" />
           Connected
         </a>
         <a v-else href="#" class="btn btn-sm btn-light">
-          <span class="svg-icon svg-icon-3">
-            <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
-          </span>
+          <KTIcon icon-name="plus" icon-class="fs-3" />
           Connect
         </a>
         <!--end::Follow-->
@@ -107,7 +79,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {getAssetPath} from "@/core/helpers/assets";
+import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "card-3",
@@ -132,6 +105,11 @@ export default defineComponent({
     totalSales: String,
 
     connected: Boolean,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

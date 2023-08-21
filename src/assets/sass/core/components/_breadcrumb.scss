@@ -14,20 +14,23 @@
     .breadcrumb-item {
         display: flex;
         align-items: center;
-        padding-left: 0;
-        padding-right: $breadcrumb-item-padding-x;
+        padding-left: $breadcrumb-item-padding-x;
 
         &:last-child {
             padding-right: 0;
         }
 
         &:after {
-            content: "/";
             padding-left: $breadcrumb-item-padding-x;
+            content: "/";
         }
 
         &:before {
             display: none;
+        }
+
+        &:first-child {
+            padding-left: 0;
         }
 
         &:last-child {
@@ -50,7 +53,7 @@
 // Breadcrumb dot style
 .breadcrumb-dot {
     .breadcrumb-item {
-        &:after {
+        &:after {            
             content: "\2022";
         }
     }

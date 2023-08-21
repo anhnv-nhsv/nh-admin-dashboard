@@ -2,7 +2,7 @@
   <!--begin::Campaigns toolbar-->
   <div class="d-flex flex-wrap flex-stack my-5">
     <!--begin::Title-->
-    <h2 class="fw-bold my-2">
+    <h2 class="fw-semobold my-2">
       Campaigns
       <span class="fs-4 text-gray-400 ms-1">30 Days</span>
     </h2>
@@ -45,10 +45,10 @@
         <Card2
           card-classes="h-100"
           title="Twitch Posts"
-          icon="media/svg/brand-logos/twitch.svg"
+          :icon="getAssetPath('media/svg/brand-logos/twitch.svg')"
           content="$500.00"
           color="success"
-          arrow="Up-right"
+          arrow="arrow-up-right"
           footer-data="+40.5%"
           footer-text="more impressions"
           indicator-value="0.5%"
@@ -61,10 +61,10 @@
         <Card2
           card-classes="h-100"
           title="Twitter Followers"
-          icon="media/svg/brand-logos/twitter.svg"
+          :icon="getAssetPath('media/svg/brand-logos/twitter.svg')"
           content="807k"
           color="success"
-          arrow="Up-right"
+          arrow="arrow-up-right"
           footer-data="+17.62%"
           footer-text="Followers growth"
           indicator-label="New trials"
@@ -77,10 +77,10 @@
         <Card2
           card-classes="h-100"
           title="Spotify Listeners"
-          icon="media/svg/brand-logos/spotify.svg"
+          :icon="getAssetPath('media/svg/brand-logos/spotify.svg')"
           content="1,073"
           color="danger"
-          arrow="Down-left"
+          arrow="arrow-down-right"
           footer-data="+10.45%"
           footer-text="Less comments than usual"
           indicator-label="Impressions"
@@ -93,10 +93,10 @@
         <Card2
           card-classes="h-100"
           title="Pinterest Posts"
-          icon="media/svg/brand-logos/pinterest-p.svg"
+          :icon="getAssetPath('media/svg/brand-logos/pinterest-p.svg')"
           content="97"
           color="success"
-          arrow="Up-right"
+          arrow="arrow-up-right"
           footer-data="+26.1%"
           footer-text="More posts"
           indicator-label="Spend"
@@ -109,10 +109,10 @@
         <Card2
           card-classes="h-100"
           title="Github Contributes"
-          icon="media/svg/brand-logos/github.svg"
+          :icon="getAssetPath('media/svg/brand-logos/github.svg')"
           content="4,109"
           color="danger"
-          arrow="Down-left"
+          arrow="arrow-down-right"
           footer-data="+32.8%"
           footer-text="Less contributions"
           indicator-label="Dispute"
@@ -125,10 +125,10 @@
         <Card2
           card-classes="h-100"
           title="Youtube Subscribers"
-          icon="media/svg/brand-logos/youtube-3.svg"
+          :icon="getAssetPath('media/svg/brand-logos/youtube-3.svg')"
           content="354"
           color="success"
-          arrow="Up-right"
+          arrow="arrow-up-right"
           footer-data="+29.45%"
           footer-text="Subscribers growth"
           indicator-label="Subscribers"
@@ -141,10 +141,10 @@
         <Card2
           card-classes="h-100"
           title="Telegram Posts"
-          icon="media/svg/brand-logos/telegram.svg"
+          :icon="getAssetPath('media/svg/brand-logos/telegram.svg')"
           content="566"
           color="success"
-          arrow="Up-right"
+          arrow="arrow-up-right"
           footer-data="+11.4%"
           footer-text="more clicks"
           indicator-label="Profit"
@@ -157,10 +157,10 @@
         <Card2
           card-classes="h-100"
           title="Reddit Awards"
-          icon="media/svg/brand-logos/reddit.svg"
+          :icon="getAssetPath('media/svg/brand-logos/reddit.svg')"
           content="2.1M"
           color="success"
-          arrow="Up-right"
+          arrow="arrow-down-right"
           footer-data="-46.7%"
           footer-text="more adds"
           indicator-label="Retention"
@@ -172,7 +172,9 @@
 
   <!--begin::Pagination-->
   <div class="d-flex flex-stack flex-wrap pt-10">
-    <div class="fs-6 fw-bold text-gray-700">Showing 1 to 10 of 50 entries</div>
+    <div class="fs-6 fw-semobold text-gray-700">
+      Showing 1 to 10 of 50 entries
+    </div>
 
     <!--begin::Pages-->
     <ul class="pagination">
@@ -214,19 +216,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import Card2 from "@/components/cards/Card2.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 
 export default defineComponent({
-  name: "campaigns",
+  name: "profile-campaigns",
   components: {
     Card2,
   },
   setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Campaigns", ["Pages", "Profile"]);
-    });
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

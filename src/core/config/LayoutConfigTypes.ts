@@ -1,83 +1,101 @@
-interface Main {
-  type: "default";
-  primaryColor: string;
-  logo: {
-    dark: string;
-    light: string;
-  };
+interface General {
+  mode: "dark" | "light" | "system";
+  primaryColor: "#50CD89";
+  pageWidth: string;
+  layout: "dark-sidebar" | "light-sidebar" | "light-header" | "dark-header";
+  iconsType: "duotone" | "solid" | "outline";
 }
 
-interface Loader {
-  logo: string;
-  display: boolean;
-  type: "default" | "spinner-message" | "spinner-logo";
+interface Illustrations {
+  set: "dozzy-1" | "sigma-1" | "sketchy-1" | "unitedpalms-1";
 }
 
 interface ScrollTop {
   display: boolean;
 }
 
-interface Fixed {
-  desktop: boolean;
-  tabletAndMobile: boolean;
-}
-
 interface Header {
   display: boolean;
-  width: "fixed" | "fluid";
-  menuIcon: "svg" | "font";
-  fixed: Fixed;
+  default: {
+    container: "fixed" | "fluid";
+    fixed: {
+      desktop: boolean;
+      mobile: boolean;
+    };
+    menu: {
+      display: boolean;
+      iconType: "keenthemes" | "bootstrap";
+    };
+  };
 }
 
-interface Aside {
+interface PageTitle {
   display: boolean;
-  theme: "dark" | "light";
-  fixed: boolean;
-  menuIcon: "svg" | "font";
-  minimized: boolean;
-  minimize: boolean;
-  hoverable: boolean;
+  breadcrumb: boolean;
+  direction: string;
+}
+
+interface Sidebar {
+  display: boolean;
+  default: {
+    minimize: {
+      desktop: {
+        enabled: boolean;
+        default: boolean;
+        hoverable: boolean;
+      };
+    };
+    menu: {
+      iconType: "keenthemes" | "bootstrap";
+    };
+  };
 }
 
 interface Content {
-  width: "fixed" | "fluid";
+  container: "fixed" | "fluid";
 }
 
 interface Toolbar {
   display: boolean;
-  width: "fixed" | "fluid";
-  fixed: Fixed;
+  container: "fixed" | "fluid";
+  fixed: {
+    desktop: boolean;
+    mobile: boolean;
+  };
 }
 
 interface Footer {
-  width: "fixed" | "fluid";
+  display: boolean;
+  container: "fixed" | "fluid";
+  fixed: {
+    desktop: boolean;
+    mobile: boolean;
+  };
 }
 
 interface LayoutConfig {
-  themeName: string;
-  themeVersion: string;
-  demo: string;
-  main: Main;
-  loader: Loader;
-  scrollTop: ScrollTop;
+  general: General;
+  illustrations: Illustrations;
+  scrolltop: ScrollTop;
   header: Header;
   toolbar: Toolbar;
-  aside: Aside;
+  pageTitle: PageTitle;
+  sidebar: Sidebar;
   content: Content;
   footer: Footer;
 }
 
 export default LayoutConfig;
 
-export {
-  Main,
-  Loader,
+export type {
+  General,
+  Illustrations,
   ScrollTop,
-  Fixed,
   Header,
-  Aside,
+  Sidebar,
   Content,
   Toolbar,
+  PageTitle,
   Footer,
   LayoutConfig,
 };

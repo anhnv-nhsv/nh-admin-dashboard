@@ -6,20 +6,20 @@
 @each $name, $color in $theme-text-colors {
     // Base color
     .text-#{$name} {
-        color: $color !important;
+        color: var(--#{$prefix}text-#{$name}) !important;
     }
 
     // Inverse color
     @if (theme-inverse-color($name)) {
         .text-inverse-#{$name} {
-            color: theme-inverse-color($name) !important;
+            color: var(--#{$prefix}#{$name}-inverse) !important;
         }
     }
 
     @if (theme-light-color($name)) {
         // Light colors
         .text-light-#{$name} {
-            color: theme-light-color($name) !important;
+            color: var(--#{$prefix}#{$name}-light) !important;
         }
     }
 
@@ -33,41 +33,16 @@
 
         &:hover {
             transition: $transition-link;
-            color: $color !important;
+            color: var(--#{$prefix}text-#{$name}) !important;
 
             i {
                 transition: $transition-link;
-				color: $color !important;
+				color: var(--#{$prefix}text-#{$name}) !important;
 			}
 
 			.svg-icon {
-				@include svg-icon-color($color);
+				color: var(--#{$prefix}text-#{$name}) !important;
 			}
-        }
-    }
-
-    // Hover inverse
-    @if (theme-inverse-color($name)) {
-        .text-hover-inverse-#{$name} {
-            transition: $transition-link;
-
-            i {
-                transition: $transition-link;
-            }
-
-            &:hover {
-                transition: $transition-link;
-                color: theme-inverse-color($name) !important;
-
-                i {
-                    transition: $transition-link;
-                    color: theme-inverse-color($name) !important;
-                }
-
-                .svg-icon {
-                    @include svg-icon-color(theme-inverse-color($name));
-                }
-            }
         }
     }
 
@@ -81,48 +56,50 @@
 
         &.active {
             transition: $transition-link;
-            color: $color !important;
+            color: var(--#{$prefix}text-#{$name}) !important;
             
             i {
                 transition: $transition-link;
-                color: $color !important;
+                color: var(--#{$prefix}text-#{$name}) !important;
             }
     
             .svg-icon {
-                @include svg-icon-color($color);
-            }
-        }
-    }
-
-    // Active inverse
-    @if (theme-inverse-color($name)) {
-        .text-active-inverse-#{$name} {
-            transition: $transition-link;        
-
-            i {
-                transition: $transition-link;
-            }
-
-            &.active {
-                transition: $transition-link;
-                color: theme-inverse-color($name) !important;
-
-                i {
-                    transition: $transition-link;
-                    color: theme-inverse-color($name) !important;
-                }
-
-                .svg-icon {
-                    @include svg-icon-color(theme-inverse-color($name));
-                }
+                color: var(--#{$prefix}text-#{$name}) !important;
             }
         }
     }
 }
 
-// Text transparent
-.fw-boldest {
-    font-weight: $font-weight-boldest !important;
+// Parent hover
+.parent-hover {
+    @each $name, $color in $theme-text-colors {
+        .parent-hover-#{$name} {
+            transition: $transition-link;
+        }
+
+        &:hover {
+            .parent-hover-#{$name} {
+                transition: $transition-link;
+                color: var(--#{$prefix}text-#{$name}) !important;
+            }
+        }    
+    }
+}
+
+// Parent active
+.parent-active {
+    @each $name, $color in $theme-text-colors {
+        .parent-active-#{$name} {
+            transition: $transition-link;
+        }
+
+        &.active {
+            .parent-active-#{$name} {
+                transition: $transition-link;
+                color: var(--#{$prefix}text-#{$name}) !important;
+            }
+        }    
+    }
 }
 
 // Text transparent
@@ -146,9 +123,17 @@
 
 // Icons
 i {
-    line-height: 1;
-    font-size: 1rem;
-    color: $text-muted;
+    &.bi,
+    &[class^="fonticon-"],
+    &[class*=" fonticon-"],
+    &[class^="fa-"],
+    &[class*=" fa-"],
+    &[class^="la-"],
+    &[class*=" la-"] {
+        line-height: 1;
+        font-size: 1rem;
+        color: var(--#{$prefix}text-muted);        
+    }   
 }
 
 // Link transition

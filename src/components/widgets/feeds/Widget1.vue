@@ -9,17 +9,19 @@
         <div class="d-flex align-items-center flex-grow-1">
           <!--begin::Avatar-->
           <div class="symbol symbol-45px me-5">
-            <img src="media/avatars/150-1.jpg" alt="" />
+            <img :src="getAssetPath('media/avatars/300-6.jpg')" alt="" />
           </div>
           <!--end::Avatar-->
 
           <!--begin::Info-->
           <div class="d-flex flex-column">
-            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder"
+            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold"
               >Grace Green</a
             >
 
-            <span class="text-gray-400 fw-bold">PHP, SQLite, Artisan CLI</span>
+            <span class="text-gray-400 fw-semobold"
+              >PHP, SQLite, Artisan CLI</span
+            >
           </div>
           <!--end::Info-->
         </div>
@@ -29,16 +31,12 @@
         <div class="my-0">
           <button
             type="button"
-            class="
-              btn btn-sm btn-icon btn-color-primary btn-active-light-primary
-            "
+            class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end"
             data-kt-menu-flip="top-end"
           >
-            <span class="svg-icon svg-icon-2">
-              <inline-svg src="media/icons/duotune/general/gen024.svg" />
-            </span>
+            <KTIcon icon-name="category" icon-class="fs-2" />
           </button>
           <Dropdown2></Dropdown2>
         </div>
@@ -95,8 +93,9 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, onMounted } from "vue";
-import Quill from "quill/dist/quill.js";
+import Quill from "quill";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 
 export default defineComponent({
@@ -124,6 +123,10 @@ export default defineComponent({
       // Init editor
       new Quill("#" + editorId, options);
     });
+
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

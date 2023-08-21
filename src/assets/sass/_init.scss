@@ -12,16 +12,20 @@
 // Custom variables
 @import "components/variables.custom";
 @import "./core/components/variables";
+@import "./core/components/variables-dark";
 
 // Bootstrap initializaton
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
-@import "~bootstrap/scss/utilities";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/variables-dark";
+@import "bootstrap/scss/maps";
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/utilities";
 
 // 3rd-Party plugins variables
 @import "./core/vendors/plugins/variables";
+@import "./core/vendors/plugins/variables-dark";
 
 // Custom layout variables
-@import "layout/variables";
-@import "./core/layout/docs/variables";
+@import "./core/layout/base/variables";
+@import "layout/variables.custom";

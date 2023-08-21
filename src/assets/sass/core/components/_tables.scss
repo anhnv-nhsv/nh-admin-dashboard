@@ -3,9 +3,14 @@
 //
 
 // Table
-.table {
-	width: 100%;
-
+.table:not(.table-bordered) {
+	// Fix for BS 5.1.2 update
+	& > :not(:first-child) {
+    	border-color: transparent;
+		border-width: 0;
+		border-style: none;
+	}
+	
 	>:not(:last-child)>:last-child>* {
 		border-bottom-color: inherit;
 	}
@@ -62,17 +67,11 @@
 	}
 
 	// Row bordered
-	&.table-bordered {
-		th,td {
-			border: 1px solid $border-color;
-		}
-	}
-
 	&.table-row-bordered {
 		tr {
 			border-bottom-width: 1px;
 			border-bottom-style: solid;
-			border-bottom-color: $border-color;
+			border-bottom-color: var(--#{$prefix}border-color);
 		}
 
 		tfoot {
@@ -87,7 +86,7 @@
 		tr {
 			border-bottom-width: 1px;
 			border-bottom-style: dashed;
-			border-bottom-color: $border-color;
+			border-bottom-color: var(--#{$prefix}border-color);
 		}
 
 		tfoot {
@@ -98,13 +97,82 @@
 	}
 
 	// Row border colors
-	@each $color, $value in $grays {
-		&.table-row-gray-#{$color} {
-			tr {
-				border-bottom-color: $value;
+	@each $name, $value in $grays {
+		&.table-row-gray-#{$name} {
+			tr { 
+				border-bottom-color: var(--#{$prefix}gray-#{$name});
 			}
 		}
+	}	
+}
+
+// Layout fixed
+.table-layout-fixed {
+	table-layout: fixed;
+}
+
+// Sorting
+.table-sort {
+	&:after {
+		opacity: 0;
 	}
+}
+
+.table-sort,
+.table-sort-asc,
+.table-sort-desc {
+	vertical-align: middle;
+
+	&:after {
+		position: relative;
+		display: inline-block;
+		width: 0.75rem;
+		height: 0.75rem;
+		content: " ";
+		bottom: auto;
+		right: auto;
+		left: auto;
+		margin-left: 0.5rem;
+	}		
+}
+
+.table-sort-asc {
+	&:after {
+		opacity: 1;
+		@include svg-bg-icon(arrow-top, var(--#{$prefix}text-muted));
+	}
+}
+
+.table-sort-desc {
+	&:after {
+		opacity: 1;
+		@include svg-bg-icon(arrow-bottom, var(--#{$prefix}text-muted));
+	}
+}
+
+// Loading
+.table-loading-message {
+	display: none;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	@include border-radius($border-radius);
+	box-shadow: var(--#{$prefix}table-loading-message-box-shadow);
+	background-color: $table-loading-message-bg;
+	color: $table-loading-message-color;
+	font-weight: $font-weight-bold;
+	margin: 0 !important;
+	width: auto;
+	padding: 0.85rem 2rem !important;
+	transform: translateX(-50%) translateY(-50%);
+}
+
+.table-loading {
+	position: relative;
+
+	.table-loading-message {
+		display: block;
+	}	
 }
 
 // Cell gutters
@@ -116,6 +184,11 @@
 			.table.g#{$infix}-#{$name} {
 				th, td {
 					padding: $value;
+
+					// Datatables responsive mode fix
+					&.dtr-control {
+						padding-left: $value !important;
+					}
 				}
             }
 
@@ -130,6 +203,11 @@
 				th, td {
 					padding-left: $value;
 					padding-right: $value;
+
+					// Datatables responsive mode fix
+					&.dtr-control {
+						padding-left: $value !important;
+					}
 				}
             }
 
@@ -141,6 +219,11 @@
 
 					&:last-child {
 	   					padding-right: $value;
+					}
+
+					// Datatables responsive mode fix
+					&.dtr-control:first-child {
+						padding-left: $value !important;
 					}
 				}
             }

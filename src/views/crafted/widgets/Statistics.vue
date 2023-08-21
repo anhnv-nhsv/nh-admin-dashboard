@@ -39,7 +39,7 @@
     <div class="col-xl-4">
       <StatisticsWidget2
         widget-classes="card-xl-stretch mb-xl-8"
-        avatar="media/svg/avatars/029-boy-11.svg"
+        :avatar="getAssetPath('media/svg/avatars/029-boy-11.svg')"
         title="Arthur Goldstain"
         description="System & Software Architect"
       ></StatisticsWidget2>
@@ -48,7 +48,7 @@
     <div class="col-xl-4">
       <StatisticsWidget2
         widget-classes="card-xl-stretch mb-xl-8"
-        avatar="media/svg/avatars/014-girl-7.svg"
+        :avatar="getAssetPath('media/svg/avatars/014-girl-7.svg')"
         title="Lisa Bold"
         description="Marketing & Fanance Manager"
       ></StatisticsWidget2>
@@ -57,7 +57,7 @@
     <div class="col-xl-4">
       <StatisticsWidget2
         widget-classes="card-xl-stretch mb-5 mb-xl-8"
-        avatar="media/svg/avatars/004-boy-1.svg"
+        :avatar="getAssetPath('media/svg/avatars/004-boy-1.svg')"
         title="Nick Stone"
         description="Customer Support Team"
       ></StatisticsWidget2>
@@ -70,7 +70,7 @@
     <div class="col-xl-4">
       <StatisticsWidget3
         widget-classes="card-xl-stretch mb-xl-8"
-        :height="150"
+        height="150px"
         color="success"
         title="Weekly Sales"
         description="Your Weekly Sales Chart"
@@ -81,7 +81,7 @@
     <div class="col-xl-4">
       <StatisticsWidget3
         widget-classes="card-xl-stretch mb-xl-8"
-        :height="150"
+        height="150px"
         color="danger"
         title="Authors Progress"
         description="Marketplace Authors Chart"
@@ -92,7 +92,7 @@
     <div class="col-xl-4">
       <StatisticsWidget3
         widget-classes="card-xl-stretch mb-5 mb-xl-8"
-        :height="150"
+        height="150px"
         color="primary"
         title="Sales Progress"
         description="Marketplace Sales Chart"
@@ -107,8 +107,8 @@
     <div class="col-xl-4">
       <StatisticsWidget4
         widget-classes="card-xl-stretch mb-xl-8"
-        :height="150"
-        svg-icon="media/icons/duotune/ecommerce/ecm002.svg"
+        height="150px"
+        icon-name="basket"
         color="info"
         description="Sales Change"
         change="+256"
@@ -118,8 +118,8 @@
     <div class="col-xl-4">
       <StatisticsWidget4
         widget-classes="card-xl-stretch mb-xl-8"
-        :height="150"
-        svg-icon="media/icons/duotune/general/gen025.svg"
+        height="150px"
+        icon-name="bank"
         color="success"
         description="Weekly Income"
         change="750$"
@@ -130,8 +130,8 @@
     <div class="col-xl-4">
       <StatisticsWidget4
         widget-classes="card-xl-stretch mb-5 mb-xl-8"
-        :height="150"
-        svg-icon="media/icons/duotune/finance/fin006.svg"
+        height="150px"
+        icon-name="briefcase"
         color="primary"
         description="New Users"
         change="+6.6K"
@@ -145,7 +145,7 @@
     <div class="col-xl-4">
       <StatisticsWidget5
         widget-classes="card-xl-stretch mb-xl-8"
-        svg-icon="media/icons/duotune/ecommerce/ecm002.svg"
+        icon-name="basket"
         color="danger"
         icon-color="white"
         title="Shopping Chart"
@@ -156,7 +156,7 @@
     <div class="col-xl-4">
       <StatisticsWidget5
         widget-classes="card-xl-stretch mb-xl-8"
-        svg-icon="media/icons/duotune/ecommerce/ecm008.svg"
+        icon-name="cheque"
         color="primary"
         icon-color="white"
         title="Appartments"
@@ -167,7 +167,7 @@
     <div class="col-xl-4">
       <StatisticsWidget5
         widget-classes="card-xl-stretch mb-5 mb-xl-8"
-        svg-icon="media/icons/duotune/graphs/gra005.svg"
+        icon-name="chart-simple-3"
         color="success"
         icon-color="white"
         title="Sales Stats"
@@ -182,7 +182,7 @@
     <div class="col-xl-3">
       <StatisticsWidget5
         widget-classes="card-xl-stretch mb-xl-8"
-        svg-icon="media/icons/duotune/general/gen032.svg"
+        icon-name="chart-simple"
         color="white"
         icon-color="primary"
         title="500M$"
@@ -193,7 +193,7 @@
     <div class="col-xl-3">
       <StatisticsWidget5
         widget-classes="card-xl-stretch mb-xl-8"
-        svg-icon="media/icons/duotune/ecommerce/ecm008.svg"
+        icon-name="cheque"
         color="dark"
         icon-color="white"
         title="+3000"
@@ -204,7 +204,7 @@
     <div class="col-xl-3">
       <StatisticsWidget5
         widget-classes="card-xl-stretch mb-xl-8"
-        svg-icon="media/icons/duotune/finance/fin006.svg"
+        icon-name="briefcase"
         color="warning"
         icon-color="white"
         title="$50,000"
@@ -215,7 +215,7 @@
     <div class="col-xl-3">
       <StatisticsWidget5
         widget-classes="card-xl-stretch mb-xl-8"
-        svg-icon="media/icons/duotune/graphs/gra007.svg"
+        icon-name="chart-pie-simple"
         color="info"
         icon-color="white"
         title="$50,000"
@@ -261,15 +261,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import StatisticsWidget1 from "@/components/widgets/statsistics/Widget1.vue";
 import StatisticsWidget2 from "@/components/widgets/statsistics/Widget2.vue";
 import StatisticsWidget3 from "@/components/widgets/statsistics/Widget3.vue";
 import StatisticsWidget4 from "@/components/widgets/statsistics/Widget4.vue";
 import StatisticsWidget5 from "@/components/widgets/statsistics/Widget5.vue";
 import StatisticsWidget6 from "@/components/widgets/statsistics/Widget6.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-import { MenuComponent } from "@/assets/ts/components";
 
 export default defineComponent({
   name: "widgets-statistics",
@@ -282,11 +281,9 @@ export default defineComponent({
     StatisticsWidget6,
   },
   setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Statistics", ["Widgets"]);
-
-      MenuComponent.reinitialization();
-    });
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

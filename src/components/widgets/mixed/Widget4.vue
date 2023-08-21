@@ -4,8 +4,10 @@
     <!--begin::Beader-->
     <div class="card-header border-0 py-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Action Needed</span>
-        <span class="text-muted fw-bold fs-7">Complete your profile setup</span>
+        <span class="card-label fw-bold fs-3 mb-1">Action Needed</span>
+        <span class="text-muted fw-semobold fs-7"
+          >Complete your profile setup</span
+        >
       </h3>
 
       <div class="card-toolbar">
@@ -17,9 +19,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown1></Dropdown1>
         <!--end::Menu-->
@@ -32,8 +32,9 @@
       <div class="flex-grow-1">
         <!--begin::Chart-->
         <apexchart
+          ref="chartRef"
           class="mixed-widget-4-chart"
-          :options="chartOptions"
+          :options="chart"
           :series="series"
           :height="chartHeight"
           type="radialBar"
@@ -59,9 +60,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { computed, defineComponent, onBeforeMount, ref, watch } from "vue";
 import Dropdown1 from "@/components/dropdown/Dropdown1.vue";
 import { getCSSVariableValue } from "@/assets/ts/_utils";
+import type VueApexCharts from "vue3-apexcharts";
+import type { ApexOptions } from "apexcharts";
+import { useThemeStore } from "@/stores/theme";
 
 export default defineComponent({
   name: "widget-1",
@@ -75,60 +80,91 @@ export default defineComponent({
     btnColor: String,
   },
   setup(props) {
-    const color = ref(props.chartColor);
+    const chartRef = ref<typeof VueApexCharts | null>(null);
+    let chart: ApexOptions = {};
+    const store = useThemeStore();
 
-    const baseColor = getCSSVariableValue("--bs-" + color.value);
-    const lightColor = getCSSVariableValue("--bs-light-" + color.value);
-    const labelColor = getCSSVariableValue("--bs-" + "gray-700");
+    const series = ref([74]);
 
-    const chartOptions = {
-      chart: {
-        fontFamily: "inherit",
-        height: props.chartHeight,
-        type: "radialBar",
-      },
-      plotOptions: {
-        radialBar: {
-          hollow: {
-            margin: 0,
-            size: "65%",
-          },
-          dataLabels: {
-            showOn: "always",
-            name: {
-              show: false,
-              fontWeight: "700",
-            },
-            value: {
-              color: labelColor,
-              fontSize: "30px",
-              fontWeight: "700",
-              offsetY: 12,
-              show: true,
-              formatter: function (val) {
-                return val + "%";
-              },
-            },
-          },
-          track: {
-            background: lightColor,
-            strokeWidth: "100%",
-          },
-        },
-      },
-      colors: [baseColor],
-      stroke: {
-        lineCap: "round",
-      },
-      labels: ["Progress"],
+    const themeMode = computed(() => {
+      return store.mode;
+    });
+
+    onBeforeMount(() => {
+      Object.assign(chart, chartOptions(props.chartColor, props.chartHeight));
+    });
+
+    const refreshChart = () => {
+      if (!chartRef.value) {
+        return;
+      }
+
+      Object.assign(chart, chartOptions(props.chartColor, props.chartHeight));
+
+      chartRef.value.refresh();
     };
 
-    const series = [74];
+    watch(themeMode, () => {
+      refreshChart();
+    });
 
     return {
+      chart,
       series,
-      chartOptions,
+      chartRef,
+      getAssetPath,
     };
   },
 });
+
+const chartOptions = (
+  color: string = "primary",
+  height: string = "auto"
+): ApexOptions => {
+  const baseColor = getCSSVariableValue(`--bs-${color}`);
+  const lightColor = getCSSVariableValue(`--bs-${color}-light`);
+  const labelColor = getCSSVariableValue("--bs-gray-700");
+
+  return {
+    chart: {
+      fontFamily: "inherit",
+      height: height,
+      type: "radialBar",
+    },
+    plotOptions: {
+      radialBar: {
+        hollow: {
+          margin: 0,
+          size: "65%",
+        },
+        dataLabels: {
+          show: true,
+          name: {
+            show: false,
+            fontWeight: "700",
+          },
+          value: {
+            color: labelColor,
+            fontSize: "30px",
+            fontWeight: "700",
+            offsetY: 12,
+            show: true,
+            formatter: function (val) {
+              return val + "%";
+            },
+          },
+        },
+        track: {
+          background: lightColor,
+          strokeWidth: "100%",
+        },
+      },
+    },
+    colors: [baseColor],
+    stroke: {
+      lineCap: "round",
+    },
+    labels: ["Progress"],
+  };
+};
 </script>

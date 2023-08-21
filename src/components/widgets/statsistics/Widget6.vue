@@ -6,15 +6,15 @@
       <a
         href="#"
         :class="`text-${color}`"
-        class="card-title fw-bolder fs-5 mb-3 d-block"
+        class="card-title fw-bold fs-5 mb-3 d-block"
       >
         {{ description }}
       </a>
 
       <div class="py-1">
-        <span class="text-dark fs-1 fw-bolder me-2">{{ progress }}</span>
+        <span class="text-dark fs-1 fw-bold me-2">{{ progress }}</span>
 
-        <span class="fw-bold text-muted fs-7">{{ title }}</span>
+        <span class="fw-semobold text-muted fs-7">{{ title }}</span>
       </div>
 
       <div :class="`bg-${color}`" class="progress h-7px bg-opacity-50 mt-7">
@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -47,5 +48,10 @@ export default defineComponent({
     title: String,
   },
   components: {},
+  setup() {
+    return {
+      getAssetPath,
+    };
+  },
 });
 </script>

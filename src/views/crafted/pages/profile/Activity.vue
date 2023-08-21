@@ -5,11 +5,12 @@
     <div class="card-header card-header-stretch">
       <!--begin::Title-->
       <div class="card-title d-flex align-items-center">
-        <span class="svg-icon svg-icon-1 svg-icon-primary me-3 lh-0">
-          <inline-svg src="media/icons/duotune/general/gen014.svg" />
-        </span>
+        <KTIcon
+          icon-name="calendar-8"
+          icon-class="fs-1 text-primary me-3 lh-0"
+        />
 
-        <h3 class="fw-bolder m-0 text-gray-800">Jan 23, 2021</h3>
+        <h3 class="fw-bold m-0 text-gray-800">Jan 23, 2021</h3>
       </div>
       <!--end::Title-->
 
@@ -17,18 +18,13 @@
       <div class="card-toolbar m-0">
         <!--begin::Tab nav-->
         <ul
-          class="nav nav-tabs nav-line-tabs nav-stretch fs-6 border-0 fw-bolder"
+          class="nav nav-tabs nav-line-tabs nav-stretch fs-6 border-0 fw-bold"
           role="tablist"
         >
           <li class="nav-item" role="presentation">
             <a
               id="kt_activity_today_tab"
-              class="
-                nav-link
-                justify-content-center
-                text-active-gray-800
-                active
-              "
+              class="nav-link justify-content-center text-active-gray-800 active"
               data-bs-toggle="tab"
               role="tab"
               href="#kt_activity_today"
@@ -61,11 +57,7 @@
           <li class="nav-item" role="presentation">
             <a
               id="kt_activity_year_tab"
-              class="
-                nav-link
-                justify-content-center
-                text-active-gray-800 text-hover-gray-800
-              "
+              class="nav-link justify-content-center text-active-gray-800 text-hover-gray-800"
               data-bs-toggle="tab"
               role="tab"
               href="#kt_activity_year"
@@ -171,18 +163,19 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import KTActivityItem1 from "@/layout/header/partials/activity-timeline/Item1.vue";
-import KTActivityItem2 from "@/layout/header/partials/activity-timeline/Item2.vue";
-import KTActivityItem3 from "@/layout/header/partials/activity-timeline/Item3.vue";
-import KTActivityItem4 from "@/layout/header/partials/activity-timeline/Item4.vue";
-import KTActivityItem5 from "@/layout/header/partials/activity-timeline/Item5.vue";
-import KTActivityItem6 from "@/layout/header/partials/activity-timeline/Item6.vue";
-import KTActivityItem7 from "@/layout/header/partials/activity-timeline/Item7.vue";
-import KTActivityItem8 from "@/layout/header/partials/activity-timeline/Item8.vue";
+import KTActivityItem1 from "@/components/activity-timeline-items/Item1.vue";
+import KTActivityItem2 from "@/components/activity-timeline-items/Item2.vue";
+import KTActivityItem3 from "@/components/activity-timeline-items/Item3.vue";
+import KTActivityItem4 from "@/components/activity-timeline-items/Item4.vue";
+import KTActivityItem5 from "@/components/activity-timeline-items/Item5.vue";
+import KTActivityItem6 from "@/components/activity-timeline-items/Item6.vue";
+import KTActivityItem7 from "@/components/activity-timeline-items/Item7.vue";
+import KTActivityItem8 from "@/components/activity-timeline-items/Item8.vue";
 
 export default defineComponent({
-  name: "activity",
+  name: "profile-activity",
   components: {
     KTActivityItem1,
     KTActivityItem2,
@@ -192,6 +185,11 @@ export default defineComponent({
     KTActivityItem6,
     KTActivityItem7,
     KTActivityItem8,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

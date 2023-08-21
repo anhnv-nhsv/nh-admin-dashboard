@@ -1,99 +1,80 @@
 <template>
-  <div class="d-flex flex-column flex-column-fluid">
+  <div class="d-flex flex-column flex-center flex-column-fluid">
     <!--begin::Content-->
-    <div class="d-flex flex-column flex-column-fluid text-center p-10 py-lg-15">
-      <!--begin::Logo-->
-      <router-link to="/dashboard" class="mb-10 pt-lg-10">
-        <img alt="Logo" src="/media/logos/logo-1.svg" class="h-40px mb-5" />
-      </router-link>
-      <!--end::Logo-->
-
+    <div class="d-flex flex-column flex-center text-center p-10">
       <!--begin::Wrapper-->
-      <div class="pt-lg-10 mb-10">
-        <!--begin::Logo-->
-        <h1 class="fw-bolder fs-4x text-gray-800 mb-10">System Error</h1>
-        <!--end::Logo-->
-
-        <!--begin::Message-->
-        <div class="fw-bold fs-3 text-muted mb-15">
-          Something went wrong! <br />
-          Please try again later.
+      <div class="card card-flush w-lg-650px py-5">
+        <div class="card-body py-15 py-lg-20">
+          <!--begin::Title-->
+          <h1 class="fw-bolder fs-2qx text-gray-900 mb-4">System Error</h1>
+          <!--end::Title-->
+          <!--begin::Text-->
+          <div class="fw-semibold fs-6 text-gray-500 mb-7">
+            Something went wrong! Please try again later.
+          </div>
+          <!--end::Text-->
+          <!--begin::Illustration-->
+          <div class="mb-11">
+            <img
+              :src="getAssetPath('media/auth/500-error.png')"
+              class="mw-100 mh-300px theme-light-show"
+              alt=""
+            />
+            <img
+              :src="getAssetPath('media/auth/500-error-dark.png')"
+              class="mw-100 mh-300px theme-dark-show"
+              alt=""
+            />
+          </div>
+          <!--end::Illustration-->
+          <!--begin::Link-->
+          <div class="mb-0">
+            <router-link to="/" class="btn btn-sm btn-primary"
+              >Return Home</router-link
+            >
+          </div>
+          <!--end::Link-->
         </div>
-        <!--end::Message-->
-
-        <!--begin::Action-->
-        <div class="text-center">
-          <router-link to="/dashboard" class="btn btn-lg btn-primary fw-bolder"
-            >Go to homepage</router-link
-          >
-        </div>
-        <!--end::Action-->
       </div>
       <!--end::Wrapper-->
-
-      <!--begin::Illustration-->
-      <div
-        class="
-          d-flex
-          flex-row-auto
-          bgi-no-repeat
-          bgi-position-x-center
-          bgi-size-contain
-          bgi-position-y-bottom
-          min-h-100px min-h-lg-350px
-        "
-        style="background-image: url(media/illustrations/sketchy-1/17.png"
-      ></div>
-      <!--end::Illustration-->
     </div>
     <!--end::Content-->
-
-    <!--begin::Footer-->
-    <div class="d-flex flex-center flex-column-auto p-10">
-      <!--begin::Links-->
-      <div class="d-flex align-items-center fw-bold fs-6">
-        <a
-          href="https://keenthemes.com"
-          class="text-muted text-hover-primary px-2"
-          >About</a
-        >
-
-        <a
-          href="mailto:support@keenthemes.com"
-          class="text-muted text-hover-primary px-2"
-          >Contact</a
-        >
-
-        <a
-          href="https://1.envato.market/EA4JP"
-          class="text-muted text-hover-primary px-2"
-          >Contact Us</a
-        >
-      </div>
-      <!--end::Links-->
-    </div>
-    <!--end::Footer-->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from "vue";
-import { useStore } from "vuex";
-import { Actions } from "@/store/enums/StoreEnums";
+import { getAssetPath, getIllustrationsPath } from "@/core/helpers/assets";
+import { defineComponent, onMounted } from "vue";
+import { useBodyStore } from "@/stores/body";
+import LayoutService from "@/core/services/LayoutService";
+import { themeMode } from "@/core/helpers/config";
 
 export default defineComponent({
   name: "error-500",
   components: {},
   setup() {
-    const store = useStore();
+    const bodyStore = useBodyStore();
+
+    const bgImage =
+      themeMode.value !== "dark"
+        ? getAssetPath("media/auth/bg1.jpg")
+        : getAssetPath("media/auth/bg1-dark.jpg");
 
     onMounted(() => {
-      store.dispatch(Actions.ADD_BODY_CLASSNAME, "bg-body");
+      LayoutService.emptyElementClassesAndAttributes(document.body);
+
+      bodyStore.addBodyClassname("bg-body");
+      bodyStore.addBodyAttribute({
+        qualifiedName: "style",
+        value: `background-image: url("${bgImage}")`,
+      });
     });
 
-    onUnmounted(() => {
-      store.dispatch(Actions.REMOVE_BODY_CLASSNAME, "bg-body");
-    });
+    return {
+      getIllustrationsPath,
+      bgImage,
+      getAssetPath,
+    };
   },
 });
 </script>

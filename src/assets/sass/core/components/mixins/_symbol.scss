@@ -22,7 +22,7 @@
         > img {
             width: $size;
             height: $size;
-            max-width: auto;
+            max-width: none;
         }
     }
 
@@ -30,13 +30,13 @@
     &.symbol-2by3 {
         .symbol-label {
             height: $size;
-            width:  $size * 3/2;
+            width:  $size * divide(3, 2);
         }
 
         > img {
             height: $size;
-            width:  $size * 3/2;
-            max-width: auto;
+            width:  $size * divide(3, 2);
+            max-width: none;
         }
     }
 }

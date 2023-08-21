@@ -4,9 +4,9 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Latest Orders</span>
+        <span class="card-label fw-bold fs-3 mb-1">Latest Orders</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7"
+        <span class="text-muted mt-1 fw-semobold fs-7"
           >More than 100 new orders</span
         >
       </h3>
@@ -14,14 +14,7 @@
         <ul class="nav">
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                active
-                fw-bolder
-                px-4
-                me-1
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary active fw-bold px-4 me-1"
               data-bs-toggle="tab"
               href="#kt_table_widget_7_tab_1"
               >Month</a
@@ -30,13 +23,7 @@
 
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                fw-bolder
-                px-4
-                me-1
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4 me-1"
               data-bs-toggle="tab"
               href="#kt_table_widget_7_tab_2"
               >Week</a
@@ -45,12 +32,7 @@
 
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                fw-bolder
-                px-4
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4"
               data-bs-toggle="tab"
               href="#kt_table_widget_7_tab_3"
               >Day</a
@@ -96,57 +78,43 @@
                             :class="`bg-light-${item1.icon.color}`"
                             class="symbol-label"
                           >
-                            <span
-                              :class="`svg-icon-${item1.icon.color}`"
-                              class="svg-icon svg-icon-2x"
-                            >
-                              <inline-svg :src="item1.icon.file" />
-                            </span>
+                            <KTIcon
+                              :icon-name="item1.icon.file"
+                              :icon-class="`text-${item1.icon.color} fs-2x`"
+                            />
                           </span>
                         </div>
                       </td>
                       <td>
                         <a
                           href="#"
-                          class="
-                            text-dark
-                            fw-bolder
-                            text-hover-primary
-                            mb-1
-                            fs-6
-                          "
+                          class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                           >{{ item1.info.title }}</a
                         >
-                        <span class="text-muted fw-bold d-block fs-7">{{
+                        <span class="text-muted fw-semobold d-block fs-7">{{
                           item1.info.description
                         }}</span>
                       </td>
                       <td class="text-end">
-                        <span class="text-muted fw-bold d-block fs-8"
+                        <span class="text-muted fw-semobold d-block fs-8"
                           >Ordered</span
                         >
 
-                        <span class="text-dark fw-bolder d-block fs-7">{{
+                        <span class="text-dark fw-bold d-block fs-7">{{
                           item1.date
                         }}</span>
                       </td>
                       <td class="text-end">
                         <span
                           :class="`badge-light-${item1.badge.color}`"
-                          class="badge fs-7 fw-bolder"
+                          class="badge fs-7 fw-bold"
                           >{{ item1.badge.label }}</span
                         >
                       </td>
                       <td class="text-end">
                         <a
                           href="#"
-                          class="
-                            btn
-                            btn-sm
-                            btn-icon
-                            btn-bg-light
-                            btn-active-color-primary
-                          "
+                          class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary"
                         >
                           <i class="bi bi-three-dots fs-5"></i>
                         </a>
@@ -182,7 +150,7 @@ export default defineComponent({
       [
         {
           icon: {
-            file: "media/icons/duotune/coding/cod002.svg",
+            file: "scroll",
             color: "success",
           },
           info: {
@@ -197,7 +165,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/general/gen024.svg",
+            file: "category",
             color: "danger",
           },
           info: {
@@ -212,7 +180,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/maps/map004.svg",
+            file: "compass",
             color: "primary",
           },
           info: {
@@ -227,7 +195,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/abstract/abs027.svg",
+            file: "abstract-26",
             color: "warning",
           },
           info: {
@@ -242,7 +210,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/art/art007.svg",
+            file: "bucket",
             color: "info",
           },
           info: {
@@ -260,7 +228,7 @@ export default defineComponent({
       [
         {
           icon: {
-            file: "media/icons/duotune/abstract/abs042.svg",
+            file: "abstract-41",
             color: "info",
           },
           info: {
@@ -275,7 +243,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/general/gen024.svg",
+            file: "category",
             color: "danger",
           },
           info: {
@@ -290,7 +258,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/abstract/abs027.svg",
+            file: "abstract-26",
             color: "warning",
           },
           info: {
@@ -308,7 +276,7 @@ export default defineComponent({
       [
         {
           icon: {
-            file: "media/icons/duotune/ecommerce/ecm002.svg",
+            file: "package",
             color: "success",
           },
           info: {
@@ -323,7 +291,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/general/gen024.svg",
+            file: "category",
             color: "danger",
           },
           info: {
@@ -338,7 +306,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/abstract/abs027.svg",
+            file: "abstract-26",
             color: "warning",
           },
           info: {
@@ -353,7 +321,7 @@ export default defineComponent({
         },
         {
           icon: {
-            file: "media/icons/duotune/abstract/abs042.svg",
+            file: "abstract-41",
             color: "info",
           },
           info: {

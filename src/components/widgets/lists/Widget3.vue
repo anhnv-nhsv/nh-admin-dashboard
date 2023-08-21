@@ -3,7 +3,7 @@
   <div class="card" :class="widgetClasses">
     <!--begin::Header-->
     <div class="card-header border-0">
-      <h3 class="card-title fw-bolder text-dark">Todo</h3>
+      <h3 class="card-title fw-bold text-dark">Todo</h3>
 
       <div class="card-toolbar">
         <!--begin::Menu-->
@@ -14,9 +14,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown2></Dropdown2>
         <!--end::Menu-->
@@ -47,19 +45,15 @@
 
           <!--begin::Description-->
           <div class="flex-grow-1">
-            <a
-              href="#"
-              class="text-gray-800 text-hover-primary fw-bolder fs-6"
-              >{{ item.title }}</a
-            >
+            <a href="#" class="text-gray-800 text-hover-primary fw-bold fs-6">{{
+              item.title
+            }}</a>
 
-            <span class="text-muted fw-bold d-block">{{ item.text }}</span>
+            <span class="text-muted fw-semobold d-block">{{ item.text }}</span>
           </div>
           <!--end::Description-->
 
-          <span
-            class="badge fs-8 fw-bolder"
-            :class="`badge-light-${item.color}`"
+          <span class="badge fs-8 fw-bold" :class="`badge-light-${item.color}`"
             >New</span
           >
         </div>
@@ -72,9 +66,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent, ref } from "vue";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
-import { MenuComponent } from "@/assets/ts/components/MenuComponent";
 
 export default defineComponent({
   name: "kt-widget-3",
@@ -85,10 +79,6 @@ export default defineComponent({
     widgetClasses: String,
   },
   setup() {
-    onMounted(() => {
-      MenuComponent.reinitialization();
-    });
-
     const list = ref([
       {
         color: "success",
@@ -124,6 +114,7 @@ export default defineComponent({
 
     return {
       list,
+      getAssetPath,
     };
   },
 });

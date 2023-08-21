@@ -4,13 +4,13 @@
     <!--begin::Heading-->
     <div class="pb-10 pb-lg-15">
       <!--begin::Title-->
-      <h2 class="fw-bolder text-dark">Account Info</h2>
+      <h2 class="fw-bold text-dark">Account Info</h2>
       <!--end::Title-->
 
       <!--begin::Notice-->
-      <div class="text-gray-400 fw-bold fs-6">
+      <div class="text-gray-400 fw-semobold fs-6">
         If you need more info, please check out
-        <a href="#" class="link-primary fw-bolder">Help Page</a>.
+        <a href="#" class="link-primary fw-bold">Help Page</a>.
       </div>
       <!--end::Notice-->
     </div>
@@ -23,7 +23,7 @@
         Specify Team Size
         <i
           class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="tooltip"
+          v-tooltip
           title="Provide your team size to help us setup your billing"
         ></i>
       </label>
@@ -34,20 +34,18 @@
         <!--begin::Col-->
         <div class="col">
           <!--begin::Option-->
+          <Field
+            type="radio"
+            class="btn-check"
+            id="accountTeamSize1"
+            name="accountTeamSize"
+            value="1-1"
+          />
           <label
-            class="
-              btn btn-outline btn-outline-dashed btn-outline-default
-              w-100
-              p-4
-            "
+            class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
+            for="accountTeamSize1"
           >
-            <Field
-              type="radio"
-              class="btn-check"
-              name="accountTeamSize"
-              value="1-1"
-            />
-            <span class="fw-bolder fs-3">1-1</span>
+            <span class="fw-bold fs-3">1-1</span>
           </label>
           <!--end::Option-->
         </div>
@@ -56,21 +54,18 @@
         <!--begin::Col-->
         <div class="col">
           <!--begin::Option-->
+          <Field
+            type="radio"
+            class="btn-check"
+            name="accountTeamSize"
+            id="accountTeamSize2"
+            value="2-10"
+          />
           <label
-            class="
-              btn btn-outline btn-outline-dashed btn-outline-default
-              w-100
-              p-4
-              active
-            "
+            class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
+            for="accountTeamSize2"
           >
-            <Field
-              type="radio"
-              class="btn-check"
-              name="accountTeamSize"
-              value="2-10"
-            />
-            <span class="fw-bolder fs-3">2-10</span>
+            <span class="fw-bold fs-3">2-10</span>
           </label>
           <!--end::Option-->
         </div>
@@ -79,20 +74,18 @@
         <!--begin::Col-->
         <div class="col">
           <!--begin::Option-->
+          <Field
+            type="radio"
+            class="btn-check"
+            name="accountTeamSize"
+            id="accountTeamSize3"
+            value="10-50"
+          />
           <label
-            class="
-              btn btn-outline btn-outline-dashed btn-outline-default
-              w-100
-              p-4
-            "
+            class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
+            for="accountTeamSize3"
           >
-            <Field
-              type="radio"
-              class="btn-check"
-              name="accountTeamSize"
-              value="10-50"
-            />
-            <span class="fw-bolder fs-3">10-50</span>
+            <span class="fw-bold fs-3">10-50</span>
           </label>
           <!--end::Option-->
         </div>
@@ -101,21 +94,19 @@
         <!--begin::Col-->
         <div class="col">
           <!--begin::Option-->
+          <Field
+            type="radio"
+            class="btn-check"
+            name="accountTeamSize"
+            id="accountTeamSize4"
+            checked
+            value="50+"
+          />
           <label
-            class="
-              btn btn-outline btn-outline-dashed btn-outline-default
-              w-100
-              p-4
-            "
+            class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4"
+            for="accountTeamSize4"
           >
-            <Field
-              type="radio"
-              class="btn-check"
-              name="accountTeamSize"
-              checked
-              value="50+"
-            />
-            <span class="fw-bolder fs-3">50+</span>
+            <span class="fw-bold fs-3">50+</span>
           </label>
           <!--end::Option-->
         </div>
@@ -142,8 +133,6 @@
         type="text"
         class="form-control form-control-lg form-control-solid"
         name="accountName"
-        placeholder=""
-        value=""
       />
       <ErrorMessage
         name="accountName"
@@ -160,7 +149,7 @@
         Select Account Plan
         <i
           class="fas fa-exclamation-circle ms-2 fs-7"
-          data-bs-toggle="tooltip"
+          v-tooltip
           title="Monthly billing will be based on your account plan"
         ></i>
       </label>
@@ -175,19 +164,17 @@
             <!--begin::Icon-->
             <span class="symbol symbol-50px me-6">
               <span class="symbol-label">
-                <span class="svg-icon svg-icon-1 svg-icon-gray-600">
-                  <inline-svg src="media/icons/duotune/finance/fin001.svg" />
-                </span>
+                <KTIcon icon-name="bank" icon-class="fs-1 text-gray-600" />
               </span>
             </span>
             <!--end::Icon-->
 
             <!--begin::Description-->
             <span class="d-flex flex-column">
-              <span class="fw-bolder text-gray-800 text-hover-primary fs-5"
+              <span class="fw-bold text-gray-800 text-hover-primary fs-5"
                 >Company Account</span
               >
-              <span class="fs-6 fw-bold text-gray-400"
+              <span class="fs-6 fw-semobold text-gray-400"
                 >Use images to enhance your post flow</span
               >
             </span>
@@ -215,19 +202,17 @@
             <!--begin::Icon-->
             <span class="symbol symbol-50px me-6">
               <span class="symbol-label">
-                <span class="svg-icon svg-icon-1 svg-icon-gray-600">
-                  <inline-svg src="media/icons/duotune/graphs/gra006.svg" />
-                </span>
+                <KTIcon icon-name="chart" icon-class="fs-1 text-gray-600" />
               </span>
             </span>
             <!--end::Icon-->
 
             <!--begin::Description-->
             <span class="d-flex flex-column">
-              <span class="fw-bolder text-gray-800 text-hover-primary fs-5"
+              <span class="fw-bold text-gray-800 text-hover-primary fs-5"
                 >Developer Account</span
               >
-              <span class="fs-6 fw-bold text-gray-400"
+              <span class="fs-6 fw-semobold text-gray-400"
                 >Use images to your post time</span
               >
             </span>
@@ -256,19 +241,20 @@
             <!--begin::Icon-->
             <span class="symbol symbol-50px me-6">
               <span class="symbol-label">
-                <span class="svg-icon svg-icon-1 svg-icon-gray-600">
-                  <inline-svg src="media/icons/duotune/graphs/gra008.svg" />
-                </span>
+                <KTIcon
+                  icon-name="chart-pie-4"
+                  icon-class="fs-1 text-gray-600"
+                />
               </span>
             </span>
             <!--end::Icon-->
 
             <!--begin::Description-->
             <span class="d-flex flex-column">
-              <span class="fw-bolder text-gray-800 text-hover-primary fs-5"
+              <span class="fw-bold text-gray-800 text-hover-primary fs-5"
                 >Testing Account</span
               >
-              <span class="fs-6 fw-bold text-gray-400"
+              <span class="fs-6 fw-semobold text-gray-400"
                 >Use images to enhance time travel rivers</span
               >
             </span>
@@ -297,14 +283,20 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
-import { Field, ErrorMessage } from "vee-validate";
+import { ErrorMessage, Field } from "vee-validate";
 
 export default defineComponent({
   name: "step-2",
   components: {
     Field,
     ErrorMessage,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

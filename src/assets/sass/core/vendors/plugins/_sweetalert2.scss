@@ -14,14 +14,14 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown):not(.modal-open
 
 // Popup
 .swal2-popup {
-	background-color: $body-bg;
+	background-color: var(--#{$prefix}body-bg);
 	padding: 2rem;
 	@include border-radius($border-radius);
 
 	.swal2-title {
 		font-weight: 500;
 		font-size: 1.3rem;
-		color: $dark;
+		color: var(--#{$prefix}dark);
 	}
 
 	.swal2-html-container,
@@ -29,7 +29,7 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown):not(.modal-open
 		font-weight: normal;
 		font-size: 1.1rem;
 		margin-top: 1.5rem;
-		color: $gray-800;
+		color: var(--#{$prefix}gray-800);
 	}
 
 	.btn {
@@ -52,7 +52,7 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown):not(.modal-open
 	overflow-y: hidden !important;
 
 	&.swal2-shown {
-		background-color: rgba(0, 0, 0, 0.2);
+		background-color: rgba($black, 0.2);
 	}
 
 	// Content
@@ -70,43 +70,43 @@ body.swal2-height-auto {
 .swal2-icon {
 	// Warning
 	&.swal2-warning {
-    	border-color: $warning;
-    	color: $warning;
+    	border-color: var(--#{$prefix}warning);
+    	color: var(--#{$prefix}warning);
 	}
 
 	// Error
 	&.swal2-error {
-    	border-color: $danger;
-    	color: $danger;
+    	border-color: var(--#{$prefix}danger);
+    	color: var(--#{$prefix}danger);
 
 		[class^=swal2-x-mark-line] {
-			background-color: rgba($danger, 0.75);
+			background-color: rgba(var(--#{$prefix}danger-rgb), 0.75);
 		}
 	}
 
 	// Success
 	&.swal2-success {
-    	border-color: $success;
-    	color: $success;
+    	border-color: var(--#{$prefix}success);
+    	color: var(--#{$prefix}success);
 
 		[class^=swal2-success-line] {
-			background-color: $success;
+			background-color: var(--#{$prefix}success);
 		}
 
 		.swal2-success-ring {
-			border-color: rgba($success, 0.3);
+			border-color: rgba(var(--#{$prefix}success-rgb), 0.3);
 		}
 	}
 
 	// Info
 	&.swal2-info {
-    	border-color: $info;
-    	color: $info;
+    	border-color: var(--#{$prefix}info);
+    	color: var(--#{$prefix}info);
 	}
 
 	// Question
 	&.swal2-question {
-    	border-color: $primary;
-    	color: $primary;
+    	border-color: var(--#{$prefix}primary);
+    	color: var(--#{$prefix}primary);
 	}
 }

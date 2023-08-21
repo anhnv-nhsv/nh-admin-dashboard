@@ -1,59 +1,71 @@
-import LayoutConfigTypes from "@/core/config/LayoutConfigTypes";
+import type LayoutConfigTypes from "@/core/config/LayoutConfigTypes";
 
 const config: LayoutConfigTypes = {
-  themeName: "Metronic",
-  themeVersion: "8.0.25",
-  demo: "demo1",
-  main: {
-    type: "default",
-    primaryColor: "#009EF7",
-    logo: {
-      // dark: "media/logos/logo-1-dark.svg",
-      // light: "media/logos/logo-1.svg",
-      dark: "media/logos/nhsv_logo.png",
-      light: "media/logos/nhsv_logo.png",
-    },
-  },
-  loader: {
-    // logo: "media/logos/logo-1-dark.svg",
-    logo: "media/logos/nhsv_logo.png",
-    display: true,
-    type: "default",
-  },
-  scrollTop: {
-    display: true,
+  general: {
+    mode: "system",
+    primaryColor: "#50CD89",
+    pageWidth: "default",
+    layout: "dark-sidebar",
+    iconsType: "duotone",
   },
   header: {
     display: true,
-    menuIcon: "font",
-    width: "fluid",
-    fixed: {
-      desktop: true,
-      tabletAndMobile: true,
+    default: {
+      container: "fluid",
+      fixed: {
+        desktop: true,
+        mobile: false,
+      },
+      menu: {
+        display: true,
+        iconType: "keenthemes",
+      },
+    },
+  },
+  sidebar: {
+    display: true,
+    default: {
+      minimize: {
+        desktop: {
+          enabled: true,
+          default: false,
+          hoverable: true,
+        },
+      },
+      menu: {
+        iconType: "keenthemes",
+      },
     },
   },
   toolbar: {
     display: true,
-    width: "fluid",
+    container: "fluid",
     fixed: {
-      desktop: true,
-      tabletAndMobile: true,
+      desktop: false,
+      mobile: false,
     },
   },
-  aside: {
+  pageTitle: {
     display: true,
-    theme: "dark",
-    fixed: true,
-    menuIcon: "svg",
-    minimized: false,
-    minimize: true,
-    hoverable: true,
+    breadcrumb: true,
+    direction: "column",
   },
   content: {
-    width: "fixed",
+    container: "fluid",
   },
   footer: {
-    width: "fluid",
+    display: true,
+    container: "fluid",
+    fixed: {
+      desktop: false,
+      mobile: false,
+    },
+  },
+  illustrations: {
+    set: "sketchy-1",
+  },
+  scrolltop: {
+    display: true,
   },
 };
 
