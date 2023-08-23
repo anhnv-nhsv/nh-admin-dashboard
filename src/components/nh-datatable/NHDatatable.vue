@@ -40,9 +40,77 @@
             "
             :label="item.label"
           >
-            <template #default="scope" v-if="item?.hasOwnProperty('prop')">{{
-              scope.row[item.prop]
-            }}</template>
+            <template #default="scope" v-if="item?.hasOwnProperty('prop')">
+              <template v-if="item.prop === 'uriPage'">
+                <img
+                  :src="scope.row.uriPage"
+                  :alt="scope.row.fromIP"
+                  class="table-img"
+                />
+              </template>
+              <template v-if="item.prop === 'action'">
+                <el-popover
+                  placement="bottom"
+                  :visible="openPop"
+                  hide-after="10"
+                  width="320px"
+                >
+                  <template #reference>
+                    <el-button
+                      @click="handleEditRowPage(scope.$index, scope.row)"
+                      >Edit</el-button
+                    >
+                  </template>
+                  <div>
+                    <div>
+                      <div>
+                        <div class="text-gray-600">Parent</div>
+                        <el-input
+                          v-model="scope.row.clientUserName"
+                          placeholder="Enter Parent"
+                        />
+                      </div>
+                      <div class="mt-4">
+                        <div class="text-gray-600">Tên</div>
+                        <el-input
+                          v-model="scope.row.fromIP"
+                          placeholder="Enter Name"
+                        />
+                      </div>
+                      <div class="mt-4">
+                        <div class="text-gray-600">Hình Ảnh</div>
+                        <el-input
+                          v-model="scope.row.uriPage"
+                          placeholder="Enter Image"
+                        />
+                      </div>
+                    </div>
+                    <div class="mt-3 text-end">
+                      <el-button type="">Cancel</el-button>
+                      <el-button
+                        @click="onSubmitPage(scope.row)"
+                        type="submit"
+                        class="btn-primary"
+                        color="#009ef7"
+                        >Update</el-button
+                      >
+                    </div>
+                  </div>
+                </el-popover>
+                <el-popconfirm
+                  title="Are you sure to delete this?"
+                  icon-color="#626AEF"
+                  hide-after="10"
+                  @confirm="handleDeleteRowPage(scope.$index)"
+                >
+                  <template #reference>
+                    <el-button size="small" type="danger">Delete</el-button>
+                  </template>
+                </el-popconfirm>
+              </template>
+              {{ scope.row[item.prop] }}
+            </template>
+
             <template v-if="item?.hasOwnProperty('children')">
               <el-table-column
                 :show-overflow-tooltip="showOverflowTooltip"
@@ -61,12 +129,6 @@
             </template>
           </el-table-column>
         </template>
-        <!-- <el-table-column label="Actions">
-          <template>
-            <el-button type="text" size="small">Edit</el-button>
-            <el-button type="text" size="small">Delete</el-button>
-          </template>
-        </el-table-column> -->
       </el-table>
     </div>
 
@@ -147,6 +209,7 @@ export default defineComponent({
   },
   components: {},
   setup(props, ctx) {
+    let openPop = ref(false);
     let data = ref(props.tableData);
     let getItems = ref(JSON.parse(JSON.stringify(data.value)));
     const paginationData = ref(props.pagination);
@@ -156,6 +219,24 @@ export default defineComponent({
     let currentRow = ref();
     const pageSizeList = ref([10, 20, 50, 100, 200, 500, 1000]);
     const store = useThemeStore();
+    console.log("multipleSelection: ", multipleSelection);
+
+    const handleEditRowPage = (index: number, row) => {
+      const id = row.id;
+      console.log("id: ", id);
+      console.log("index: ", index + 1);
+      if (id === index + 1) {
+        openPop.value = !openPop.value;
+      }
+    };
+
+    const handleDeleteRowPage = (index: number) => {
+      getItems.value.splice(index, 1);
+    };
+
+    const onSubmitPage = (value) => {
+      console.log("submit", JSON.parse(JSON.stringify(value)));
+    };
 
     watch(
       () => props.tableData,
@@ -207,7 +288,11 @@ export default defineComponent({
       multipleSelection,
       pageSizeList,
       pages,
+      openPop,
       themeMode,
+      handleEditRowPage,
+      handleDeleteRowPage,
+      onSubmitPage,
       handleCurrentChange,
       setCurrent,
       setCurrentPageSize,
@@ -227,6 +312,13 @@ export default defineComponent({
   max-width: none !important;
   border-collapse: separate !important;
   border-spacing: 0;
+}
+
+.table-img {
+  width: 100%;
+  border-radius: 8px;
+  position: relative;
+  object-fit: contain;
 }
 
 :deep(.cell) {

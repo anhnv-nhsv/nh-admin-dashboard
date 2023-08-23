@@ -101,12 +101,12 @@ export default defineComponent({
       },
       {
         label: "Hình ảnh",
-        prop: "apiUri",
+        prop: "uriPage",
         visible: true,
       },
       {
         label: "Actions",
-        prop: "message",
+        prop: "action",
         visible: true,
       },
     ]);
@@ -137,7 +137,6 @@ export default defineComponent({
       const requestStatisticsResponse = JSON.parse(
         JSON.stringify(store.statisticResp)
       );
-      console.log("requestStatisticsResponse: ", requestStatisticsResponse);
 
       dataRequestStatistics.value = pageArray;
       pagination.value = {
