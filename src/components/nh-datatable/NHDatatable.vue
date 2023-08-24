@@ -51,7 +51,7 @@
               <template v-if="item.prop === 'action'">
                 <el-popover
                   placement="bottom"
-                  :visible="openPop"
+                  :visible="idEdit === scope.row.id && openPop"
                   hide-after="10"
                   width="320px"
                 >
@@ -61,41 +61,11 @@
                       >Edit</el-button
                     >
                   </template>
-                  <div>
-                    <div>
-                      <div>
-                        <div class="text-gray-600">Parent</div>
-                        <el-input
-                          v-model="scope.row.clientUserName"
-                          placeholder="Enter Parent"
-                        />
-                      </div>
-                      <div class="mt-4">
-                        <div class="text-gray-600">Tên</div>
-                        <el-input
-                          v-model="scope.row.fromIP"
-                          placeholder="Enter Name"
-                        />
-                      </div>
-                      <div class="mt-4">
-                        <div class="text-gray-600">Hình Ảnh</div>
-                        <el-input
-                          v-model="scope.row.uriPage"
-                          placeholder="Enter Image"
-                        />
-                      </div>
-                    </div>
-                    <div class="mt-3 text-end">
-                      <el-button type="">Cancel</el-button>
-                      <el-button
-                        @click="onSubmitPage(scope.row)"
-                        type="submit"
-                        class="btn-primary"
-                        color="#009ef7"
-                        >Update</el-button
-                      >
-                    </div>
-                  </div>
+                  <EditPage
+                    :dataRow="scope.row"
+                    @toggle="handleOnToggle"
+                    @submit-page="onSubmitPage"
+                  />
                 </el-popover>
                 <el-popconfirm
                   title="Are you sure to delete this?"
@@ -181,6 +151,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch, toRaw } from "vue";
 import { useThemeStore } from "@/stores/theme";
+import EditPage from "@/views/apps/page-management/components/EditPage.vue";
 
 export default defineComponent({
   name: "nh-datatable",
@@ -207,9 +178,12 @@ export default defineComponent({
     showOverflowTooltip: { type: Boolean, required: false, default: false },
     userRole: { type: String, required: false, default: "none" },
   },
-  components: {},
+  components: {
+    EditPage,
+  },
   setup(props, ctx) {
     let openPop = ref(false);
+    let idEdit = ref();
     let data = ref(props.tableData);
     let getItems = ref(JSON.parse(JSON.stringify(data.value)));
     const paginationData = ref(props.pagination);
@@ -221,13 +195,14 @@ export default defineComponent({
     const store = useThemeStore();
     console.log("multipleSelection: ", multipleSelection);
 
-    const handleEditRowPage = (index: number, row) => {
+    const handleEditRowPage = (_, row) => {
       const id = row.id;
-      console.log("id: ", id);
-      console.log("index: ", index + 1);
-      if (id === index + 1) {
-        openPop.value = !openPop.value;
-      }
+      idEdit.value = id;
+      openPop.value = !openPop.value;
+    };
+
+    const handleOnToggle = (val) => {
+      openPop.value = val || false;
     };
 
     const handleDeleteRowPage = (index: number) => {
@@ -286,11 +261,13 @@ export default defineComponent({
       getItems,
       isEmptyTableData,
       multipleSelection,
+      idEdit,
       pageSizeList,
       pages,
       openPop,
       themeMode,
       handleEditRowPage,
+      handleOnToggle,
       handleDeleteRowPage,
       onSubmitPage,
       handleCurrentChange,

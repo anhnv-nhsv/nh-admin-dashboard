@@ -2,46 +2,76 @@
   <div class="card">
     <div class="card-header border-0 pt-6">
       <div class="card-title">
-        <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
-          <div
-            class="col-md-3 d-flex align-items-center position-relative my-1"
-          >
-            <el-input
-              autofocus
-              v-model="formSearchData.username"
-              placeholder="Username"
-              clearable
-            />
-          </div>
-          <div
-            class="col-md-6 d-flex align-items-center position-relative my-1"
-          >
-            <el-date-picker
-              type="daterange"
-              range-separator="-"
-              start-placeholder="Start date"
-              end-placeholder="End date"
-              format="DD/MM/YYYY"
-              value-format="DD/MM/YYYY"
-              v-model="formSearchData.dateRange"
-            />
-          </div>
-          <div
-            class="col-md-3 d-flex align-items-center position-relative my-1"
-          >
-            <button
-              :data-kt-indicator="loading ? 'on' : null"
-              type="submit"
-              class="btn btn-primary"
-            >
-              <span v-if="!loading" class="indicator-label">Search</span>
-              <span v-if="loading" class="indicator-progress"
-                >Please wait...
-                <span
-                  class="spinner-border spinner-border-sm align-middle ms-2"
-                ></span
-              ></span>
-            </button>
+        <form
+          class="form row w-100"
+          autoComplete="on"
+          @submit.prevent="submitSearch"
+        >
+          <div class="row wrapper-header">
+            <div class="row">
+              <div class="col d-flex align-items-center">
+                <el-input
+                  autofocus
+                  v-model="formSearchData.username"
+                  style=""
+                  placeholder="Page"
+                  clearable
+                />
+              </div>
+              <div class="col d-flex align-items-center">
+                <el-select
+                  v-model="formSearchData.status"
+                  clearable
+                  placeholder="Status"
+                >
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </div>
+              <div class="col d-flex align-items-center">
+                <button
+                  :data-kt-indicator="loading ? 'on' : null"
+                  type="submit"
+                  class="btn btn-primary"
+                >
+                  <span v-if="!loading" class="indicator-label">Search</span>
+                  <span v-if="loading" class="indicator-progress"
+                    >Please wait...
+                    <span
+                      class="spinner-border spinner-border-sm align-middle ms-2"
+                    ></span
+                  ></span>
+                </button>
+              </div>
+            </div>
+            <div class="col d-flex align-items-center justify-content-end">
+              <el-button
+                @click="visible = true"
+                class="btn btn-primary btn-add"
+              >
+                Add
+              </el-button>
+              <el-dialog
+                v-model="visible"
+                title="Add Page"
+                width="30%"
+                align-center
+              >
+                <span>...</span>
+                <template #footer>
+                  <span class="dialog-footer">
+                    <el-button @click="visible = false">Cancel</el-button>
+                    <el-button type="primary" @click="visible = false">
+                      Confirm
+                    </el-button>
+                  </span>
+                </template>
+              </el-dialog>
+            </div>
           </div>
         </form>
       </div>
@@ -64,9 +94,10 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { useReqStatistic } from "@/stores/req-statistic";
-import moment from "moment/moment";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
-import { pageArray } from "./mock/index";
+import { pageArray, options } from "./mock/index";
+const value = ref("");
+const visible = ref(false);
 
 export default defineComponent({
   name: "page-management",
@@ -77,10 +108,7 @@ export default defineComponent({
     const store = useReqStatistic();
     const formSearchData = ref({
       username: "",
-      dateRange: [
-        moment().startOf("month").format("DD/MM/YYYY"),
-        moment().format("DD/MM/YYYY"),
-      ],
+      status: "",
     });
     const tableHeader = ref([
       {
@@ -117,8 +145,7 @@ export default defineComponent({
     async function getRequestStatistics(
       page?: number,
       username?: string,
-      fromDate?: string,
-      toDate?: string,
+      status?: string,
       pageSize = 10
     ) {
       console.log("call APsI");
@@ -126,10 +153,7 @@ export default defineComponent({
       await store.getReqStatistic({
         params: {
           username: username ? username : "",
-          fromDate: fromDate
-            ? fromDate
-            : moment().startOf("month").format("DD/MM/YYYY"),
-          toDate: toDate ? toDate : moment().format("DD/MM/YYYY"),
+          status: status ? status : "",
           page: page,
           pageSize: pageSize,
         },
@@ -154,8 +178,7 @@ export default defineComponent({
       getRequestStatistics(
         1,
         formData.username,
-        formData.dateRange ? formData.dateRange[0] : "",
-        formData.dateRange ? formData.dateRange[1] : "",
+        formData.status ? formData.status : "",
         pagination.value.pageSize
       );
     }
@@ -165,8 +188,7 @@ export default defineComponent({
       getRequestStatistics(
         page,
         formData.username,
-        formData.dateRange ? formData.dateRange[0] : "",
-        formData.dateRange ? formData.dateRange[1] : "",
+        formData.status ? formData.status : "",
         pagination.value.pageSize
       );
     }
@@ -178,8 +200,7 @@ export default defineComponent({
       getRequestStatistics(
         1,
         formData.username,
-        formData.dateRange ? formData.dateRange[0] : "",
-        formData.dateRange ? formData.dateRange[1] : "",
+        formData.status ? formData.status : "",
         pageSize
       );
     };
@@ -189,10 +210,13 @@ export default defineComponent({
     });
     return {
       dataRequestStatistics,
+      visible,
+      options,
       tableHeader,
       pagination,
       loading,
       formSearchData,
+      value,
       changePage,
       changePageSize,
       submitSearch,
@@ -201,4 +225,27 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.btn {
+  padding: 6px 20px !important;
+}
+
+.card-title {
+  width: 100%;
+}
+.my-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.dialog-footer button:first-child {
+  margin-right: 0;
+}
+.btn-add {
+  margin-left: -25px;
+}
+.wrapper-header {
+  flex-flow: row;
+}
+</style>

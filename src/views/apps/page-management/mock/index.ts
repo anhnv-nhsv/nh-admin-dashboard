@@ -23,3 +23,18 @@ export const pageArray = [
       "https://www.quanlynhanuoc.vn/wp-content/uploads/2022/11/image-nhung-dieu-thu-vi-ve-ngon-ngu-tai-vuong-quoc-anh-164906669525225.jpg",
   },
 ];
+
+export const options = [
+  {
+    value: "value1",
+    label: "Trạng thái 1",
+  },
+  {
+    value: "value2",
+    label: "Trạng thái 2",
+  },
+  {
+    value: "value3",
+    label: "Trạng thái 3",
+  },
+];
