@@ -27,14 +27,25 @@ export const pageArray = [
 export const options = [
   {
     value: "value1",
-    label: "Trạng thái 1",
+    label: "Trạng thái",
   },
   {
     value: "value2",
-    label: "Trạng thái 2",
+    label: "Enable",
   },
   {
     value: "value3",
-    label: "Trạng thái 3",
+    label: "Disable",
+  },
+];
+
+export const selectTask = [
+  {
+    value: "action",
+    label: "Enable/disable",
+  },
+  {
+    value: "delete",
+    label: "Xóa",
   },
 ];

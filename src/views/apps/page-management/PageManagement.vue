@@ -7,48 +7,8 @@
           autoComplete="on"
           @submit.prevent="submitSearch"
         >
-          <div class="row wrapper-header">
-            <div class="row">
-              <div class="col d-flex align-items-center">
-                <el-input
-                  autofocus
-                  v-model="formSearchData.username"
-                  style=""
-                  placeholder="Page"
-                  clearable
-                />
-              </div>
-              <div class="col d-flex align-items-center">
-                <el-select
-                  v-model="formSearchData.status"
-                  clearable
-                  placeholder="Status"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  />
-                </el-select>
-              </div>
-              <div class="col d-flex align-items-center">
-                <button
-                  :data-kt-indicator="loading ? 'on' : null"
-                  type="submit"
-                  class="btn btn-primary"
-                >
-                  <span v-if="!loading" class="indicator-label">Search</span>
-                  <span v-if="loading" class="indicator-progress"
-                    >Please wait...
-                    <span
-                      class="spinner-border spinner-border-sm align-middle ms-2"
-                    ></span
-                  ></span>
-                </button>
-              </div>
-            </div>
-            <div class="col d-flex align-items-center justify-content-end">
+          <div class="wrapper-header">
+            <div class="col d-flex align-items-center justify-content-end mb-8">
               <el-button
                 @click="visible = true"
                 class="btn btn-primary btn-add"
@@ -72,6 +32,83 @@
                 </template>
               </el-dialog>
             </div>
+            <div class="row search-page">
+              <div class="row">
+                <div class="row col-9">
+                  <div class="col-4">
+                    <el-input
+                      autofocus
+                      v-model="formSearchData.username"
+                      style=""
+                      placeholder="Search Page"
+                      clearable
+                    />
+                  </div>
+                  <div class="col-4">
+                    <el-select
+                      v-model="formSearchData.status"
+                      clearable
+                      placeholder="Status"
+                    >
+                      <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                  <div class="col-4">
+                    <button
+                      :data-kt-indicator="loading ? 'on' : null"
+                      type="submit"
+                      class="btn btn-primary"
+                    >
+                      <span v-if="!loading" class="indicator-label"
+                        >Search</span
+                      >
+                      <span v-if="loading" class="indicator-progress"
+                        >Please wait...
+                        <span
+                          class="spinner-border spinner-border-sm align-middle ms-2"
+                        ></span
+                      ></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="row col-3 action-right">
+                  <div class="col-10">
+                    <el-select
+                      v-model="data.status"
+                      clearable
+                      placeholder="Chọn tác vụ"
+                    >
+                      <el-option
+                        v-for="item in selectTask"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </div>
+                  <div class="col-2">
+                    <button
+                      :data-kt-indicator="loading ? 'on' : null"
+                      @click="handleApplyStatus"
+                      class="btn btn-primary"
+                    >
+                      <span v-if="!loading" class="indicator-label">Apply</span>
+                      <span v-if="loading" class="indicator-progress"
+                        >Please wait...
+                        <span
+                          class="spinner-border spinner-border-sm align-middle ms-2"
+                        ></span
+                      ></span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </form>
       </div>
@@ -82,6 +119,7 @@
         :table-data="dataRequestStatistics"
         :pagination="pagination"
         :enable-items-per-page-dropdown="true"
+        :user-role="userRole"
         :loading="loading"
         :show-overflow-tooltip="true"
         @change-page="changePage"
@@ -95,9 +133,10 @@
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { useReqStatistic } from "@/stores/req-statistic";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
-import { pageArray, options } from "./mock/index";
+import { pageArray, options, selectTask } from "./mock/index";
 const value = ref("");
 const visible = ref(false);
+let userRole = ref("all");
 
 export default defineComponent({
   name: "page-management",
@@ -108,6 +147,9 @@ export default defineComponent({
     const store = useReqStatistic();
     const formSearchData = ref({
       username: "",
+      status: "",
+    });
+    const data = ref({
       status: "",
     });
     const tableHeader = ref([
@@ -133,6 +175,11 @@ export default defineComponent({
         visible: true,
       },
       {
+        label: "Trạng thái",
+        prop: "",
+        visible: true,
+      },
+      {
         label: "Actions",
         prop: "action",
         visible: true,
@@ -146,9 +193,9 @@ export default defineComponent({
       page?: number,
       username?: string,
       status?: string,
-      pageSize = 10
+      pageSize = 15
     ) {
-      console.log("call APsI");
+      console.log("call API");
       loading.value = true;
       await store.getReqStatistic({
         params: {
@@ -172,6 +219,13 @@ export default defineComponent({
       };
       loading.value = false;
     }
+
+    const handleApplyStatus = () => {
+      console.log(
+        "handleApplyStatus: ",
+        JSON.parse(JSON.stringify(data.value))
+      );
+    };
 
     function submitSearch() {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
@@ -210,13 +264,17 @@ export default defineComponent({
     });
     return {
       dataRequestStatistics,
+      data,
+      userRole,
       visible,
       options,
       tableHeader,
       pagination,
       loading,
       formSearchData,
+      selectTask,
       value,
+      handleApplyStatus,
       changePage,
       changePageSize,
       submitSearch,
@@ -239,11 +297,20 @@ export default defineComponent({
   justify-content: space-between;
 }
 
+.action-right {
+  flex: 1;
+}
+
+.search-page {
+  flex-flow: row;
+}
+
 .dialog-footer button:first-child {
   margin-right: 0;
 }
 .btn-add {
-  margin-left: -25px;
+  position: relative;
+  left: 24px;
 }
 .wrapper-header {
   flex-flow: row;
