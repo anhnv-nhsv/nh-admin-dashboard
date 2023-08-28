@@ -4,6 +4,7 @@
       <el-table
         class="customerTable el-table--border"
         ref="customerScoreTableRef"
+        row-key="id"
         :data="getItems"
         :header-cell-style="
           themeMode === 'light'
@@ -193,7 +194,6 @@ export default defineComponent({
     let currentRow = ref();
     const pageSizeList = ref([10, 20, 50, 100, 200, 500, 1000]);
     const store = useThemeStore();
-    console.log("multipleSelection: ", multipleSelection);
 
     const handleEditRowPage = (_, row) => {
       const id = row.id;

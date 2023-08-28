@@ -80,6 +80,7 @@
                   <div class="col-10">
                     <el-select
                       v-model="data.status"
+                      :disabled="!syncPayload.length"
                       clearable
                       placeholder="Chọn tác vụ"
                     >
@@ -95,6 +96,8 @@
                     <button
                       :data-kt-indicator="loading ? 'on' : null"
                       @click="handleApplyStatus"
+                      ref="syncKLPBtn"
+                      disabled
                       class="btn btn-primary"
                     >
                       <span v-if="!loading" class="indicator-label">Apply</span>
@@ -124,6 +127,8 @@
         :show-overflow-tooltip="true"
         @change-page="changePage"
         @change-page-size="changePageSize"
+        @single-select="handleSingleSelection"
+        @multiple-select="handleMultipleSelection"
       />
     </div>
   </div>
@@ -137,6 +142,7 @@ import { pageArray, options, selectTask } from "./mock/index";
 const value = ref("");
 const visible = ref(false);
 let userRole = ref("all");
+let syncPayload = ref<any[]>([]);
 
 export default defineComponent({
   name: "page-management",
@@ -144,6 +150,8 @@ export default defineComponent({
     NHDatatable,
   },
   setup() {
+    console.log("syncPayload: ", syncPayload);
+
     const store = useReqStatistic();
     const formSearchData = ref({
       username: "",
@@ -188,6 +196,7 @@ export default defineComponent({
     const loading = ref<boolean>(false);
     let dataRequestStatistics = ref();
     let pagination = ref();
+    let syncKLPBtn = ref<HTMLElement | null>(null);
 
     async function getRequestStatistics(
       page?: number,
@@ -236,6 +245,31 @@ export default defineComponent({
         pagination.value.pageSize
       );
     }
+    const handleSingleSelection = (val) => {
+      if (!syncKLPBtn.value) {
+        return;
+      }
+      if (val) {
+        syncKLPBtn.value.removeAttribute("disabled");
+      } else {
+        syncKLPBtn.value?.setAttribute("disabled", "");
+      }
+      syncPayload.value = [val];
+      console.log("syncPayload.value1: ", val);
+    };
+
+    const handleMultipleSelection = (val) => {
+      if (!syncKLPBtn.value) {
+        return;
+      }
+      if (val.length > 0) {
+        syncKLPBtn.value.removeAttribute("disabled");
+      } else {
+        syncKLPBtn.value?.setAttribute("disabled", "");
+      }
+      syncPayload.value = val;
+      console.log("syncPayload.value2: ", syncPayload.value);
+    };
 
     function changePage(page) {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
@@ -266,6 +300,7 @@ export default defineComponent({
       dataRequestStatistics,
       data,
       userRole,
+      syncKLPBtn,
       visible,
       options,
       tableHeader,
@@ -273,8 +308,11 @@ export default defineComponent({
       loading,
       formSearchData,
       selectTask,
+      syncPayload,
       value,
       handleApplyStatus,
+      handleSingleSelection,
+      handleMultipleSelection,
       changePage,
       changePageSize,
       submitSearch,
