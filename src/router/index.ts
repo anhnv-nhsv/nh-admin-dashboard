@@ -179,12 +179,21 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
-        path: "/apps/statistics/page-management",
+        path: "/apps/page-management",
         name: "apps-page-management",
         component: () =>
           import("@/views/apps/page-management/PageManagement.vue"),
         meta: {
           pageTitle: "Page Management",
+          breadcrumbs: ["Apps", "Page Management"],
+        },
+      },
+      {
+        path: "/apps/contact",
+        name: "apps-contact",
+        component: () => import("@/views/apps/contact/Contact.vue"),
+        meta: {
+          pageTitle: "Contact Management",
           breadcrumbs: ["Apps", "Page Management"],
         },
       },

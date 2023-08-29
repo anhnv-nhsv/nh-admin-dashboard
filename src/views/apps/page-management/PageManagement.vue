@@ -50,12 +50,18 @@
                       clearable
                       placeholder="Status"
                     >
-                      <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
+                      <el-option-group
+                        v-for="group in options"
+                        :key="group.label"
+                        :label="group.label"
+                      >
+                        <el-option
+                          v-for="item in group.options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value"
+                        />
+                      </el-option-group>
                     </el-select>
                   </div>
                   <div class="col-4">

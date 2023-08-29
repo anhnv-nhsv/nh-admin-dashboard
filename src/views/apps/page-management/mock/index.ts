@@ -26,16 +26,17 @@ export const pageArray = [
 
 export const options = [
   {
-    value: "value1",
     label: "Trạng thái",
-  },
-  {
-    value: "value2",
-    label: "Enable",
-  },
-  {
-    value: "value3",
-    label: "Disable",
+    options: [
+      {
+        value: "value2",
+        label: "Enable",
+      },
+      {
+        value: "value3",
+        label: "Disable",
+      },
+    ],
   },
 ];
 

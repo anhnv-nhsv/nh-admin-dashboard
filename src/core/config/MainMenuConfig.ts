@@ -280,12 +280,24 @@ const MainMenuConfig: Array<MenuItem> = [
       {
         sectionTitle: "Pages",
         route: "/page-management",
-        keenthemesIcon: "abstract-45",
+        keenthemesIcon: "abstract-46",
         bootstrapIcon: "bi-graph-up",
         sub: [
           {
             heading: "Page Management",
-            route: "/apps/statistics/page-management",
+            route: "/apps/page-management",
+          },
+        ],
+      },
+      {
+        heading: "Contact",
+        route: "/apps/contact",
+        keenthemesIcon: "abstract-47",
+        bootstrapIcon: "bi-graph-up",
+        sub: [
+          {
+            heading: "Contact Management",
+            route: "/apps/contact",
           },
         ],
       },
