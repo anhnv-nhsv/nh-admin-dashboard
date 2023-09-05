@@ -4,7 +4,6 @@
       <el-table
         class="customerTable el-table--border"
         ref="customerScoreTableRef"
-        row-key="id"
         :data="getItems"
         :header-cell-style="
           themeMode === 'light'
@@ -21,13 +20,7 @@
         "
         v-loading="loading"
       >
-        <el-table-column
-          header-align="center"
-          class-name="text-center"
-          v-if="userRole === 'all'"
-          type="selection"
-          width="55"
-        />
+        <slot name="indexColumn"></slot>
         <template v-for="(item, i) in tableHeader" :key="i">
           <el-table-column
             :show-overflow-tooltip="showOverflowTooltip"
@@ -41,48 +34,12 @@
             "
             :label="item.label"
           >
-            <template #default="scope" v-if="item?.hasOwnProperty('prop')">
-              <template v-if="item.prop === 'uriPage'">
-                <img
-                  :src="scope.row.uriPage"
-                  :alt="scope.row.fromIP"
-                  class="table-img"
-                />
-              </template>
-              <template v-if="item.prop === 'action'">
-                <el-popover
-                  placement="bottom"
-                  :visible="idEdit === scope.row.id && openPop"
-                  hide-after="10"
-                  width="320px"
-                >
-                  <template #reference>
-                    <el-button
-                      @click="handleEditRowPage(scope.$index, scope.row)"
-                      >Edit</el-button
-                    >
-                  </template>
-                  <EditPage
-                    :dataRow="scope.row"
-                    @toggle="handleOnToggle"
-                    @submit-page="onSubmitPage"
-                  />
-                </el-popover>
-                <el-popconfirm
-                  title="Are you sure to delete this?"
-                  icon-color="#626AEF"
-                  hide-after="10"
-                  @confirm="handleDeleteRowPage(scope.$index)"
-                >
-                  <template #reference>
-                    <el-button size="small" type="danger">Delete</el-button>
-                  </template>
-                </el-popconfirm>
-              </template>
-              {{ scope.row[item.prop] }}
+            <template #default="scope" v-if="item.hasOwnProperty('prop')">
+              <slot :name="item.prop" :row="scope.row">
+                {{ scope.row[item.prop] }}
+              </slot>
             </template>
-
-            <template v-if="item?.hasOwnProperty('children')">
+            <template v-if="item.hasOwnProperty('children')">
               <el-table-column
                 :show-overflow-tooltip="showOverflowTooltip"
                 header-align="center"
@@ -100,6 +57,7 @@
             </template>
           </el-table-column>
         </template>
+        <slot name="actionColumn"></slot>
       </el-table>
     </div>
 
@@ -133,7 +91,7 @@
         class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"
       >
         <el-pagination
-          v-if="!isEmptyTableData"
+          v-if="!isEmptyTableData && Object.keys(paginationObj).length !== 0"
           background
           layout="prev, pager, next"
           @current-change="setCurrent"
@@ -152,16 +110,12 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch, toRaw } from "vue";
 import { useThemeStore } from "@/stores/theme";
-import EditPage from "@/views/apps/page-management/components/EditPage.vue";
+import { ThemeModeComponent } from "@/assets/ts/layout";
 
 export default defineComponent({
   name: "nh-datatable",
   props: {
-    tableHeader: {
-      type: Array as any,
-      required: true,
-      default: () => [],
-    },
+    tableHeader: { type: Array, required: true, default: () => [] },
     tableData: { type: Array, required: true, default: () => [] },
     pagination: {
       type: Object,
@@ -179,12 +133,8 @@ export default defineComponent({
     showOverflowTooltip: { type: Boolean, required: false, default: false },
     userRole: { type: String, required: false, default: "none" },
   },
-  components: {
-    EditPage,
-  },
+  components: {},
   setup(props, ctx) {
-    let openPop = ref(false);
-    let idEdit = ref();
     let data = ref(props.tableData);
     let getItems = ref(JSON.parse(JSON.stringify(data.value)));
     const paginationData = ref(props.pagination);
@@ -194,24 +144,6 @@ export default defineComponent({
     let currentRow = ref();
     const pageSizeList = ref([10, 20, 50, 100, 200, 500, 1000]);
     const store = useThemeStore();
-
-    const handleEditRowPage = (_, row) => {
-      const id = row.id;
-      idEdit.value = id;
-      openPop.value = !openPop.value;
-    };
-
-    const handleOnToggle = (val) => {
-      openPop.value = val || false;
-    };
-
-    const handleDeleteRowPage = (index: number) => {
-      getItems.value.splice(index, 1);
-    };
-
-    const onSubmitPage = (value) => {
-      console.log("submit", JSON.parse(JSON.stringify(value)));
-    };
 
     watch(
       () => props.tableData,
@@ -229,6 +161,9 @@ export default defineComponent({
     );
 
     const themeMode = computed(() => {
+      if (store.mode === "system") {
+        return ThemeModeComponent.getSystemMode();
+      }
       return store.mode;
     });
 
@@ -261,15 +196,9 @@ export default defineComponent({
       getItems,
       isEmptyTableData,
       multipleSelection,
-      idEdit,
       pageSizeList,
       pages,
-      openPop,
       themeMode,
-      handleEditRowPage,
-      handleOnToggle,
-      handleDeleteRowPage,
-      onSubmitPage,
       handleCurrentChange,
       setCurrent,
       setCurrentPageSize,
@@ -289,13 +218,6 @@ export default defineComponent({
   max-width: none !important;
   border-collapse: separate !important;
   border-spacing: 0;
-}
-
-.table-img {
-  width: 100%;
-  border-radius: 8px;
-  position: relative;
-  object-fit: contain;
 }
 
 :deep(.cell) {
