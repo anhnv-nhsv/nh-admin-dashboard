@@ -107,7 +107,7 @@
     <div class="col-xl-4">
       <MixedWidget8
         widget-classes="card-xl-stretch mb-xl-8"
-        image="media/svg/brand-logos/plurk.svg"
+        :image="getAssetPath('media/svg/brand-logos/plurk.svg')"
         color="danger"
         title="Monthly Subscription"
         date="Due: 27 Apr 2020"
@@ -120,7 +120,7 @@
     <div class="col-xl-4">
       <MixedWidget8
         widget-classes="card-xl-stretch mb-xl-8"
-        image="media/svg/brand-logos/vimeo.svg"
+        :image="getAssetPath('media/svg/brand-logos/vimeo.svg')"
         color="primary"
         title="Monthly Subscription"
         date="Due: 27 Apr 2020"
@@ -133,7 +133,7 @@
     <div class="col-xl-4">
       <MixedWidget8
         widget-classes="card-xl-stretch mb-5 mb-xl-8"
-        image="media/svg/brand-logos/kickstarter.svg"
+        :image="getAssetPath('media/svg/brand-logos/kickstarter.svg')"
         color="success"
         title="Monthly Subscription"
         date="Due: 27 Apr 2020"
@@ -150,7 +150,7 @@
     <div class="col-xl-4">
       <MixedWidget9
         widget-classes="card-xl-stretch mb-xl-8"
-        image="media/svg/brand-logos/plurk.svg"
+        :image="getAssetPath('media/svg/brand-logos/plurk.svg')"
         time="7 hours ago"
         title="PitStop - Multiple Email Generator"
         description="Pitstop creates quick email campaigns.<br/>
@@ -164,7 +164,7 @@
     <div class="col-xl-4">
       <MixedWidget9
         widget-classes="card-xl-stretch mb-xl-8"
-        image="media/svg/brand-logos/telegram.svg"
+        :image="getAssetPath('media/svg/brand-logos/telegram.svg')"
         time="10 days ago"
         title="ReactJS Admin Theme"
         description="Pitstop creates quick email campaigns.<br/>
@@ -178,7 +178,7 @@
     <div class="col-xl-4">
       <MixedWidget9
         widget-classes="card-xl-stretch mb-5 mb-xl-8"
-        image="media/svg/brand-logos/vimeo.svg"
+        :image="getAssetPath('media/svg/brand-logos/vimeo.svg')"
         time="2 weeks ago"
         title="KT.com - High Quality Templates"
         description="Easy to use, incredibly flexible and secure<br/>
@@ -498,7 +498,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import MixedWidget1 from "@/components/widgets/mixed/Widget1.vue";
 import MixedWidget2 from "@/components/widgets/mixed/Widget2.vue";
 import MixedWidget3 from "@/components/widgets/mixed/Widget3.vue";
@@ -513,8 +514,6 @@ import MixedWidget11 from "@/components/widgets/mixed/Widget11.vue";
 import MixedWidget12 from "@/components/widgets/mixed/Widget12.vue";
 import MixedWidget13 from "@/components/widgets/mixed/Widget13.vue";
 import MixedWidget14 from "@/components/widgets/mixed/Widget14.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
-import { MenuComponent } from "@/assets/ts/components";
 
 export default defineComponent({
   name: "widgets-mixed",
@@ -535,11 +534,9 @@ export default defineComponent({
     MixedWidget14,
   },
   setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Mixed", ["Widgets"]);
-
-      MenuComponent.reinitialization();
-    });
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

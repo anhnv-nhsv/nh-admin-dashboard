@@ -1,12 +1,37 @@
 import { computed } from "vue";
-import store from "@/store/index";
+import { useConfigStore } from "@/stores/config";
+import { ThemeModeComponent } from "@/assets/ts/layout";
 
 /**
  * Returns layout config
  * @returns {object}
  */
 export const config = computed(() => {
-  return store.getters.layoutConfig();
+  return useConfigStore().config;
+});
+
+/**
+ * Returns theme mode
+ * @returns {string}
+ */
+export const themeMode = computed(() => {
+  if (useConfigStore().getLayoutConfig("general.mode") === "system") {
+    return ThemeModeComponent.getSystemMode();
+  }
+  return useConfigStore().getLayoutConfig("general.mode");
+});
+
+/**
+ * Returns the actual theme configuration mode
+ * @returns {string}
+ */
+export const themeConfigValue = computed(() => {
+  return useConfigStore().getLayoutConfig("general.mode")
+    ? (useConfigStore().getLayoutConfig("general.mode") as
+        | "system"
+        | "dark"
+        | "light")
+    : "system";
 });
 
 /**
@@ -14,7 +39,17 @@ export const config = computed(() => {
  * @returns {boolean}
  */
 export const displaySidebar = computed(() => {
-  return store.getters.layoutConfig("sidebar.display");
+  return useConfigStore().getLayoutConfig("sidebar.display");
+});
+
+/**
+ * Sidebar toggle
+ * @returns {boolean}
+ */
+export const sidebarToggleDisplay = computed(() => {
+  return useConfigStore().getLayoutConfig(
+    "sidebar.default.minimize.desktop.enabled"
+  );
 });
 
 /**
@@ -22,7 +57,15 @@ export const displaySidebar = computed(() => {
  * @returns {boolean}
  */
 export const footerWidthFluid = computed(() => {
-  return store.getters.layoutConfig("footer.width") === "fluid";
+  return useConfigStore().getLayoutConfig("footer.container") === "fluid";
+});
+
+/**
+ * Footer display
+ * @returns {boolean}
+ */
+export const footerDisplay = computed(() => {
+  return useConfigStore().getLayoutConfig("footer.display");
 });
 
 /**
@@ -30,7 +73,17 @@ export const footerWidthFluid = computed(() => {
  * @returns {boolean}
  */
 export const headerWidthFluid = computed(() => {
-  return store.getters.layoutConfig("header.width") === "fluid";
+  return (
+    useConfigStore().getLayoutConfig("header.default.container") === "fluid"
+  );
+});
+
+/**
+ * Header display
+ * @returns {boolean}
+ */
+export const headerDisplay = computed(() => {
+  return useConfigStore().getLayoutConfig("header.display");
 });
 
 /**
@@ -38,15 +91,23 @@ export const headerWidthFluid = computed(() => {
  * @returns {string}
  */
 export const headerLeft = computed(() => {
-  return store.getters.layoutConfig("header.left");
+  return useConfigStore().getLayoutConfig("header.left");
 });
 
 /**
- * Set the aside display
+ * Sidebar display
  * @returns {boolean}
  */
-export const asideDisplay = computed(() => {
-  return store.getters.layoutConfig("aside.display") === true;
+export const sidebarDisplay = computed(() => {
+  return useConfigStore().getLayoutConfig("sidebar.display");
+});
+
+/**
+ * Layout type
+ * @returns {string}
+ */
+export const layout = computed(() => {
+  return useConfigStore().getLayoutConfig("general.layout");
 });
 
 /**
@@ -54,7 +115,7 @@ export const asideDisplay = computed(() => {
  * @returns {boolean}
  */
 export const toolbarWidthFluid = computed(() => {
-  return store.getters.layoutConfig("toolbar.width") === "fluid";
+  return useConfigStore().getLayoutConfig("toolbar.container") === "fluid";
 });
 
 /**
@@ -62,15 +123,7 @@ export const toolbarWidthFluid = computed(() => {
  * @returns {boolean}
  */
 export const toolbarDisplay = computed(() => {
-  return store.getters.layoutConfig("toolbar.display");
-});
-
-/**
- * Check if the page loader is enabled
- * @returns {boolean}
- */
-export const loaderEnabled = computed(() => {
-  return store.getters.layoutConfig("loader.display");
+  return useConfigStore().getLayoutConfig("toolbar.display");
 });
 
 /**
@@ -78,31 +131,23 @@ export const loaderEnabled = computed(() => {
  * @returns {boolean}
  */
 export const contentWidthFluid = computed(() => {
-  return store.getters.layoutConfig("content.width") === "fluid";
+  return useConfigStore().getLayoutConfig("content.container") === "fluid";
 });
 
 /**
- * Page loader logo image
- * @returns {string}
- */
-export const loaderLogo = computed(() => {
-  return process.env.BASE_URL + store.getters.layoutConfig("loader.logo");
-});
-
-/**
- * Check if the aside menu is enabled
+ * Check if the sidebar menu is enabled
  * @returns {boolean}
  */
-export const asideEnabled = computed(() => {
-  return !!store.getters.layoutConfig("aside.display");
+export const sidebarEnabled = computed(() => {
+  return !!useConfigStore().getLayoutConfig("aside.display");
 });
 
 /**
- * Set the aside theme
+ * Set the sidebar theme
  * @returns {string}
  */
-export const asideTheme = computed(() => {
-  return store.getters.layoutConfig("aside.theme");
+export const sidebarTheme = computed(() => {
+  return useConfigStore().getLayoutConfig("aside.theme");
 });
 
 /**
@@ -110,15 +155,15 @@ export const asideTheme = computed(() => {
  * @returns {boolean}
  */
 export const subheaderDisplay = computed(() => {
-  return store.getters.layoutConfig("toolbar.display");
+  return useConfigStore().getLayoutConfig("toolbar.display");
 });
 
 /**
- * Set the aside menu icon type
+ * Set the sidebar menu icon type
  * @returns {string}
  */
-export const asideMenuIcons = computed(() => {
-  return store.getters.layoutConfig("aside.menuIcon");
+export const sidebarMenuIcons = computed(() => {
+  return useConfigStore().getLayoutConfig("sidebar.default.menu.iconType");
 });
 
 /**
@@ -126,7 +171,7 @@ export const asideMenuIcons = computed(() => {
  * @returns {string}
  */
 export const themeLightLogo = computed(() => {
-  return store.getters.layoutConfig("main.logo.light");
+  return useConfigStore().getLayoutConfig("main.logo.light");
 });
 
 /**
@@ -134,7 +179,7 @@ export const themeLightLogo = computed(() => {
  * @returns {string}
  */
 export const themeDarkLogo = computed(() => {
-  return store.getters.layoutConfig("main.logo.dark");
+  return useConfigStore().getLayoutConfig("main.logo.dark");
 });
 
 /**
@@ -142,5 +187,53 @@ export const themeDarkLogo = computed(() => {
  * @returns {string}
  */
 export const headerMenuIcons = computed(() => {
-  return store.getters.layoutConfig("header.menuIcon");
+  return useConfigStore().getLayoutConfig("header.default.menu.iconType");
+});
+
+/**
+ * Set the header menu display
+ * @returns {string}
+ */
+export const headerMenuDisplay = computed(() => {
+  return useConfigStore().getLayoutConfig("header.default.menu.display");
+});
+
+/**
+ * Page title display
+ * @returns {boolean}
+ */
+export const pageTitleDisplay = computed(() => {
+  return useConfigStore().getLayoutConfig("pageTitle.display");
+});
+
+/**
+ * Page title breadcrumb display
+ * @returns {boolean}
+ */
+export const pageTitleBreadcrumbDisplay = computed(() => {
+  return useConfigStore().getLayoutConfig("pageTitle.breadcrumb");
+});
+
+/**
+ * Page title direction display
+ * @returns { "row" | "column" }
+ */
+export const pageTitleDirection = computed(() => {
+  return useConfigStore().getLayoutConfig("pageTitle.direction");
+});
+
+/**
+ * Scrolltop display
+ * @returns {boolean}
+ */
+export const scrolltopDispaly = computed(() => {
+  return useConfigStore().getLayoutConfig("scrolltop.display");
+});
+
+/**
+ * Illustrations set
+ * @returns {string}
+ */
+export const illustrationsSet = computed(() => {
+  return useConfigStore().getLayoutConfig("illustrations.set");
 });

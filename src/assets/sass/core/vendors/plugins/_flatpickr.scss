@@ -4,22 +4,31 @@
 
 $flatpickr-padding-y: 0.5rem;
 $flatpickr-padding-x: 1rem;
-$flatpickr-width: 315px;
+$flatpickr-width: 280px;
+$flatpickr-width-week-numbers: 325px;
 $flatpickr-day-height: 36px;
+$flatpickr-day-width: 100%;
 $flatpickr-time-height: 46px;
 
 // Container
 .flatpickr-calendar {    
+    width: $flatpickr-width !important;
     font-family: inherit;
     border: 0;
-	box-shadow: $dropdown-box-shadow;
-    border-radius: $dropdown-border-radius;
-    background-color: $body-bg;
+    border-radius: 0;
+	box-shadow: var(--#{$prefix}dropdown-box-shadow);
+    background-color: var(--#{$prefix}body-bg);
+    @include border-radius($dropdown-border-radius);
 
     // Remow arrows
     &:before,
     &:after {
         display: none;
+    }
+
+    // Week numbers
+    &.hasWeeks {
+        width: $flatpickr-width-week-numbers !important;
     }
 }   
 
@@ -34,21 +43,20 @@ $flatpickr-time-height: 46px;
     padding: $flatpickr-padding-y $flatpickr-padding-x;
 }
 
-
 // Day containers
 .flatpickr-days,
 .dayContainer {
     width: 100% !important;
     min-width: 100% !important;
-    max-width: 100% !important;
+    max-width: 100% !important;   
 }
 
 // Months
 .flatpickr-months {
     .flatpickr-month {
         background: transparent;
-        color: $gray-600;
-        fill: $gray-600;
+        color: var(--#{$prefix}gray-600);
+        fill: var(--#{$prefix}gray-600);
         height: 46px;
     }
 
@@ -61,16 +69,16 @@ $flatpickr-time-height: 46px;
         top: 1rem;        
 
         svg {
-            fill: $gray-500;
+            fill: var(--#{$prefix}gray-500);
             height: 13px;
             width: 13px;
         }
 
         &:hover {
-            background: $gray-100;
+            background: var(--#{$prefix}gray-100);
 
             svg {
-                fill: $gray-700;
+                fill: var(--#{$prefix}gray-700);
             }
         }
     }
@@ -92,7 +100,7 @@ $flatpickr-time-height: 46px;
 
 // Month selector
 .flatpickr-current-month {
-    font-weight: $font-weight-bold;
+    font-weight: $font-weight-semibold;
     color: inherit;   
 
     .numInputWrapper {
@@ -112,10 +120,10 @@ $flatpickr-time-height: 46px;
 
     .flatpickr-monthDropdown-months {
         border: 0 !important;
-        background-color: $body-bg;
+        background-color: var(--#{$prefix}body-bg);
         font-size: 1rem;
-        color: $gray-700;
-        font-weight: $font-weight-bold;
+        color: var(--#{$prefix}gray-700);
+        font-weight: $font-weight-semibold;
         padding: 0.5rem 0.75rem;
         margin-right: 0.5rem;
         outline: none !important;
@@ -125,13 +133,13 @@ $flatpickr-time-height: 46px;
         -webkit-appearance: none;
 
         &:hover {
-            background: $gray-100;
+            background: var(--#{$prefix}gray-100);
         }
     
         .flatpickr-monthDropdown-month {
             font-size: 1rem;
-            color: $gray-700;
-            font-weight: $font-weight-bold;
+            color: var(--#{$prefix}gray-700);
+            font-weight: $font-weight-semibold;
             background-color: transparent;
             outline: none;
             padding: 0;
@@ -139,29 +147,29 @@ $flatpickr-time-height: 46px;
     }
 
     span.cur-month {
-        color: $gray-700;
+        color: var(--#{$prefix}gray-700);
         font-size: 1rem;
-        font-weight: $font-weight-bold;    
+        font-weight: $font-weight-semibold;    
 
         &:hover {
-            background: $gray-100;
+            background: var(--#{$prefix}gray-100);
         }
     }
 
     input.cur-year {
-        color: $gray-700;
-        font-size: 1.1rem;
+        color: var(--#{$prefix}gray-700);
+        font-size: 1.1rem !important;
         padding: 0.5rem 0.75rem;
-        font-weight: $font-weight-bold;
+        font-weight: $font-weight-semibold;
         outline: 0 !important;
     }
 }
 
 // Week days
 span.flatpickr-weekday {
-    color: $gray-800;
+    color: var(--#{$prefix}gray-800);
     font-size: 1rem;
-    font-weight: $font-weight-bolder;
+    font-weight: $font-weight-bold;
 }
 
 // Time
@@ -172,7 +180,7 @@ span.flatpickr-weekday {
         height: height;
         line-height: height;
         max-height: height;
-        border-top: 1px solid $gray-100;
+        border-top: 1px solid var(--#{$prefix}gray-100);
     }
 
     .numInputWrapper {
@@ -180,17 +188,17 @@ span.flatpickr-weekday {
     }
 
     .flatpickr-am-pm {
-        color: $gray-700;
+        color: var(--#{$prefix}gray-700);
         font-size: 1rem;
-        font-weight: $font-weight-bold;
+        font-weight: $font-weight-semibold;
     }
 
     input {
         &.flatpickr-hour,
         &.flatpickr-minute {
-            color: $gray-700;
+            color: var(--#{$prefix}gray-700);
             font-size: 1rem;
-            font-weight: $font-weight-bold;
+            font-weight: $font-weight-semibold;
         }
     }
     
@@ -221,24 +229,24 @@ span.flatpickr-weekday {
 
         &.arrowUp {    
             &:after {
-                border-bottom-color: $gray-500 !important;
+                border-bottom-color: var(--#{$prefix}gray-500) !important;
             }
     
             &:hover {
                 &:after {
-                    border-bottom-color: $gray-700 !important;
+                    border-bottom-color: var(--#{$prefix}gray-700) !important;
                 }
             }
         }
     
         &.arrowDown {    
             &:after {
-                border-top-color: $gray-500 !important;
+                border-top-color: var(--#{$prefix}gray-500) !important;
             }
     
             &:hover {
                 &:after {
-                    border-top-color: $gray-700 !important;
+                    border-top-color: var(--#{$prefix}gray-700) !important;
                 }
             }
         }
@@ -254,10 +262,13 @@ span.flatpickr-weekday {
     font-size: 1rem;
     @include border-radius($border-radius);
     box-shadow: none !important;
-    height: $flatpickr-day-height;
-    max-width: $flatpickr-day-height;
+    height: $flatpickr-day-height;    
+    width: $flatpickr-day-width;
+    max-width: 100% !important;
+    margin: 0;
     line-height: $flatpickr-day-height;
-    color: $gray-600;
+    color: var(--#{$prefix}gray-600);
+    margin-top: 0 !important;
 
     &.inRange,
     &.prevMonthDay.inRange,
@@ -273,22 +284,22 @@ span.flatpickr-weekday {
     &.nextMonthDay:focus {
         cursor: pointer;
         outline: 0;
-        background: $component-hover-bg;
-        color: $component-hover-color;
+        background: var(--#{$prefix}component-hover-bg);
+        color: var(--#{$prefix}component-hover-color);
         border-color: transparent;
     }
 
     // Today
     &.today {
-        background: $gray-100;
-        color: $gray-600;
+        background: var(--#{$prefix}gray-100);
+        color: var(--#{$prefix}gray-600);
         border-color: transparent;
 
         &:hover,
         &:focus {
             border-color: transparent;
-            background: $gray-200;
-            color: $gray-700;
+            background: var(--#{$prefix}gray-200);
+            color: var(--#{$prefix}gray-700);
         }
     }
 
@@ -311,8 +322,8 @@ span.flatpickr-weekday {
     &.selected.nextMonthDay,
     &.startRange.nextMonthDay,
     &.endRange.nextMonthDay {
-        background: $component-active-bg;
-        color: $component-active-color;;
+        background: var(--#{$prefix}component-active-bg);
+        color: var(--#{$prefix}component-active-color);;
         border-color: transparent;
     }
 
@@ -330,8 +341,8 @@ span.flatpickr-weekday {
     &.nextMonthDay:focus {
         cursor: pointer;
         outline: 0;
-        background: $component-hover-bg;
-        color: $component-hover-color;
+        background: var(--#{$prefix}component-hover-bg);
+        color: var(--#{$prefix}component-hover-color);
         border-color: transparent;
     }
 
@@ -343,8 +354,8 @@ span.flatpickr-weekday {
     &.today:hover,
     &.today:focus {
         border-color: transparent;
-        background: $gray-100;
-        color: $gray-600;
+        background: var(--#{$prefix}gray-100);
+        color: var(--#{$prefix}gray-600);
     }
 
     // Selected
@@ -366,8 +377,8 @@ span.flatpickr-weekday {
     &.selected.nextMonthDay,
     &.startRange.nextMonthDay,
     &.endRange.nextMonthDay {
-        background: $component-active-bg;
-        color: $component-active-color;;
+        background: var(--#{$prefix}component-active-bg);
+        color: var(--#{$prefix}component-active-color);;
         border-color: transparent;
     }
 
@@ -379,14 +390,18 @@ span.flatpickr-weekday {
     &.notAllowed,
     &.notAllowed.prevMonthDay,
     &.notAllowed.nextMonthDay {
-        color: $gray-400;
+        color: var(--#{$prefix}gray-400);
         background: transparent;
         border-color: transparent;
     }
     &.flatpickr-disabled,
     &.flatpickr-disabled:hover {
         cursor: not-allowed;
-        color: $gray-400;
+        color: var(--#{$prefix}gray-400);
     }
 }
 
+// Week numbers
+.flatpickr-weekwrapper {
+    margin-right: 5px;
+}

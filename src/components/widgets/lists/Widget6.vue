@@ -3,7 +3,7 @@
   <div class="card" :class="widgetClasses">
     <!--begin::Header-->
     <div class="card-header border-0">
-      <h3 class="card-title fw-bolder text-dark">Notifications</h3>
+      <h3 class="card-title fw-bold text-dark">Notifications</h3>
 
       <div class="card-toolbar">
         <!--begin::Menu-->
@@ -14,9 +14,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown3></Dropdown3>
         <!--end::Menu-->
@@ -36,27 +34,24 @@
           class="d-flex align-items-center rounded p-5 mb-7"
         >
           <!--begin::Icon-->
-          <span :class="`svg-icon-${item.color}`" class="svg-icon me-5">
-            <span class="svg-icon svg-icon-1">
-              <inline-svg src="media/icons/duotune/abstract/abs027.svg" />
-            </span>
-          </span>
+          <KTIcon
+            icon-name="abstract-26"
+            :icon-class="`text-${item.color} fs-1 me-5`"
+          />
           <!--end::Icon-->
 
           <!--begin::Title-->
           <div class="flex-grow-1 me-2">
-            <a
-              href="#"
-              class="fw-bolder text-gray-800 text-hover-primary fs-6"
-              >{{ item.title }}</a
-            >
+            <a href="#" class="fw-bold text-gray-800 text-hover-primary fs-6">{{
+              item.title
+            }}</a>
 
-            <span class="text-muted fw-bold d-block">{{ item.text }}</span>
+            <span class="text-muted fw-semobold d-block">{{ item.text }}</span>
           </div>
           <!--end::Title-->
 
           <!--begin::Lable-->
-          <span :class="`text-${item.color}`" class="fw-bolder py-1">{{
+          <span :class="`text-${item.color}`" class="fw-bold py-1">{{
             item.number
           }}</span>
           <!--end::Lable-->
@@ -70,6 +65,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, ref } from "vue";
 import Dropdown3 from "@/components/dropdown/Dropdown3.vue";
 
@@ -85,28 +81,28 @@ export default defineComponent({
     const list = ref([
       {
         color: "warning",
-        icon: "icons/duotune/abstract/abs027.svg",
+        icon: getAssetPath("media/icons/duotune/abstract/abs027.svg"),
         title: "Group lunch celebration",
         text: "Due in 2 Days",
         number: "+28%",
       },
       {
         color: "success",
-        icon: "icons/duotune/art/art005.svg",
+        icon: getAssetPath("media/icons/duotune/art/art005.svg"),
         title: "Navigation optimization",
         text: "Due in 2 Days",
         number: "+50%",
       },
       {
         color: "danger",
-        icon: "icons/duotune/communication/com012.svg",
+        icon: getAssetPath("media/icons/duotune/communication/com012.svg"),
         title: "Rebrand strategy planning",
         text: "Due in 5 Days",
         number: "-27%",
       },
       {
         color: "info",
-        icon: "icons/duotune/communication/com012.svg",
+        icon: getAssetPath("media/icons/duotune/communication/com012.svg"),
         title: "Product goals strategy",
         text: "Due in 7 Days",
         number: "+8%",
@@ -115,6 +111,7 @@ export default defineComponent({
 
     return {
       list,
+      getAssetPath,
     };
   },
 });

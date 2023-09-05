@@ -4,8 +4,8 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder text-dark">Tasks Overview</span>
-        <span class="text-muted mt-1 fw-bold fs-7">Pending 10 tasks</span>
+        <span class="card-label fw-bold text-dark">Tasks Overview</span>
+        <span class="text-muted mt-1 fw-semobold fs-7">Pending 10 tasks</span>
       </h3>
 
       <div class="card-toolbar">
@@ -17,9 +17,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown1></Dropdown1>
         <!--end::Menu-->
@@ -38,23 +36,21 @@
           <!--begin::Symbol-->
           <div class="symbol symbol-50px me-5">
             <span :class="`bg-light-${item.color}`" class="symbol-label">
-              <span
-                :class="`svg-icon-${item.color}`"
-                class="svg-icon svg-icon-2x"
-              >
-                <inline-svg :src="item.icon" />
-              </span>
+              <KTIcon
+                :icon-name="item.icon"
+                :icon-class="`text-${item.color} fs-2x`"
+              />
             </span>
           </div>
           <!--end::Symbol-->
 
           <!--begin::Text-->
           <div class="d-flex flex-column">
-            <a href="#" class="text-dark text-hover-primary fs-6 fw-bolder">{{
+            <a href="#" class="text-dark text-hover-primary fs-6 fw-bold">{{
               item.title
             }}</a>
 
-            <span class="text-muted fw-bold">{{ item.description }}</span>
+            <span class="text-muted fw-semobold">{{ item.description }}</span>
           </div>
           <!--end::Text-->
         </div>
@@ -67,6 +63,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import Dropdown1 from "@/components/dropdown/Dropdown1.vue";
 
@@ -81,31 +78,31 @@ export default defineComponent({
   setup() {
     const items = [
       {
-        icon: "media/icons/duotune/abstract/abs027.svg",
+        icon: "abstract-26",
         color: "success",
         title: "Project Briefing",
         description: "Project Manager",
       },
       {
-        icon: "media/icons/duotune/art/art005.svg",
+        icon: "pencil",
         color: "warning",
         title: "Concept Design",
         description: "Art Director",
       },
       {
-        icon: "media/icons/duotune/communication/com012.svg",
+        icon: "message-text-2",
         color: "primary",
         title: "Functional Logics",
         description: "Lead Developer",
       },
       {
-        icon: "media/icons/duotune/coding/cod008.svg",
+        icon: "disconnect",
         color: "danger",
         title: "Development",
         description: "DevOps",
       },
       {
-        icon: "media/icons/duotune/general/gen049.svg",
+        icon: "security-user",
         color: "info",
         title: "Testing",
         description: "QA Managers",
@@ -114,6 +111,7 @@ export default defineComponent({
 
     return {
       items,
+      getAssetPath,
     };
   },
 });

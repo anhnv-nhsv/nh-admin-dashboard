@@ -3,7 +3,7 @@
   <div class="card" :class="widgetClasses">
     <!--begin::Header-->
     <div class="card-header border-0">
-      <h3 class="card-title fw-bolder text-dark">Authors</h3>
+      <h3 class="card-title fw-bold text-dark">Authors</h3>
 
       <div class="card-toolbar">
         <!--begin::Menu-->
@@ -14,9 +14,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown2></Dropdown2>
         <!--end::Menu-->
@@ -40,11 +38,11 @@
 
           <!--begin::Text-->
           <div class="flex-grow-1">
-            <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">{{
+            <a href="#" class="text-dark fw-bold text-hover-primary fs-6">{{
               item.name
             }}</a>
 
-            <span class="text-muted d-block fw-bold">{{
+            <span class="text-muted d-block fw-semobold">{{
               item.description
             }}</span>
           </div>
@@ -59,6 +57,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, ref } from "vue";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 
@@ -73,27 +72,32 @@ export default defineComponent({
   setup() {
     const list = ref([
       {
-        avatar: "media/avatars/150-1.jpg",
+        avatar: getAssetPath("media/avatars/300-6.jpg"),
         name: "Emma Smith",
         description: "Project Manager",
       },
       {
-        avatar: "media/avatars/150-4.jpg",
+        avatar: getAssetPath("media/avatars/300-5.jpg"),
         name: "Sean Bean",
         description: "PHP, SQLite, Artisan CLI",
       },
       {
-        avatar: "media/avatars/150-12.jpg",
+        avatar: getAssetPath("media/avatars/300-11.jpg"),
         name: "Brian Cox",
         description: "PHP, SQLite, Artisan CLI",
       },
       {
-        avatar: "media/avatars/150-8.jpg",
+        avatar: getAssetPath("media/avatars/300-9.jpg"),
         name: "Francis Mitcham",
         description: "PHP, SQLite, Artisan CLI",
       },
       {
-        avatar: "media/avatars/150-6.jpg",
+        avatar: getAssetPath("media/avatars/300-23.jpg"),
+        name: "Dan Wilson",
+        description: "PHP, SQLite, Artisan CLI",
+      },
+      {
+        avatar: getAssetPath("media/avatars/300-23.jpg"),
         name: "Dan Wilson",
         description: "PHP, SQLite, Artisan CLI",
       },
@@ -101,6 +105,7 @@ export default defineComponent({
 
     return {
       list,
+      getAssetPath,
     };
   },
 });

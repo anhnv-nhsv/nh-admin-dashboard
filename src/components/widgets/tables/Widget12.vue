@@ -4,9 +4,11 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Member Statistics</span>
+        <span class="card-label fw-bold fs-3 mb-1">Member Statistics</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7">Over 500 new members</span>
+        <span class="text-muted mt-1 fw-semobold fs-7"
+          >Over 500 new members</span
+        >
       </h3>
       <div class="card-toolbar">
         <!--begin::Menu-->
@@ -17,9 +19,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown2></Dropdown2>
         <!--end::Menu-->
@@ -35,7 +35,7 @@
         <table class="table align-middle gs-0 gy-4">
           <!--begin::Table head-->
           <thead>
-            <tr class="fw-bolder text-muted bg-light">
+            <tr class="fw-bold text-muted bg-light">
               <th class="ps-4 min-w-300px rounded-start">Agent</th>
               <th class="min-w-125px">Earnings</th>
               <th class="min-w-125px">Comission</th>
@@ -65,11 +65,11 @@
                     <div class="d-flex justify-content-start flex-column">
                       <a
                         href="#"
-                        class="text-dark fw-bolder text-hover-primary mb-1 fs-6"
+                        class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                         >{{ item.agent.name }}</a
                       >
                       <span
-                        class="text-muted fw-bold text-muted d-block fs-7"
+                        class="text-muted fw-semobold text-muted d-block fs-7"
                         >{{ item.agent.skills }}</span
                       >
                     </div>
@@ -79,17 +79,10 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.earnings.value }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7"
+                  <span class="text-muted fw-semobold text-muted d-block fs-7"
                     >{{ item.earnings.remarks }}></span
                   >
                 </td>
@@ -97,37 +90,25 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.comission.value }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7">{{
-                    item.comission.remarks
-                  }}</span>
+                  <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ item.comission.remarks }}</span
+                  >
                 </td>
 
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.company.name }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7">{{
-                    item.company.fields
-                  }}</span>
+                  <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ item.company.fields }}</span
+                  >
                 </td>
 
                 <td>
@@ -143,7 +124,7 @@
                   </div>
 
                   <span
-                    class="text-muted fw-bold text-muted d-block fs-7 mt-1"
+                    class="text-muted fw-semobold text-muted d-block fs-7 mt-1"
                     >{{ item.rating.remarks }}</span
                   >
                 </td>
@@ -151,29 +132,14 @@
                 <td class="text-end">
                   <a
                     href="#"
-                    class="
-                      btn
-                      btn-bg-light
-                      btn-color-muted
-                      btn-active-color-primary
-                      btn-sm
-                      px-4
-                      me-2
-                    "
+                    class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4 me-2"
                   >
                     View
                   </a>
 
                   <a
                     href="#"
-                    class="
-                      btn
-                      btn-bg-light
-                      btn-color-muted
-                      btn-active-color-primary
-                      btn-sm
-                      px-4
-                    "
+                    class="btn btn-bg-light btn-color-muted btn-active-color-primary btn-sm px-4"
                   >
                     Edit
                   </a>
@@ -193,6 +159,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 
@@ -208,7 +175,7 @@ export default defineComponent({
     const list = [
       {
         agent: {
-          image: "media/svg/avatars/001-boy.svg",
+          image: getAssetPath("media/svg/avatars/001-boy.svg"),
           name: "Brad Simmons",
           skills: "HTML, JS, ReactJS",
         },
@@ -231,7 +198,7 @@ export default defineComponent({
       },
       {
         agent: {
-          image: "media/svg/avatars/047-girl-25.svg",
+          image: getAssetPath("media/svg/avatars/047-girl-25.svg"),
           name: "Lebron Wayde",
           skills: "PHP, Laravel, VueJS",
         },
@@ -254,7 +221,7 @@ export default defineComponent({
       },
       {
         agent: {
-          image: "media/svg/avatars/006-girl-3.svg",
+          image: getAssetPath("media/svg/avatars/006-girl-3.svg"),
           name: "Brad Simmons",
           skills: "HTML, JS, ReactJS",
         },
@@ -277,7 +244,7 @@ export default defineComponent({
       },
       {
         agent: {
-          image: "media/svg/avatars/014-girl-7.svg",
+          image: getAssetPath("media/svg/avatars/014-girl-7.svg"),
           name: "Natali Trump",
           skills: "HTML, JS, ReactJS",
         },
@@ -300,7 +267,7 @@ export default defineComponent({
       },
       {
         agent: {
-          image: "media/svg/avatars/020-girl-11.svg",
+          image: getAssetPath("media/svg/avatars/020-girl-11.svg"),
           name: "	Jessie Clarcson",
           skills: "HTML, JS, ReactJS",
         },
@@ -325,6 +292,7 @@ export default defineComponent({
 
     return {
       list,
+      getAssetPath,
     };
   },
 });

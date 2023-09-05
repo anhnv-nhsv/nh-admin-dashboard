@@ -6,11 +6,11 @@
       <!--begin::Heading-->
       <div class="card-px text-center py-20 my-10">
         <!--begin::Title-->
-        <h2 class="fs-2x fw-bolder mb-10">{{ title }}</h2>
+        <h2 class="fs-2x fw-bold mb-10">{{ title }}</h2>
         <!--end::Title-->
 
         <!--begin::Description-->
-        <p class="text-gray-400 fs-5 fw-bold mb-13">
+        <p class="text-gray-400 fs-5 fw-semobold mb-13">
           <span v-html="description"></span>
         </p>
         <!--end::Description-->

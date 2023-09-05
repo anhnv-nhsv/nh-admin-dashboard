@@ -1,19 +1,7 @@
 <template>
   <!--begin::Menu-->
   <div
-    class="
-      menu
-      menu-sub
-      menu-sub-dropdown
-      menu-column
-      menu-rounded
-      menu-gray-800
-      menu-state-bg-light-primary
-      fw-bold
-      py-4
-      w-250px
-      fs-6
-    "
+    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semobold py-4 w-250px fs-6"
     data-kt-menu="true"
   >
     <!--begin::Menu item-->

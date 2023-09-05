@@ -21,6 +21,10 @@
 
 	// States
 	& {
+		[data-kt-stepper-action="final"] {
+			display: none;
+		}
+
 		[data-kt-stepper-action="previous"] {
 			display: none;
 		}
@@ -63,16 +67,32 @@
 	}
 
 	&.last {
+		[data-kt-stepper-action="final"] {
+			display: inline-block;
+		}
+
+		[data-kt-stepper-action="final"].btn-flex {
+			display: flex;
+		}
+
 		[data-kt-stepper-action="previous"] {
 			display: inline-block;
+		}
+
+		[data-kt-stepper-action="previous"].btn-flex {
+			display: flex;
 		}
 
 		[data-kt-stepper-action="next"] {
 			display: none;
 		}
 
+		[data-kt-stepper-action="next"].btn-flex {
+			display: flex;
+		}
+
 		[data-kt-stepper-action="submit"] {
-			display: none;
+			display: inline-block;
 		}
 
 		[data-kt-stepper-action="submit"].btn-flex {

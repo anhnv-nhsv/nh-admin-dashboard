@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from "vue";
+import { computed, defineComponent, onMounted, ref } from "vue";
 import Prism from "prismjs";
 import { useCopyClipboard } from "@/core/helpers/documentation";
 

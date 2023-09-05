@@ -4,14 +4,7 @@
     <div class="card h-100">
       <!--begin::Card body-->
       <div
-        class="
-          card-body
-          d-flex
-          justify-content-center
-          text-center
-          flex-column
-          p-8
-        "
+        class="card-body d-flex justify-content-center text-center flex-column p-8"
       >
         <!--begin::Name-->
         <a href="#" class="text-gray-800 text-hover-primary d-flex flex-column">
@@ -22,7 +15,7 @@
           <!--end::Image-->
 
           <!--begin::Title-->
-          <div class="fs-5 fw-bolder mb-2">
+          <div class="fs-5 fw-bold mb-2">
             {{ fileTitle }}
           </div>
           <!--end::Title-->
@@ -30,7 +23,7 @@
         <!--end::Name-->
 
         <!--begin::Description-->
-        <div class="fs-7 fw-bold text-gray-400 mt-auto">
+        <div class="fs-7 fw-semobold text-gray-400 mt-auto">
           {{ createdAt }}
         </div>
         <!--end::Description-->
@@ -45,7 +38,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "file",
+  name: "file-component",
   props: {
     fileTitle: String,
 

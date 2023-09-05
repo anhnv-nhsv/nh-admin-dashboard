@@ -4,9 +4,9 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">New Members</span>
+        <span class="card-label fw-bold fs-3 mb-1">New Members</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7"
+        <span class="text-muted mt-1 fw-semobold fs-7"
           >More than 400 new members</span
         >
       </h3>
@@ -14,14 +14,7 @@
         <ul class="nav">
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                active
-                fw-bolder
-                px-4
-                me-1
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary active fw-bold px-4 me-1"
               data-bs-toggle="tab"
               href="#kt_table_widget_4_tab_1"
               >Month</a
@@ -30,13 +23,7 @@
 
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                fw-bolder
-                px-4
-                me-1
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4 me-1"
               data-bs-toggle="tab"
               href="#kt_table_widget_4_tab_2"
               >Week</a
@@ -45,12 +32,7 @@
 
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                fw-bolder
-                px-4
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4"
               data-bs-toggle="tab"
               href="#kt_table_widget_4_tab_3"
               >Day</a
@@ -98,21 +80,15 @@
                       <td>
                         <a
                           href="#"
-                          class="
-                            text-dark
-                            fw-bolder
-                            text-hover-primary
-                            mb-1
-                            fs-6
-                          "
+                          class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                           >{{ item1.user.name }}</a
                         >
-                        <span class="text-muted fw-bold d-block fs-7">{{
+                        <span class="text-muted fw-semobold d-block fs-7">{{
                           item1.user.position
                         }}</span>
                       </td>
                       <td>
-                        <span class="text-muted fw-bold d-block fs-7">
+                        <span class="text-muted fw-semobold d-block fs-7">
                           Rating
                         </span>
 
@@ -159,6 +135,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -171,7 +148,7 @@ export default defineComponent({
     const items = [
       [
         {
-          image: "media/avatars/150-11.jpg",
+          image: getAssetPath("media/avatars/300-14.jpg"),
           user: {
             name: "Brad Simmons",
             position: "Movie Creator",
@@ -179,7 +156,7 @@ export default defineComponent({
           rating: 5,
         },
         {
-          image: "media/avatars/150-4.jpg",
+          image: getAssetPath("media/avatars/300-5.jpg"),
           user: {
             name: "Jessie Clarcson",
             position: "HTML, CSS Coding",
@@ -187,7 +164,7 @@ export default defineComponent({
           rating: 5,
         },
         {
-          image: "media/avatars/150-5.jpg",
+          image: getAssetPath("media/avatars/300-20.jpg"),
           user: {
             name: "Lebron Wayde",
             position: "ReactJS Developer",
@@ -195,7 +172,7 @@ export default defineComponent({
           rating: 4,
         },
         {
-          image: "media/avatars/150-6.jpg",
+          image: getAssetPath("media/avatars/300-23.jpg"),
           user: {
             name: "Natali Trump",
             position: "UI/UX Designer",
@@ -203,7 +180,7 @@ export default defineComponent({
           rating: 5,
         },
         {
-          image: "media/avatars/150-9.jpg",
+          image: getAssetPath("media/avatars/300-10.jpg"),
           user: {
             name: "Kevin Leonard",
             position: "Art Director",
@@ -214,7 +191,7 @@ export default defineComponent({
 
       [
         {
-          image: "media/svg/avatars/043-boy-18.svg",
+          image: getAssetPath("media/svg/avatars/043-boy-18.svg"),
           user: {
             name: "Kevin Leonard",
             position: "Art Director",
@@ -222,7 +199,7 @@ export default defineComponent({
           rating: 3,
         },
         {
-          image: "media/svg/avatars/014-girl-7.svg",
+          image: getAssetPath("media/svg/avatars/014-girl-7.svg"),
           user: {
             name: "Natali Trump",
             position: "UI/UX Designer",
@@ -230,7 +207,7 @@ export default defineComponent({
           rating: 5,
         },
         {
-          image: "media/svg/avatars/018-girl-9.svg",
+          image: getAssetPath("media/svg/avatars/018-girl-9.svg"),
           user: {
             name: "Jessie Clarcson",
             position: "HTML, CSS Coding",
@@ -238,7 +215,7 @@ export default defineComponent({
           rating: 5,
         },
         {
-          image: "media/svg/avatars/001-boy.svg",
+          image: getAssetPath("media/svg/avatars/001-boy.svg"),
           user: {
             name: "Brad Simmons",
             position: "Movie Creator",
@@ -249,7 +226,7 @@ export default defineComponent({
 
       [
         {
-          image: "media/svg/avatars/018-girl-9.svg",
+          image: getAssetPath("media/svg/avatars/018-girl-9.svg"),
           user: {
             name: "Jessie Clarcson",
             position: "HTML, CSS Coding",
@@ -257,7 +234,7 @@ export default defineComponent({
           rating: 5,
         },
         {
-          image: "media/svg/avatars/047-girl-25.svg",
+          image: getAssetPath("media/svg/avatars/047-girl-25.svg"),
           user: {
             name: "Lebron Wayde",
             position: "ReactJS Developer",
@@ -265,7 +242,7 @@ export default defineComponent({
           rating: 4,
         },
         {
-          image: "media/svg/avatars/014-girl-7.svg",
+          image: getAssetPath("media/svg/avatars/014-girl-7.svg"),
           user: {
             name: "Natali Trump",
             position: "UI/UX Designer",

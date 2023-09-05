@@ -2,9 +2,9 @@
   <!--begin::Documents toolbar-->
   <div class="d-flex flex-wrap flex-stack mb-6">
     <!--begin::Title-->
-    <h3 class="fw-bolder my-2">
+    <h3 class="fw-bold my-2">
       My Documents
-      <span class="fs-6 text-gray-400 fw-bold ms-1">100+ resources</span>
+      <span class="fs-6 text-gray-400 fw-semobold ms-1">100+ resources</span>
     </h3>
     <!--end::Title-->
 
@@ -12,9 +12,10 @@
     <div class="d-flex my-2">
       <!--begin::Search-->
       <div class="d-flex align-items-center position-relative me-4">
-        <span class="svg-icon svg-icon-3 position-absolute ms-3">
-          <inline-svg src="media/icons/duotune/general/gen021.svg" />
-        </span>
+        <KTIcon
+          icon-name="magnifier"
+          icon-class="fs-3 position-absolute ms-3"
+        />
         <input
           type="text"
           id="kt_filter_search"
@@ -68,7 +69,11 @@
       created-at="4 days ago"
     ></KTFile>
 
-    <KTFile file-title="Logo" file-type="ai" created-at="5 days ago"></KTFile>
+    <KTFile
+      file-title="Metronic Logo"
+      file-type="ai"
+      created-at="5 days ago"
+    ></KTFile>
 
     <KTFile
       file-title="Orders backup"
@@ -99,21 +104,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import KTFolder from "@/components/files/Folder.vue";
 import KTFile from "@/components/files/File.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 
 export default defineComponent({
-  name: "documents",
+  name: "profile-documents",
   components: {
     KTFolder,
     KTFile,
   },
   setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Documents", ["Pages", "Profile"]);
-    });
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

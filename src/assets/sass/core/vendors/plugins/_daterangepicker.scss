@@ -9,11 +9,11 @@
     margin: 0;
     border: 0;
     width: auto;
-    background-color: $body-bg;
-    box-shadow: $dropdown-box-shadow;
+    background-color: var(--#{$prefix}body-bg);
+    box-shadow: var(--#{$prefix}dropdown-box-shadow);
     font-family: $font-family-sans-serif;
     z-index: $zindex-dropdown;
-    @include border-radius($border-radius);
+    @include border-radius($dropdown-border-radius);
 
     &:after,
     &:before {
@@ -34,35 +34,39 @@
     }
 
     .calendar-table {
-        background-color: $body-bg;
+        background-color: var(--#{$prefix}body-bg);
         border: 0;
     }
 
     .ranges {
-        @include border-top-start-radius($border-radius);
-        background-color: $body-bg;
+        @include border-radius($dropdown-border-radius);
+        background-color: var(--#{$prefix}body-bg);
+        position: relative;
+        overflow: hidden;
 
         ul {
             padding: 1rem 0;
-            width: 175px;
+            width: $daterangepicker-ranges-list-width;
+            overflow: auto;
+            max-height: $daterangepicker-ranges-list-height;
         }
 
         li {
             padding: 0.7rem 1.75rem;
             font-weight: 500;
             font-size: 1rem;
-            color: $gray-600;
+            color: var(--#{$prefix}gray-600);
             transition: $transition-link;
 
             &:hover {
-                background-color: $component-hover-bg;
-                color: $component-hover-color;
+                background-color: var(--#{$prefix}component-hover-bg);
+                color: var(--#{$prefix}component-hover-color);
                 transition: $transition-link;
             }
 
             &.active {
-                background-color: $component-active-bg;
-                color: $component-active-color;
+                background-color: var(--#{$prefix}component-active-bg);
+                color: var(--#{$prefix}component-active-color);
                 transition: $transition-link;
             }
         }
@@ -70,6 +74,8 @@
 
     &.show-calendar {
         .ranges {            
+            @include border-radius(0);
+            @include border-top-start-radius($dropdown-border-radius);
             margin-top: 0;
             height: 297px;
         }
@@ -78,7 +84,7 @@
     &.show-ranges {
         &.show-calendar {
             .ranges  {
-                border-right: 1px solid $gray-200;
+                border-right: 1px solid var(--#{$prefix}gray-200);
             }
         }
 
@@ -89,30 +95,25 @@
 
     .drp-buttons {
         padding: 1rem 1.75rem;
-        border-top: 1px solid $gray-200;
+        border-top: 1px solid var(--#{$prefix}gray-200);
 
        .btn {
             font-size: 1rem;
-            font-weight: $font-weight-bold;
+            font-weight: $font-weight-semibold;
             padding: 0.5rem 1rem;
         }
 
         .cancelBtn {
-            $color: $light-inverse;
-            $icon-color: $light-inverse;
-            $border-color: $light;
-            $bg-color: $light;
-
-            $color-active: $light-inverse;
-            $icon-color-active: $light-inverse;
-            $border-color-active: $light-active;
-            $bg-color-active: $light-active;
-
-            @include button-custom-variant($color, $icon-color, $border-color, $bg-color, $color-active, $icon-color-active, $border-color-active, $bg-color-active);
-        }
-
-        .applyBtn {
-
+            @include button-custom-variant(
+                $color: var(--#{$prefix}light-inverse),
+                $icon-color: var(--#{$prefix}light-inverse),
+                $border-color: var(--#{$prefix}light),
+                $bg-color: var(--#{$prefix}light),
+                $color-active: var(--#{$prefix}light-inverse),
+                $icon-color-active: var(--#{$prefix}light-inverse),
+                $border-color-active: var(--#{$prefix}light-active),
+                $bg-color-active: var(--#{$prefix}light-active)
+            );
         }
     }
 
@@ -139,30 +140,30 @@
 
             &.available:hover {
                 @include border-radius($border-radius);
-                background-color: $component-hover-bg;
-                color: $component-hover-color;
+                background-color: var(--#{$prefix}component-hover-bg);
+                color: var(--#{$prefix}component-hover-color);
             }
         }
 
         th {
-            font-weight: $font-weight-bold;
-            color: $gray-800;
+            font-weight: $font-weight-semibold;
+            color: var(--#{$prefix}gray-800);
 
             &.month {
-                font-weight: $font-weight-bold;
-                color: $gray-800;
+                font-weight: $font-weight-semibold;
+                color: var(--#{$prefix}gray-800);
             }
 
             &.next,
             &.prev {
                 span {
                     border-width: 0 1px 1px 0;
-                    border-color: $gray-600;
+                    border-color: var(--#{$prefix}gray-600);
                 }
 
                 &.available:hover {
                     span {
-                        border-color: $component-hover-color;
+                        border-color: var(--#{$prefix}component-hover-color);
                     }
                 }
             }
@@ -181,15 +182,15 @@
         }
 
         td {
-            color: $gray-700;
+            color: var(--#{$prefix}gray-700);
 
             &.available.off {
-                color: $gray-400;
+                color: var(--#{$prefix}gray-400);
             }
 
             &.active {
-                background-color: $component-active-bg !important;
-                color: $component-active-color !important;
+                background-color: var(--#{$prefix}component-active-bg) !important;
+                color: var(--#{$prefix}component-active-color) !important;
                 @include border-radius($border-radius);
 
                 &.start-date {
@@ -209,19 +210,19 @@
 
             &.today,
             &.today.active {
-                background: $component-hover-bg !important;
-                color: $component-hover-color !important;
+                background: var(--#{$prefix}component-hover-bg) !important;
+                color: var(--#{$prefix}component-hover-color) !important;
                 @include border-radius($border-radius);
             }
 
             &.in-range.available:not(.active):not(.off):not(.today) {
-                background-color: $component-hover-bg;
-                color: $component-hover-color;
+                background-color: var(--#{$prefix}component-hover-bg);
+                color: var(--#{$prefix}component-hover-color);
             }
 
             &:hover {
-                background-color: $component-hover-bg;
-                color: $component-hover-color;
+                background-color: var(--#{$prefix}component-hover-bg);
+                color: var(--#{$prefix}component-hover-color);
             }
         }
     }
@@ -234,14 +235,14 @@
         padding-top: 0.35rem;
         padding-bottom: 0.35rem;
         @include border-radius($border-radius);
-        background: transparent;
+        background-color: var(--#{$prefix}body-bg) !important;
         border-color: transparent;
-        color: $input-color;
-        font-weight: $font-weight-bold;
+        color: var(--#{$prefix}input-color);
+        font-weight: $font-weight-semibold;
         outline: 0 !important;
 
         &:focus {
-            background: $gray-100;
+            background-color: var(--#{$prefix}gray-100);
         }
     }
 }

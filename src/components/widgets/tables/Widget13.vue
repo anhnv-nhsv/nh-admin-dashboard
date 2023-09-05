@@ -4,9 +4,9 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Recent Orders</span>
+        <span class="card-label fw-bold fs-3 mb-1">Recent Orders</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7">Over 500 orders</span>
+        <span class="text-muted mt-1 fw-semobold fs-7">Over 500 orders</span>
       </h3>
       <div class="card-toolbar">
         <!--begin::Menu-->
@@ -17,9 +17,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown2></Dropdown2>
         <!--end::Menu-->
@@ -33,28 +31,23 @@
       <div class="table-responsive">
         <!--begin::Table-->
         <table
-          class="
-            table table-row-bordered table-row-gray-100
-            align-middle
-            gs-0
-            gy-3
-          "
+          class="table table-row-bordered table-row-gray-100 align-middle gs-0 gy-3"
         >
           <!--begin::Table head-->
           <thead>
-            <tr class="fw-bolder text-muted">
+            <tr class="fw-bold text-muted">
               <th class="w-25px">
                 <div
-                  class="
-                    form-check form-check-sm form-check-custom form-check-solid
-                  "
+                  class="form-check form-check-sm form-check-custom form-check-solid"
                 >
                   <input
                     class="form-check-input"
                     type="checkbox"
-                    value="1"
-                    data-kt-check="true"
-                    data-kt-check-target=".widget-13-check"
+                    @change="
+                      checkedRows.length === 6
+                        ? (checkedRows.length = 0)
+                        : (checkedRows = [0, 1, 2, 3, 4, 5])
+                    "
                   />
                 </div>
               </th>
@@ -75,17 +68,13 @@
               <tr>
                 <td>
                   <div
-                    class="
-                      form-check
-                      form-check-sm
-                      form-check-custom
-                      form-check-solid
-                    "
+                    class="form-check form-check-sm form-check-custom form-check-solid"
                   >
                     <input
                       class="form-check-input widget-13-check"
                       type="checkbox"
-                      value="1"
+                      :value="index"
+                      v-model="checkedRows"
                     />
                   </div>
                 </td>
@@ -93,7 +82,7 @@
                 <td>
                   <a
                     href="#"
-                    class="text-dark fw-bolder text-hover-primary fs-6"
+                    class="text-dark fw-bold text-hover-primary fs-6"
                     >{{ item.orderid }}</a
                   >
                 </td>
@@ -101,17 +90,10 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.company.name }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7"
+                  <span class="text-muted fw-semobold text-muted d-block fs-7"
                     >Code: {{ item.country.code }}</span
                   >
                 </td>
@@ -119,17 +101,10 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.date.value }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7"
+                  <span class="text-muted fw-semobold text-muted d-block fs-7"
                     >Code: {{ item.date.remarks }}</span
                   >
                 </td>
@@ -137,22 +112,16 @@
                 <td>
                   <a
                     href="#"
-                    class="
-                      text-dark
-                      fw-bolder
-                      text-hover-primary
-                      d-block
-                      mb-1
-                      fs-6
-                    "
+                    class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6"
                     >{{ item.company.name }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7">{{
-                    item.company.fields
-                  }}</span>
+                  <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ item.company.fields }}</span
+                  >
                 </td>
 
-                <td class="text-dark fw-bolder text-hover-primary fs-6">
+                <td class="text-dark fw-bold text-hover-primary fs-6">
                   {{ item.total }}
                 </td>
 
@@ -167,41 +136,23 @@
                 <td class="text-end">
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                      me-1
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg
-                        src="media/icons/duotune/general/gen019.svg"
-                      />
-                    </span>
+                    <KTIcon icon-name="switch" icon-class="fs-3" />
                   </a>
 
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                      me-1
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg src="media/icons/duotune/art/art005.svg" />
-                    </span>
+                    <KTIcon icon-name="pencil" icon-class="fs-3" />
                   </a>
 
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg
-                        src="media/icons/duotune/general/gen027.svg"
-                      />
-                    </span>
+                    <KTIcon icon-name="trash" icon-class="fs-3" />
                   </a>
                 </td>
               </tr>
@@ -219,7 +170,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent, ref } from "vue";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 
 export default defineComponent({
@@ -231,6 +183,7 @@ export default defineComponent({
     widgetClasses: String,
   },
   setup() {
+    const checkedRows = ref<Array<number>>([]);
     const list = [
       {
         orderid: "56037-XDER",
@@ -356,6 +309,8 @@ export default defineComponent({
 
     return {
       list,
+      checkedRows,
+      getAssetPath,
     };
   },
 });

@@ -17,7 +17,7 @@
       <div class="card-toolbar">
         <span
           :class="getStatusDataBadgeColor"
-          class="badge fw-bolder me-auto px-4 py-3"
+          class="badge fw-bold me-auto px-4 py-3"
           >{{ getStatus }}</span
         >
       </div>
@@ -28,13 +28,13 @@
     <!--begin:: Card body-->
     <div class="card-body p-9">
       <!--begin::Name-->
-      <div class="fs-3 fw-bolder text-dark">
+      <div class="fs-3 fw-bold text-dark">
         {{ title }}
       </div>
       <!--end::Name-->
 
       <!--begin::Description-->
-      <p class="text-gray-400 fw-bold fs-5 mt-1 mb-7">
+      <p class="text-gray-400 fw-semobold fs-5 mt-1 mb-7">
         {{ getDescription }}
       </p>
       <!--end::Description-->
@@ -43,34 +43,19 @@
       <div class="d-flex flex-wrap mb-5">
         <!--begin::Due-->
         <div
-          class="
-            border border-gray-300 border-dashed
-            rounded
-            min-w-125px
-            py-3
-            px-4
-            me-7
-            mb-3
-          "
+          class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-7 mb-3"
         >
-          <div class="fs-6 text-gray-800 fw-bolder">{{ getDate }}</div>
-          <div class="fw-bold text-gray-400">Due Date</div>
+          <div class="fs-6 text-gray-800 fw-bold">{{ getDate }}</div>
+          <div class="fw-semobold text-gray-400">Due Date</div>
         </div>
         <!--end::Due-->
 
         <!--begin::Budget-->
         <div
-          class="
-            border border-gray-300 border-dashed
-            rounded
-            min-w-125px
-            py-3
-            px-4
-            mb-3
-          "
+          class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 mb-3"
         >
-          <div class="fs-6 text-gray-800 fw-bolder">{{ getBudget }}</div>
-          <div class="fw-bold text-gray-400">Budget</div>
+          <div class="fs-6 text-gray-800 fw-bold">{{ getBudget }}</div>
+          <div class="fw-semobold text-gray-400">Budget</div>
         </div>
         <!--end::Budget-->
       </div>
@@ -107,7 +92,7 @@
               <img v-if="user.src" alt="Pic" :src="user.src" />
               <span
                 v-else
-                class="symbol-label fw-bolder"
+                class="symbol-label fw-bold"
                 :class="`bg-${user.state} text-inverse-${user.state}`"
                 >{{ user.initials }}</span
               >
@@ -124,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
   name: "card-1",
@@ -148,7 +133,7 @@ export default defineComponent({
 
     budget: String,
 
-    users: Array,
+    users: Array as () => Array<any>,
   },
   setup(props) {
     const getDescription = computed(() => {

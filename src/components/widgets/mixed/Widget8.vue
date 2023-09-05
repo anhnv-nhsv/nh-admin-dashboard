@@ -17,11 +17,11 @@
 
           <!--begin:Title-->
           <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pr-3">
-            <a href="#" class="text-dark fw-bolder text-hover-primary fs-5">
+            <a href="#" class="text-dark fw-bold text-hover-primary fs-5">
               {{ title }}
             </a>
 
-            <span class="text-muted fw-bold">
+            <span class="text-muted fw-semobold">
               {{ date }}
             </span>
           </div>
@@ -33,16 +33,12 @@
         <div class="ms-1">
           <button
             type="button"
-            class="
-              btn btn-sm btn-icon btn-color-primary btn-active-light-primary
-            "
+            class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end"
             data-kt-menu-flip="top-end"
           >
-            <span class="svg-icon svg-icon-2">
-              <inline-svg src="media/icons/duotune/general/gen024.svg" />
-            </span>
+            <KTIcon icon-name="category" icon-class="fs-2" />
           </button>
           <Dropdown2></Dropdown2>
         </div>
@@ -52,7 +48,7 @@
 
       <!--begin:Stats-->
       <div class="d-flex flex-column w-100 mt-12">
-        <span class="text-dark me-2 fw-bolder pb-3"> Progress </span>
+        <span class="text-dark me-2 fw-bold pb-3"> Progress </span>
 
         <div class="progress h-5px w-100">
           <div
@@ -70,7 +66,7 @@
 
       <!--begin:Team-->
       <div class="d-flex flex-column mt-10">
-        <div class="text-dark me-2 fw-bolder pb-4">Team</div>
+        <div class="text-dark me-2 fw-bold pb-4">Team</div>
 
         <div class="d-flex">
           <a
@@ -79,7 +75,7 @@
             data-bs-toggle="tooltip"
             title="Ana Stone"
           >
-            <img src="media/avatars/150-1.jpg" alt="" />
+            <img :src="getAssetPath('media/avatars/300-6.jpg')" alt="" />
           </a>
 
           <a
@@ -88,7 +84,7 @@
             data-bs-toggle="tooltip"
             title="Mark Larson"
           >
-            <img src="media/avatars/150-4.jpg" alt="" />
+            <img :src="getAssetPath('media/avatars/300-5.jpg')" alt="" />
           </a>
 
           <a
@@ -97,7 +93,7 @@
             data-bs-toggle="tooltip"
             title="Sam Harris"
           >
-            <img src="media/avatars/150-8.jpg" alt="" />
+            <img :src="getAssetPath('media/avatars/300-9.jpg')" alt="" />
           </a>
 
           <a
@@ -106,7 +102,7 @@
             data-bs-toggle="tooltip"
             title="Alice Micto"
           >
-            <img src="media/avatars/150-9.jpg" alt="" />
+            <img :src="getAssetPath('media/avatars/300-10.jpg')" alt="" />
           </a>
         </div>
       </div>
@@ -118,6 +114,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 
@@ -133,6 +130,11 @@ export default defineComponent({
     title: String,
     date: String,
     progress: String,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

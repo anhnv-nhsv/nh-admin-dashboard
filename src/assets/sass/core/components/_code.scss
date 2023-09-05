@@ -4,12 +4,12 @@
 
 code:not([class*="language-"]) {
     font-weight: $code-font-weight;
-    color: $code-color;
+    color: var(--#{$prefix}code-color);
     line-height: inherit;
     font-size: inherit;
-    background-color: $code-bg;
+    background-color: var(--#{$prefix}code-bg);
     padding: $code-padding;
     margin: $code-margin;
-    box-shadow: $code-box-shadow;
+    box-shadow: var(--#{$prefix}code-box-shadow);
     @include border-radius($code-border-radius);
 }

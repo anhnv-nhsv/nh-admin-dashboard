@@ -2,11 +2,11 @@
 @use 'sass:math';
 
 @mixin shape($edges-number: 6, $main-radius: 30%, $rounding-radius: 10%, $rotated: true, $precision: 20) {
-	$central-angle: 360deg/$edges-number;
-	$angle: ($edges-number - 2) * 180deg/$edges-number;
-	$max-var-angle: 2 * (90deg - $angle/2);
+	$central-angle: divide(360deg, $edges-number);
+	$angle: ($edges-number - 2) * divide(180deg, $edges-number);
+	$max-var-angle: 2 * (90deg - divide($angle, 2));
 	$precision: 6;
-	$unit-var-angle: $max-var-angle / $precision;
+	$unit-var-angle: divide($max-var-angle, $precision);	
 	$r-diff: $main-radius + $rounding-radius;
 
 	$points: ();

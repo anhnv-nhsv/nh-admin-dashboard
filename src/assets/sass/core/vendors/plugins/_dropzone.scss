@@ -8,8 +8,8 @@
     padding: 1.5rem 1.75rem;
 	text-align: center;
 	cursor: pointer;
-    border: 1px dashed $primary;
-    background-color: $primary-light;
+    border: 1px dashed var(--#{$prefix}primary);
+    background-color: var(--#{$prefix}primary-light);
     border-radius: $border-radius !important;
 
     .dz-message{
@@ -29,7 +29,7 @@
 
         &.dz-file-preview {
             .dz-image {
-                background: $gray-200;
+                background: var(--#{$prefix}gray-200);
             }
         }
     }
@@ -49,7 +49,6 @@
 
     .dz-remove {
         $size: 1.65rem;
-
         display:flex;
 		justify-content: center;
 		align-items: center;
@@ -60,23 +59,35 @@
         white-space: nowrap;  
         position: absolute;
         z-index: 2;
-        background-size: 40%;
-        background-color: $white !important;
-        box-shadow: $box-shadow-sm;        
+        background-color: var(--#{$prefix}body-bg) !important;        
+        box-shadow: var(--#{$prefix}box-shadow);        
 		border-radius: 100%;
         top: -(divide($size,2));
         right: -(divide($size,2));
 
-        @include svg-bg-icon(close, $gray-500);
+        &:after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            display: block;
+            content: "";
+            mask-size: 40%;
+            -webkit-mask-size: 40%;
+            @include svg-bg-icon(close, var(--#{$prefix}gray-600));
+        }       
 
         &:hover {
-            @include svg-bg-icon(close, $primary);
+            &:after {
+                @include svg-bg-icon(close, var(--#{$prefix}primary));
+            } 
         }
     }
 
     .dz-error-message {
-        color: $danger-inverse;
-        background: $danger;
+        color: var(--#{$prefix}danger-inverse);
+        background: var(--#{$prefix}danger);
     }
 }
 
@@ -104,7 +115,7 @@
         margin-top: 0.75rem;
         @include border-radius($border-radius);
         padding: 0.5rem 1rem;
-        background-color: $gray-100;
+        background-color: var(--#{$prefix}gray-100);
 
         .dropzone-file {
             flex-grow: 1;
@@ -112,12 +123,12 @@
             .dropzone-filename {
                 font-size: 0.9rem;
                 font-weight: 500;
-                color: $gray-600;
+                color: var(--#{$prefix}gray-600);
                 text-overflow: ellipsis;
                 margin-right: 0.5rem;
 
                 &:hover {
-                    color: $primary;
+                    color: var(--#{$prefix}primary);
                 }
             }
 
@@ -125,7 +136,7 @@
                 margin-top: 0.25rem;
                 font-size: 0.9rem;
                 font-weight: 400;
-                color: $danger;
+                color: var(--#{$prefix}danger);
                 text-overflow: ellipsis;
             }
         }
@@ -155,16 +166,16 @@
                 cursor: pointer;
                 transition: $transition-link;
 
-                i {
+                > i {
                     transition: $transition-link;
                     font-size: 0.8rem;
-                    color: $gray-600;
+                    color: var(--#{$prefix}gray-600);
                 }
 
                 &:hover {
                     transition: $transition-link;
-                    i {
-                        color: $primary;
+                    > i {
+                        color: var(--#{$prefix}primary);
                     }
                 }
             }

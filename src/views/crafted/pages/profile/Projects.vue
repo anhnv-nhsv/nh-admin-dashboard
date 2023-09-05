@@ -2,7 +2,7 @@
   <!--begin::Toolbar-->
   <div class="d-flex flex-wrap flex-stack my-5">
     <!--begin::Heading-->
-    <h2 class="fs-2 fw-bold my-2">
+    <h2 class="fs-2 fw-semobold my-2">
       Projects
       <span class="fs-6 text-gray-400 ms-1">by Status</span>
     </h2>
@@ -17,7 +17,7 @@
           name="status"
           data-control="select2"
           data-hide-search="true"
-          class="form-select form-select-white form-select-sm fw-bolder w-125px"
+          class="form-select form-select-white form-select-sm fw-bold w-125px"
         >
           <option value="Active" selected>Active</option>
           <option value="Approved">In Progress</option>
@@ -39,7 +39,7 @@
       <KTCard
         :progress="50"
         title="Fitnes App"
-        icon="media/svg/brand-logos/plurk.svg"
+        :icon="getAssetPath('media/svg/brand-logos/plurk.svg')"
         :users="users1"
       ></KTCard>
     </div>
@@ -51,7 +51,7 @@
         status="Pending"
         status-data-badge-color="badge-light"
         :progress="30"
-        icon="media/svg/brand-logos/disqus.svg"
+        :icon="getAssetPath('media/svg/brand-logos/disqus.svg')"
         title="Leaf CRM"
         date="May 10, 2021"
         budget="$36,400.00"
@@ -66,7 +66,7 @@
         status="Completed"
         status-data-badge-color="badge-light-success"
         :progress="100"
-        icon="media/svg/brand-logos/figma-1.svg"
+        :icon="getAssetPath('media/svg/brand-logos/figma-1.svg')"
         title="Atica Banking"
         date="Mar 14, 2021"
         budget="$605,100.00"
@@ -81,7 +81,7 @@
         status="Pending"
         :progress="60"
         status-data-badge-color="badge-light"
-        icon="media/svg/brand-logos/sentry-3.svg"
+        :icon="getAssetPath('media/svg/brand-logos/sentry-3.svg')"
         title="Finance Dispatch"
         budget="$36,400.00"
         :users="users4"
@@ -94,7 +94,7 @@
       <KTCard
         status="In Progress"
         :progress="40"
-        icon="media/svg/brand-logos/xing-icon.svg"
+        :icon="getAssetPath('media/svg/brand-logos/xing-icon.svg')"
         title="9 Degree"
         date="May 10, 2021"
         budget="$36,400.00"
@@ -108,7 +108,7 @@
       <KTCard
         status="In Progress"
         :progress="70"
-        icon="media/svg/brand-logos/tvit.svg"
+        :icon="getAssetPath('media/svg/brand-logos/tvit.svg')"
         title="GoPro App"
         date="May 10, 2021"
         budget="$36,400.00"
@@ -122,7 +122,7 @@
       <KTCard
         status="In Progress"
         :progress="30"
-        icon="media/svg/brand-logos/aven.svg"
+        :icon="getAssetPath('media/svg/brand-logos/aven.svg')"
         title="Buldozer CRM"
         date="May 10, 2021"
         budget="$36,400.00"
@@ -137,7 +137,7 @@
         status="Overdue"
         :progress="10"
         status-data-badge-color="badge-light-danger"
-        icon="media/svg/brand-logos/treva.svg"
+        :icon="getAssetPath('media/svg/brand-logos/treva.svg')"
         title="Aviasales App"
         date="May 10, 2021"
         budget="$36,400.00"
@@ -152,7 +152,7 @@
         status="Completed"
         :progress="100"
         status-data-badge-color="badge-light-success"
-        icon="media/svg/brand-logos/kanba.svg"
+        :icon="getAssetPath('media/svg/brand-logos/kanba.svg')"
         title="Oppo CRM"
         date="May 10, 2021"
         budget="$36,400.00"
@@ -163,7 +163,7 @@
 
     <!--begin::Pagination-->
     <div class="d-flex flex-stack flex-wrap pt-10">
-      <div class="fs-6 fw-bold text-gray-700">
+      <div class="fs-6 fw-semobold text-gray-700">
         Showing 1 to 10 of 50 entries
       </div>
 
@@ -208,34 +208,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from "vue";
+import { getAssetPath } from "@/core/helpers/assets";
+import { defineComponent } from "vue";
 import KTCard from "@/components/cards/Card1.vue";
-import { setCurrentPageBreadcrumbs } from "@/core/helpers/breadcrumb";
 
 export default defineComponent({
-  name: "projects",
+  name: "profile-projects",
   components: {
     KTCard,
   },
   setup() {
-    onMounted(() => {
-      setCurrentPageBreadcrumbs("Projects", ["Pages", "Profile"]);
-    });
-
     const users1 = [
-      { name: "Emma Smith", src: "media/avatars/150-1.jpg" },
-      { name: "Rudy Stone", src: "media/avatars/150-2.jpg" },
+      { name: "Emma Smith", src: getAssetPath("media/avatars/300-6.jpg") },
+      { name: "Rudy Stone", src: getAssetPath("media/avatars/300-1.jpg") },
       { name: "Susan Redwood", initials: "S", state: "primary" },
     ];
 
     const users2 = [
       { name: "Alan Warden", initials: "A", state: "warning" },
-      { name: "Brian Cox", src: "media/avatars/150-4.jpg" },
+      { name: "Brian Cox", src: getAssetPath("media/avatars/300-5.jpg") },
     ];
 
     const users3 = [
-      { name: "Mad Masy", src: "media/avatars/150-1.jpg" },
-      { name: "Cris Willson", src: "media/avatars/150-2.jpg" },
+      { name: "Mad Masy", src: getAssetPath("media/avatars/300-6.jpg") },
+      { name: "Cris Willson", src: getAssetPath("media/avatars/300-1.jpg") },
       { name: "Mike Garcie", initials: "M", state: "info" },
     ];
 
@@ -245,30 +241,36 @@ export default defineComponent({
     ];
 
     const users5 = [
-      { name: "Francis Mitcham", src: "media/avatars/150-5.jpg" },
-      { name: "Michelle Swanston", src: "media/avatars/150-13.jpg" },
+      {
+        name: "Francis Mitcham",
+        src: getAssetPath("media/avatars/300-20.jpg"),
+      },
+      {
+        name: "Michelle Swanston",
+        src: getAssetPath("media/avatars/300-7.jpg"),
+      },
       { name: "Susan Redwood", initials: "S", state: "primary" },
     ];
 
     const users6 = [
-      { name: "Emma Smith", src: "media/avatars/150-1.jpg" },
-      { name: "Rudy Stone", src: "media/avatars/150-2.jpg" },
+      { name: "Emma Smith", src: getAssetPath("media/avatars/300-6.jpg") },
+      { name: "Rudy Stone", src: getAssetPath("media/avatars/300-1.jpg") },
       { name: "Susan Redwood", initials: "S", state: "primary" },
     ];
 
     const users7 = [
-      { name: "Meloday Macy", src: "media/avatars/150-3.jpg" },
+      { name: "Meloday Macy", src: getAssetPath("media/avatars/300-2.jpg") },
       { name: "Rabbin Watterman", initials: "S", state: "success" },
     ];
 
     const users8 = [
-      { name: "Emma Smith", src: "media/avatars/150-1.jpg" },
-      { name: "Rudy Stone", src: "media/avatars/150-2.jpg" },
+      { name: "Emma Smith", src: getAssetPath("media/avatars/300-6.jpg") },
+      { name: "Rudy Stone", src: getAssetPath("media/avatars/300-1.jpg") },
       { name: "Susan Redwood", initials: "S", state: "primary" },
     ];
 
     const users9 = [
-      { name: "Meloday Macy", src: "media/avatars/150-3.jpg" },
+      { name: "Meloday Macy", src: getAssetPath("media/avatars/300-2.jpg") },
       { name: "Rabbin Watterman", initials: "S", state: "danger" },
     ];
 
@@ -282,6 +284,7 @@ export default defineComponent({
       users7,
       users8,
       users9,
+      getAssetPath,
     };
   },
 });

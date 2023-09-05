@@ -4,8 +4,8 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Authors Earnings</span>
-        <span class="text-muted mt-1 fw-bold fs-7"
+        <span class="card-label fw-bold fs-3 mb-1">Authors Earnings</span>
+        <span class="text-muted mt-1 fw-semobold fs-7"
           >More than 400 new authors</span
         >
       </h3>
@@ -13,14 +13,7 @@
         <ul class="nav">
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                active
-                fw-bolder
-                px-4
-                me-1
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary active fw-bold px-4 me-1"
               data-bs-toggle="tab"
               href="#kt_table_widget_6_tab_1"
               >Month</a
@@ -29,13 +22,7 @@
 
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                fw-bolder
-                px-4
-                me-1
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4 me-1"
               data-bs-toggle="tab"
               href="#kt_table_widget_6_tab_2"
               >Week</a
@@ -44,12 +31,7 @@
 
           <li class="nav-item">
             <a
-              class="
-                nav-link
-                btn btn-sm btn-color-muted btn-active btn-active-light-primary
-                fw-bolder
-                px-4
-              "
+              class="nav-link btn btn-sm btn-color-muted btn-active btn-active-light-primary fw-bold px-4"
               data-bs-toggle="tab"
               href="#kt_table_widget_6_tab_3"
               >Day</a
@@ -103,50 +85,34 @@
                       <td>
                         <a
                           href="#"
-                          class="
-                            text-dark
-                            fw-bolder
-                            text-hover-primary
-                            mb-1
-                            fs-6
-                          "
+                          class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                           >{{ item1.user.name }}</a
                         >
-                        <span class="text-muted fw-bold d-block">{{
+                        <span class="text-muted fw-semobold d-block">{{
                           item1.user.position
                         }}</span>
                       </td>
                       <td>
-                        <span class="text-muted fw-bold d-block fs-7"
+                        <span class="text-muted fw-semobold d-block fs-7"
                           >Paid</span
                         >
-                        <span class="text-dark fw-bolder d-block fs-5">{{
+                        <span class="text-dark fw-bold d-block fs-5">{{
                           item1.paid
                         }}</span>
                       </td>
                       <td class="text-end">
                         <span
                           :class="`text-${item1.progress.color}`"
-                          class="fs-7 fw-bolder"
+                          class="fs-7 fw-bold"
                           >{{ item1.progress.value }}</span
                         >
                       </td>
                       <td class="text-end">
                         <a
                           href="#"
-                          class="
-                            btn
-                            btn-sm
-                            btn-icon
-                            btn-bg-light
-                            btn-active-color-primary
-                          "
+                          class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary"
                         >
-                          <span class="svg-icon svg-icon-2">
-                            <inline-svg
-                              src="media/icons/duotune/arrows/arr064.svg"
-                            />
-                          </span>
+                          <KTIcon icon-name="arrow-right" icon-class="fs-2" />
                         </a>
                       </td>
                     </tr>
@@ -167,6 +133,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -179,7 +146,7 @@ export default defineComponent({
     const items = [
       [
         {
-          image: "media/svg/avatars/001-boy.svg",
+          image: getAssetPath("media/svg/avatars/001-boy.svg"),
           user: {
             name: "Brad Simmons",
             position: "Successful Fellas",
@@ -191,7 +158,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/018-girl-9.svg",
+          image: getAssetPath("media/svg/avatars/018-girl-9.svg"),
           user: {
             name: "Jessie Clarcson",
             position: "HTML, CSS Coding",
@@ -203,7 +170,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/047-girl-25.svg",
+          image: getAssetPath("media/svg/avatars/047-girl-25.svg"),
           user: {
             name: "Jessie Clarcson",
             position: "PHP, Laravel, VueJS",
@@ -215,7 +182,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/014-girl-7.svg",
+          image: getAssetPath("media/svg/avatars/014-girl-7.svg"),
           user: {
             name: "Natali Trump",
             position: "UI/UX Designer",
@@ -227,7 +194,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/043-boy-18.svg",
+          image: getAssetPath("media/svg/avatars/043-boy-18.svg"),
           user: {
             name: "Kevin Leonard",
             position: "Art Director",
@@ -242,7 +209,7 @@ export default defineComponent({
 
       [
         {
-          image: "media/svg/avatars/018-girl-9.svg",
+          image: getAssetPath("media/svg/avatars/018-girl-9.svg"),
           user: {
             name: "Jessie Clarcson",
             position: "HTML, CSS Coding",
@@ -254,7 +221,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/014-girl-7.svg",
+          image: getAssetPath("media/svg/avatars/014-girl-7.svg"),
           user: {
             name: "Natali Trump",
             position: "UI/UX Designer",
@@ -266,7 +233,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/001-boy.svg",
+          image: getAssetPath("media/svg/avatars/001-boy.svg"),
           user: {
             name: "Brad Simmons",
             position: "Successful Fellas",
@@ -281,7 +248,7 @@ export default defineComponent({
 
       [
         {
-          image: "media/svg/avatars/047-girl-25.svg",
+          image: getAssetPath("media/svg/avatars/047-girl-25.svg"),
           user: {
             name: "Jessie Clarcson",
             position: "HTML, CSS Coding",
@@ -293,7 +260,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/014-girl-7.svg",
+          image: getAssetPath("media/svg/avatars/014-girl-7.svg"),
           user: {
             name: "Natali Trump",
             position: "UI/UX Designer",
@@ -305,7 +272,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/043-boy-18.svg",
+          image: getAssetPath("media/svg/avatars/043-boy-18.svg"),
           user: {
             name: "Kevin Leonard",
             position: "Art Director",
@@ -317,7 +284,7 @@ export default defineComponent({
           },
         },
         {
-          image: "media/svg/avatars/001-boy.svg",
+          image: getAssetPath("media/svg/avatars/001-boy.svg"),
           user: {
             name: "Brad Simmons",
             position: "Successful Fellas",
@@ -333,6 +300,7 @@ export default defineComponent({
 
     return {
       items,
+      getAssetPath,
     };
   },
 });

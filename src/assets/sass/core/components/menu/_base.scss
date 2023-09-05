@@ -16,6 +16,13 @@
     list-style: none;
 }
 
+// Sub inner
+.menu-inner {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
 // Sub menu
 .menu-sub {
     display: none;
@@ -28,7 +35,7 @@
 // Menu item
 .menu-item {
     display: block;
-    padding: 0;
+    padding: $menu-item-padding-y $menu-item-padding-x;
 
     // Menu Link
     .menu-link {
@@ -37,65 +44,65 @@
         align-items: center;
         padding: 0;
         flex: 0 0 100%;
-        padding: get($menu, link, self, padding-y) get($menu, link, self, padding-x);
+        padding: $menu-link-padding-y $menu-link-padding-x;
         transition: none;
         outline: none !important;
 
-        // Menu Icon
         .menu-icon {
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: get($menu, link, icon, width);
-            margin-right: get($menu, link, icon, space);
+            width: $menu-icon-size;
+            margin-right: $menu-icon-space;
 
+            i,
             .svg-icon {
                 line-height: 1;
             }
         }
 
-        // Menu Icon
         .menu-bullet {
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: get($menu, link, bullet, width);
-            margin-right: get($menu, link, bullet, space);
+            width: $menu-bullet-size;
+            margin-right: $menu-bullet-space;
         }
 
-        // Menu Label
         .menu-title {
             display: flex;
             align-items: center;
             flex-grow: 1;
         }
 
-        // Menu Label
         .menu-badge {
+            display: flex;
+            align-items: center;
             flex-shrink: 0;
-            margin-left: get($menu, link, badge, space);
+            margin-left: $menu-badge-space;
         }
 
-        // Menu Arrow
         .menu-arrow {
             display: flex;
             align-items: stretch;
             position: relative;
             overflow: hidden;
             flex-shrink: 0;
-            margin-left: get($menu, link, arrow, space);
-            width: get($menu, link, arrow, width);
-            height: get($menu, link, arrow, height);
+            margin-left: $menu-arrow-space;
+            width: $menu-arrow-size;
+            height: $menu-arrow-size;
 
             &:after {
                 display: block;
                 width: 100%;
                 content: " ";
-                @include svg-bg-icon(arrow-start, $text-muted);
+                will-change: transform;
+                background-size: 100% 100%;
+                @include svg-bg-icon(arrow-start, var(--#{$prefix}text-muted));
                 /*rtl:begin:remove*/
-                @include svg-bg-icon(arrow-end, $text-muted);
+                @include svg-bg-icon(arrow-end, var(--#{$prefix}text-muted));
                 /*rtl:end:remove*/
             }
         }
@@ -103,7 +110,7 @@
 
     // Menu Content
     .menu-content {
-        padding: get($menu, link, self, padding-y) get($menu, link, self, padding-x);
+        padding: $menu-link-padding-y $menu-link-padding-x;
     }
 }
 
@@ -111,9 +118,9 @@
 .menu-item {    
     &.show {
         .menu-link {
-            .menu-arrow:after {
-                -webkit-backface-visibility: hidden;
-                transition: get($menu, accordion, arrow-transition);
+            .menu-arrow:after {                
+                backface-visibility: hidden;
+                transition: $menu-accordion-arrow-transition;
             }
         }
     }
@@ -122,6 +129,11 @@
 // Center alignment
 .menu-center {
     justify-content: center;
+}
+
+// Heading
+.menu-heading {
+    color: var(--#{$prefix}menu-heading-color);    
 }
 
 // Responsive 
@@ -136,11 +148,15 @@
         @include media-breakpoint-direction($direction, $breakpoint) {
             // Accordion arrow
             .menu-item.menu#{$infix}-accordion {
+                .menu-arrow:after {
+                    @include menu-link-arrow-rotate(90deg, -90deg);
+                }
+
                 &.showing:not(.menu-dropdown),
                 &.show:not(.hiding):not(.menu-dropdown) {
                     > .menu-link {
                         .menu-arrow:after {
-                            @include menu-link-arrow-rotate(90deg, -90deg);
+                            @include menu-link-arrow-rotate(-90deg, 90deg);
                         }
                     }
                 }
@@ -149,28 +165,22 @@
             // Sub dropdown
             .menu-sub#{$infix}-dropdown {
                 display: none;
-                border-radius: get($menu, dropdown, border-radius);
-                background-color: get($menu, dropdown, background-color);
-                box-shadow: get($menu, dropdown, box-shadow);
-                z-index: get($menu, dropdown, z-index);
+                border-radius: $menu-dropdown-border-radius;
+                background-color: var(--#{$prefix}menu-dropdown-bg-color);
+                box-shadow: var(--#{$prefix}menu-dropdown-box-shadow);
+                z-index: $menu-dropdown-z-index;
 
                 // Dropdown show
                 .show.menu-dropdown > &,
                 &.menu.show,
                 &.show[data-popper-placement] {
                     display: flex;
-
+                    will-change: transform;
+                    
                     // Animation
-                    @if (get($menu, dropdown, animation) == true) {
+                    @if ($menu-dropdown-animation == true) {
                         // Move up
-                        animation: menu-sub-dropdown-animation-fade-in #{get($menu, dropdown, animation-speed)} ease 1, menu-sub-dropdown-animation-move-up #{get($menu, dropdown, animation-speed)} ease 1;
-                        
-                        // Move down
-                        &[data-popper-placement="top"],
-                        &[data-popper-placement="top-start"],
-                        &[data-popper-placement="top-end"] {
-                            animation: menu-sub-dropdown-animation-fade-in #{get($menu, dropdown, animation-speed)} ease 1, menu-sub-dropdown-animation-move-down #{get($menu, dropdown, animation-speed)} ease 1;
-                        }                        
+                        animation: menu-sub-dropdown-animation-fade-in #{$menu-dropdown-animation-speed} ease 1, menu-sub-dropdown-animation-move-up #{$menu-dropdown-animation-speed} ease 1;
                     }                    
                 }
             }
@@ -182,6 +192,16 @@
                 .show:not(.menu-dropdown) > &,
                 &.show {
                     display: flex;
+                }
+            }
+
+            // Sub indention
+            .menu-sub#{$infix}-indention {
+                @include menu-sub-indention($menu-accordion-indention);
+
+                // Active link
+                .menu-item .menu-item .menu-link.active {
+                    margin-right: $menu-link-padding-x;
                 }
             }
 
@@ -224,7 +244,7 @@
             // Border radiuses
             .menu#{$infix}-rounded {
                 .menu-link {
-                    @include border-radius($border-radius);
+                    @include border-radius($menu-link-border-radius);
                 }
             }
 
@@ -245,21 +265,43 @@
     }
 }
 
-// Menu indention
-@include menu-link-indention(get($menu, accordion, indention), get($menu, link, self, padding-x));
+// Link indention
+.menu-link-indention {
+    .menu-item {
+        padding-top: 0;    
+        padding-bottom: 0;    
+    }
+        
+    @include menu-link-indention($menu-accordion-indention, $menu-link-padding-x);
+}
 
 // Menu animations
 @keyframes menu-sub-dropdown-animation-fade-in {
-    from   { opacity: 0; }
-    to { opacity: 1; }
+    from   { 
+        opacity: 0; 
+    }
+
+    to { 
+        opacity: 1; 
+    }
 }
 
 @keyframes menu-sub-dropdown-animation-move-up {
-    from   { margin-top: #{get($menu, dropdown, animation-move-offset)} }
-    to { margin-top: 0 }
+    from   { 
+        margin-top: #{$menu-dropdown-animation-move-offset};
+    }
+    
+    to { 
+        margin-top: 0;
+    }
 }
 
 @keyframes menu-sub-dropdown-animation-move-down {
-    from   { margin-bottom: #{get($menu, dropdown, animation-move-offset)} }
-    to { margin-bottom: 0 }
+    from   { 
+        margin-bottom: #{$menu-dropdown-animation-move-offset};
+    }
+
+    to { 
+        margin-bottom: 0;
+    }
 }

@@ -4,9 +4,11 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Files</span>
+        <span class="card-label fw-bold fs-3 mb-1">Files</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7">Over 100 pending files</span>
+        <span class="text-muted mt-1 fw-semobold fs-7"
+          >Over 100 pending files</span
+        >
       </h3>
       <div class="card-toolbar">
         <!--begin::Menu-->
@@ -17,9 +19,7 @@
           data-kt-menu-placement="bottom-end"
           data-kt-menu-flip="top-end"
         >
-          <span class="svg-icon svg-icon-2">
-            <inline-svg src="media/icons/duotune/general/gen024.svg" />
-          </span>
+          <KTIcon icon-name="category" icon-class="fs-2" />
         </button>
         <Dropdown3></Dropdown3>
         <!--end::Menu-->
@@ -55,30 +55,28 @@
                       :class="`bg-light-${item.color}`"
                       class="symbol-label"
                     >
-                      <span
-                        :class="`svg-icon-${item.color}`"
-                        class="svg-icon svg-icon-2x"
-                      >
-                        <inline-svg :src="item.icon" />
-                      </span>
+                      <KTIcon
+                        :icon-name="item.icon"
+                        :icon-class="`text-${item.color} fs-2x`"
+                      />
                     </span>
                   </div>
                 </td>
                 <td>
                   <a
                     href="#"
-                    class="text-dark fw-bolder text-hover-primary mb-1 fs-6"
+                    class="text-dark fw-bold text-hover-primary mb-1 fs-6"
                   >
                     {{ item.title }}
                   </a>
                 </td>
-                <td class="text-end text-muted fw-bold">
+                <td class="text-end text-muted fw-semobold">
                   {{ item.technologies }}
                 </td>
-                <td class="text-end text-muted fw-bold">
+                <td class="text-end text-muted fw-semobold">
                   {{ item.users }}
                 </td>
-                <td class="text-end text-dark fw-bolder fs-6 pe-0">
+                <td class="text-end text-dark fw-bold fs-6 pe-0">
                   {{ item.size }}
                 </td>
               </tr>
@@ -96,6 +94,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import Dropdown3 from "@/components/dropdown/Dropdown3.vue";
 
@@ -110,7 +109,7 @@ export default defineComponent({
   setup() {
     const items = [
       {
-        icon: "media/icons/duotune/ecommerce/ecm002.svg",
+        icon: "basket",
         color: "success",
         title: "Top Authors",
         description: "Best Customers",
@@ -119,7 +118,7 @@ export default defineComponent({
         size: "5.4MB",
       },
       {
-        icon: "media/icons/duotune/general/gen024.svg",
+        icon: "category",
         color: "danger",
         title: "Popular Authors",
         description: "Best Customers",
@@ -128,7 +127,7 @@ export default defineComponent({
         size: "2.8MB",
       },
       {
-        icon: "media/icons/duotune/finance/fin006.svg",
+        icon: "briefcase",
         color: "info",
         title: "New Users",
         description: "Communication/Group.svg",
@@ -137,7 +136,7 @@ export default defineComponent({
         size: "1.5MB",
       },
       {
-        icon: "media/icons/duotune/abstract/abs027.svg",
+        icon: "abstract-26",
         color: "warning",
         title: "Active Customers",
         description: "Best Customers",
@@ -146,7 +145,7 @@ export default defineComponent({
         size: "5.4MB",
       },
       {
-        icon: "media/icons/duotune/abstract/abs042.svg",
+        icon: "abstract-41",
         color: "primary",
         title: "Active Customers",
         description: "Best Customers",
@@ -158,6 +157,7 @@ export default defineComponent({
 
     return {
       items,
+      getAssetPath,
     };
   },
 });

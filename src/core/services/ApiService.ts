@@ -1,8 +1,8 @@
-import { App } from "vue";
+import type { App } from "vue";
+import type { AxiosResponse } from "axios";
 import axios from "axios";
 import VueAxios from "vue-axios";
 import JwtService from "@/core/services/JwtService";
-import { AxiosResponse, AxiosRequestConfig } from "axios";
 
 /**
  * @description service to call HTTP request via Axios
@@ -19,8 +19,8 @@ class ApiService {
   public static init(app: App<Element>) {
     ApiService.vueInstance = app;
     ApiService.vueInstance.use(VueAxios, axios);
-    ApiService.vueInstance.axios.defaults.baseURL = process.env.VUE_APP_GW_URL;
-    // ApiService.vueInstance.axios.defaults.withCredentials = true;
+    ApiService.vueInstance.axios.defaults.baseURL =
+      import.meta.env.VITE_APP_API_URL;
   }
 
   /**
@@ -30,12 +30,8 @@ class ApiService {
     ApiService.vueInstance.axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${JwtService.getToken()}`;
-  }
-
-  public static clearAuthorizationHeader(): void {
-    delete ApiService.vueInstance.axios.defaults.headers.common[
-      "Authorization"
-    ];
+    // ApiService.vueInstance.axios.defaults.headers.common["Accept"] =
+    //   "application/json";
   }
 
   /**
@@ -44,10 +40,7 @@ class ApiService {
    * @param params: AxiosRequestConfig
    * @returns Promise<AxiosResponse>
    */
-  public static query(
-    resource: string,
-    params: AxiosRequestConfig
-  ): Promise<AxiosResponse> {
+  public static query(resource: string, params: any): Promise<AxiosResponse> {
     return ApiService.vueInstance.axios.get(resource, params);
   }
 
@@ -61,11 +54,7 @@ class ApiService {
     resource: string,
     slug = "" as string
   ): Promise<AxiosResponse> {
-    return ApiService.vueInstance.axios
-      .get(`${resource}/${slug}`)
-      .catch((error) => {
-        throw new Error(`[KT] ApiService ${error}`);
-      });
+    return ApiService.vueInstance.axios.get(`${resource}/${slug}`);
   }
 
   /**
@@ -74,10 +63,7 @@ class ApiService {
    * @param params: AxiosRequestConfig
    * @returns Promise<AxiosResponse>
    */
-  public static post(
-    resource: string,
-    params: AxiosRequestConfig
-  ): Promise<AxiosResponse> {
+  public static post(resource: string, params: any): Promise<AxiosResponse> {
     return ApiService.vueInstance.axios.post(`${resource}`, params);
   }
 
@@ -91,7 +77,7 @@ class ApiService {
   public static update(
     resource: string,
     slug: string,
-    params: AxiosRequestConfig
+    params: any
   ): Promise<AxiosResponse> {
     return ApiService.vueInstance.axios.put(`${resource}/${slug}`, params);
   }
@@ -102,10 +88,7 @@ class ApiService {
    * @param params: AxiosRequestConfig
    * @returns Promise<AxiosResponse>
    */
-  public static put(
-    resource: string,
-    params: AxiosRequestConfig
-  ): Promise<AxiosResponse> {
+  public static put(resource: string, params: any): Promise<AxiosResponse> {
     return ApiService.vueInstance.axios.put(`${resource}`, params);
   }
 
@@ -115,9 +98,7 @@ class ApiService {
    * @returns Promise<AxiosResponse>
    */
   public static delete(resource: string): Promise<AxiosResponse> {
-    return ApiService.vueInstance.axios.delete(resource).catch((error) => {
-      throw new Error(`[RWV] ApiService ${error}`);
-    });
+    return ApiService.vueInstance.axios.delete(resource);
   }
 }
 

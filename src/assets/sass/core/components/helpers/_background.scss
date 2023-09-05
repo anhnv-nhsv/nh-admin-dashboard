@@ -2,141 +2,167 @@
 // Custom background helpers
 //
 
-// Background theme light colors
-@each $color, $value in $theme-colors {
-	@if (theme-light-color($color)) {
-		.bg-light-#{$color} {
-			background-color: theme-light-color($color) !important;
+// Background white color
+.bg-white {
+	--#{$prefix}bg-rgb-color: var(--#{$prefix}white-bg-rgb);
+	background-color: $white !important;
+}
 
-			&.hoverable:hover {
-				background-color: darken(theme-light-color($color), 6%) !important;
-			}
+// Background black color
+.bg-black {
+	--#{$prefix}bg-rgb-color: var(--#{$prefix}black-bg-rgb);
+	background-color: $black !important;
+}
+
+// Background body color
+.bg-body {
+	--#{$prefix}bg-rgb-color: var(--#{$prefix}body-bg-rgb);
+	background-color: var(--#{$prefix}body-bg) !important;
+}
+
+.bg-hover-body {
+	cursor: pointer;
+
+	&:hover {
+		background-color: var(--#{$prefix}body-bg) !important;
+	}
+}
+
+.bg-active-body {
+	&.active {
+		background-color: var(--#{$prefix}body-bg) !important;
+	}
+}
+
+.bg-state-body {
+	cursor: pointer;
+
+	&.active,
+	&:hover {				
+		background-color: var(--#{$prefix}body-bg) !important;
+	}
+}
+
+.bg-hover-white {
+	cursor: pointer;
+
+	&:hover {
+		--#{$prefix}bg-rgb-color: var(--#{$prefix}white-bg-rgb);
+		background-color: $white !important;
+	}
+}
+
+.bg-active-white {
+	&.active {
+		--#{$prefix}bg-rgb-color: var(--#{$prefix}white-bg-rgb);
+		background-color: $white !important;
+	}
+}
+
+.bg-state-white {
+	cursor: pointer;
+
+	&.active,
+	&:hover {				
+		--#{$prefix}bg-rgb-color: var(--#{$prefix}white-bg-rgb);
+		background-color: $white !important;
+	}
+}
+
+// Background theme light colors
+@each $name, $value in $theme-colors {
+	@if (theme-light-color($name)) {
+		.bg-light-#{$name} {
+			background-color: var(--#{$prefix}#{$name}-light) !important;
 		}
 	}
 
-    .bg-#{$color} {
-		--bg-color: #{red($value)}, #{green($value)}, #{blue($value)};
-
-        &.hoverable:hover {
-		   background-color: theme-active-color($color) !important;
-       }
+	.bg-#{$name} {
+		--#{$prefix}bg-rgb-color: var(--#{$prefix}#{$name}-rgb);
+		background-color: var(--#{$prefix}#{$name}) !important;
 	}
 
-	@if (theme-light-color($color)) {
-		.bg-hover-light-#{$color} {
+	.bg-#{$name}-active {
+		--#{$prefix}bg-rgb-color: var(--#{$prefix}#{$name}-active-rgb);
+		background-color: var(--#{$prefix}#{$name}-active) !important;
+	}
+
+	@if (theme-light-color($name)) {
+		.bg-hover-light-#{$name} {
 			cursor: pointer;
 
 			&:hover {
-				background-color: theme-light-color($color) !important;
+				background-color: var(--#{$prefix}#{$name}-light) !important;
 			}
 		}
 
-		.bg-state-light-#{$color} {
+		.bg-state-light-#{$name} {
 			cursor: pointer;
 
 			&.active,
 			&:hover {				
-				background-color: theme-light-color($color) !important;
+				background-color: var(--#{$prefix}#{$name}-light) !important;
 			}
 		}
 	}
 
-	.bg-hover-#{$color} {
+	.bg-hover-#{$name} {
 		cursor: pointer;
 
 		&:hover {
-			--bg-color: #{red($value)}, #{green($value)}, #{blue($value)};
-			background-color: $value !important;
+			background-color: var(--#{$prefix}#{$name}) !important;
 		}
 	}
 
-	.bg-active-#{$color} {
+	.bg-active-#{$name} {
 		&.active {
-			--bg-color: #{red($value)}, #{green($value)}, #{blue($value)};
-			background-color: $value !important;
+			background-color: var(--#{$prefix}#{$name}) !important;
 		}
 	}
 
-	.bg-state-#{$color} {
+	.bg-state-#{$name} {
 		cursor: pointer;
 
 		&.active,
 		&:hover {				
-			--bg-color: #{red($value)}, #{green($value)}, #{blue($value)};
-			background-color: $value !important;
+			background-color: var(--#{$prefix}#{$name}) !important;
 		}
+	}
+}
+
+// Background gray colors
+@each $name, $value in $grays {
+    .bg-gray-#{$name} {
+		--#{$prefix}bg-rgb-color: var(--#{$prefix}gray-#{$name}-rgb);
+		background-color: var(--#{$prefix}gray-#{$name});
+	}
+
+	.bg-gray-#{$name}i {
+		--#{$prefix}bg-rgb-color: var(--#{$prefix}gray-#{$name}-rgb);
+		background-color: var(--#{$prefix}gray-#{$name}) !important;
 	}
 }
 
 // Opacity
 @each $name, $value in $opacity-values {
 	.bg-opacity-#{$name} {
-		background-color: rgba(var(--bg-color), #{$value}) !important;
+		background-color: rgba(var(--#{$prefix}bg-rgb-color), #{$value}) !important;
 	}
 
 	.bg-hover-opacity-#{$name}:hover {
-		background-color: rgba(var(--bg-color), #{$value}) !important;
+		background-color: rgba(var(--#{$prefix}bg-rgb-color), #{$value}) !important;
 	}
 
 	.bg-active-opacity-#{$name}.active {
-		background-color: rgba(var(--bg-color), #{$value}) !important;
+		background-color: rgba(var(--#{$prefix}bg-rgb-color), #{$value}) !important;
 	}
 
 	.bg-state-opacity-#{$name} {
 		.active,
 		&:hover {
-			background-color: rgba(var(--bg-color), #{$value}) !important;
+			background-color: rgba(var(--#{$prefix}bg-rgb-color), #{$value}) !important;
 		}		
 	}
-}
-
-// Background black color
-.bg-black {
-	background-color: $black !important;
-}
-
-// Background body color
-.bg-body {
-	--bg-color: #{red($body-bg)}, #{green($body-bg)}, #{blue($body-bg)};
-	background-color: $body-bg !important;
-}
-
-// Lighten bg states
-.bg-lighten {
-	background-color: $lighten !important;
-}
-
-.bg-hover-lighten {
-	cursor: pointer;
-
-	&:hover {
-		background-color: $lighten !important;
-	}
-}
-
-.bg-active-lighten {
-	&.active {
-		background-color: $lighten !important;
-	}
-}
-
-.bg-state-lighten {
-	cursor: pointer;
-
-	&.active,
-	&:hover {				
-		background-color: $lighten !important;
-	}
-}
-
-// Hoverable
-.hoverable {
-	cursor: pointer;
-    transition: $transition-base;
-
-    &:hover {
-        transition: $transition-base;
-    }
 }
 
 // Background image helpers
@@ -205,8 +231,8 @@
 			background-attachment: fixed;
 		}
 
-		.bgi-attachment#{$infix}-auto {
-			background-attachment: auto;
+		.bgi-attachment#{$infix}-scroll {
+			background-attachment: scroll;
 		}
 	}
 }

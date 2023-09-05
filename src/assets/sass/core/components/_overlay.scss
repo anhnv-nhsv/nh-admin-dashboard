@@ -6,10 +6,6 @@
 .overlay  {
     position: relative;
 
-    .overlay-wrapper {
-
-    }
-
     .overlay-layer {
         position: absolute;
         top: 0;
@@ -19,7 +15,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: get($overlay, bg);
+        background-color: var(--#{$prefix}overlay-bg);
         transition: all 0.3s ease;
         opacity: 0;
     }

@@ -9,17 +9,17 @@
         <div class="d-flex align-items-center flex-grow-1">
           <!--begin::Avatar-->
           <div class="symbol symbol-45px me-5">
-            <img src="media/avatars/150-15.jpg" alt="" />
+            <img :src="getAssetPath('media/avatars/300-25.jpg')" alt="" />
           </div>
           <!--end::Avatar-->
 
           <!--begin::Info-->
           <div class="d-flex flex-column">
-            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bolder"
+            <a href="#" class="text-gray-800 text-hover-primary fs-6 fw-bold"
               >Sam Logan</a
             >
 
-            <span class="text-gray-400 fw-bold">Mango, Java, Python</span>
+            <span class="text-gray-400 fw-semobold">Mango, Java, Python</span>
           </div>
           <!--end::Info-->
         </div>
@@ -29,16 +29,12 @@
         <div class="my-0">
           <button
             type="button"
-            class="
-              btn btn-sm btn-icon btn-color-primary btn-active-light-primary
-            "
+            class="btn btn-sm btn-icon btn-color-primary btn-active-light-primary"
             data-kt-menu-trigger="click"
             data-kt-menu-placement="bottom-end"
             data-kt-menu-flip="top-end"
           >
-            <span class="svg-icon svg-icon-2">
-              <inline-svg src="media/icons/duotune/general/gen024.svg" />
-            </span>
+            <KTIcon icon-name="category" icon-class="fs-2" />
           </button>
 
           <Dropdown2></Dropdown2>
@@ -52,7 +48,11 @@
         <!--begin::Image-->
         <div
           class="bgi-no-repeat bgi-size-cover rounded min-h-250px mb-5"
-          style="background-image: url('media/stock/900x600/20.jpg')"
+          :style="{
+            backgroundImage: `url(${getAssetPath(
+              '/media/stock/900x600/20.jpg'
+            )})`,
+          }"
         ></div>
         <!--end::Image-->
 
@@ -68,30 +68,17 @@
         <div class="d-flex align-items-center mb-5">
           <a
             href="#"
-            class="
-              btn btn-sm btn-light btn-color-muted btn-active-light-success
-              px-4
-              py-2
-              me-4
-            "
+            class="btn btn-sm btn-light btn-color-muted btn-active-light-success px-4 py-2 me-4"
           >
-            <span class="svg-icon svg-icon-3">
-              <inline-svg src="media/icons/duotune/communication/com012.svg" />
-            </span>
+            <KTIcon icon-name="message-text-2" icon-class="fs-3" />
             89
           </a>
 
           <a
             href="#"
-            class="
-              btn btn-sm btn-light btn-color-muted btn-active-light-danger
-              px-4
-              py-2
-            "
+            class="btn btn-sm btn-light btn-color-muted btn-active-light-danger px-4 py-2"
           >
-            <span class="svg-icon svg-icon-2">
-              <inline-svg src="media/icons/duotune/general/gen030.svg" />
-            </span>
+            <KTIcon icon-name="heart" icon-class="fs-2" />
             29
           </a>
         </div>
@@ -114,15 +101,11 @@
 
         <div class="position-absolute top-0 end-0 me-n5">
           <span class="btn btn-icon btn-sm btn-active-color-primary pe-0 me-2">
-            <span class="svg-icon svg-icon-3 mb-3">
-              <inline-svg src="media/icons/duotune/communication/com008.svg" />
-            </span>
+            <KTIcon icon-name="paper-clip" icon-class="fs-3 mb-3" />
           </span>
 
           <span class="btn btn-icon btn-sm btn-active-color-primary ps-0">
-            <span class="svg-icon svg-icon-2 mb-3">
-              <inline-svg src="media/icons/duotune/general/gen018.svg" />
-            </span>
+            <KTIcon icon-name="geolocation" icon-class="fs-2 mb-3" />
           </span>
         </div>
       </form>
@@ -134,6 +117,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import Dropdown2 from "@/components/dropdown/Dropdown2.vue";
 
@@ -144,6 +128,11 @@ export default defineComponent({
   },
   components: {
     Dropdown2,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>

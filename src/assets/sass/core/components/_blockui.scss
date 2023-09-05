@@ -16,7 +16,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: get($blockui, overlay-bg);
+        background-color: var(--#{$prefix}blockui-overlay-bg);
 
         .spinner-border {
             height: 1.35rem;
@@ -28,9 +28,9 @@
         display: flex;
         align-items: center;
         @include border-radius($border-radius);
-        box-shadow: $dropdown-box-shadow;
-        background-color: $tooltip-bg;
-        color: if(isDarkMode(), $gray-700, $gray-600);
+        box-shadow: var(--#{$prefix}blockui-message-box-shadow);
+        background-color: var(--#{$prefix}blockui-message-bg);
+        color: var(--#{$prefix}gray-700);
         font-weight: $font-weight-bold;
         margin: 0 !important;
         width: auto;
@@ -38,6 +38,16 @@
 
         .spinner-border {
             margin-right: 0.65rem;
+        }
+    }
+}
+
+@if $enable-dark-mode {
+    @include color-mode(dark) {
+        .blockui {
+            --#{$prefix}blockui-overlay-bg: #{$blockui-overlay-bg-dark};
+            --#{$prefix}blockui-message-bg: #{$blockui-message-bg-dark};
+            --#{$prefix}blockui-message-box-shadow: #{$blockui-message-box-shadow-dark};
         }
     }
 }

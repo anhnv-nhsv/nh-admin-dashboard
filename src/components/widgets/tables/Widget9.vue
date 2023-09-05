@@ -4,9 +4,9 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
       <h3 class="card-title align-items-start flex-column">
-        <span class="card-label fw-bolder fs-3 mb-1">Members Statistics</span>
+        <span class="card-label fw-bold fs-3 mb-1">Members Statistics</span>
 
-        <span class="text-muted mt-1 fw-bold fs-7">Over 500 members</span>
+        <span class="text-muted mt-1 fw-semobold fs-7">Over 500 members</span>
       </h3>
 
       <div
@@ -22,9 +22,7 @@
           data-bs-toggle="modal"
           data-bs-target="#kt_modal_invite_friends"
         >
-          <span class="svg-icon svg-icon-3">
-            <inline-svg src="media/icons/duotune/arrows/arr075.svg" />
-          </span>
+          <KTIcon icon-name="plus" icon-class="fs-3" />
           New Member
         </a>
       </div>
@@ -37,23 +35,24 @@
       <div class="table-responsive">
         <!--begin::Table-->
         <table
-          class="
-            table table-row-dashed table-row-gray-300
-            align-middle
-            gs-0
-            gy-4
-          "
+          class="table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4"
         >
           <!--begin::Table head-->
           <thead>
-            <tr class="fw-bolder text-muted">
+            <tr class="fw-bold text-muted">
               <th class="w-25px">
                 <div
-                  class="
-                    form-check form-check-sm form-check-custom form-check-solid
-                  "
+                  class="form-check form-check-sm form-check-custom form-check-solid"
                 >
-                  <input class="form-check-input" type="checkbox" value="1" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    @change="
+                      checkedRows.length === 6
+                        ? (checkedRows.length = 0)
+                        : (checkedRows = [0, 1, 2, 3, 4, 5])
+                    "
+                  />
                 </div>
               </th>
               <th class="min-w-150px">Authors</th>
@@ -70,17 +69,13 @@
               <tr>
                 <td>
                   <div
-                    class="
-                      form-check
-                      form-check-sm
-                      form-check-custom
-                      form-check-solid
-                    "
+                    class="form-check form-check-sm form-check-custom form-check-solid"
                   >
                     <input
                       class="form-check-input widget-9-check"
                       type="checkbox"
                       :value="index"
+                      v-model="checkedRows"
                     />
                   </div>
                 </td>
@@ -93,12 +88,12 @@
                     <div class="d-flex justify-content-start flex-column">
                       <a
                         href="#"
-                        class="text-dark fw-bolder text-hover-primary fs-6"
+                        class="text-dark fw-bold text-hover-primary fs-6"
                         >{{ item.name }}</a
                       >
 
                       <span
-                        class="text-muted fw-bold text-muted d-block fs-7"
+                        class="text-muted fw-semobold text-muted d-block fs-7"
                         >{{ item.skills }}</span
                       >
                     </div>
@@ -108,18 +103,19 @@
                 <td>
                   <a
                     href="#"
-                    class="text-dark fw-bolder text-hover-primary d-block fs-6"
+                    class="text-dark fw-bold text-hover-primary d-block fs-6"
                     >{{ item.companyName }}</a
                   >
-                  <span class="text-muted fw-bold text-muted d-block fs-7">{{
-                    item.companySkills
-                  }}</span>
+                  <span
+                    class="text-muted fw-semobold text-muted d-block fs-7"
+                    >{{ item.companySkills }}</span
+                  >
                 </td>
 
                 <td class="text-end">
                   <div class="d-flex flex-column w-100 me-2">
                     <div class="d-flex flex-stack mb-2">
-                      <span class="text-muted me-2 fs-7 fw-bold">
+                      <span class="text-muted me-2 fs-7 fw-semobold">
                         {{ item.value }}%
                       </span>
                     </div>
@@ -141,41 +137,23 @@
                 <td class="text-end">
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                      me-1
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg
-                        src="media/icons/duotune/general/gen019.svg"
-                      />
-                    </span>
+                    <KTIcon icon-name="switch" icon-class="fs-3" />
                   </a>
 
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                      me-1
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg src="media/icons/duotune/art/art005.svg" />
-                    </span>
+                    <KTIcon icon-name="pencil" icon-class="fs-3" />
                   </a>
 
                   <a
                     href="#"
-                    class="
-                      btn btn-icon btn-bg-light btn-active-color-primary btn-sm
-                    "
+                    class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
                   >
-                    <span class="svg-icon svg-icon-3">
-                      <inline-svg
-                        src="media/icons/duotune/general/gen027.svg"
-                      />
-                    </span>
+                    <KTIcon icon-name="trash" icon-class="fs-3" />
                   </a>
                 </td>
               </tr>
@@ -193,6 +171,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent, ref } from "vue";
 
 export default defineComponent({
@@ -202,11 +181,11 @@ export default defineComponent({
     widgetClasses: String,
   },
   setup() {
-    const checked = ref(false);
+    const checkedRows = ref<Array<number>>([]);
 
     const list = [
       {
-        image: "media/avatars/150-11.jpg",
+        image: getAssetPath("media/avatars/300-14.jpg"),
         name: "Ana Simmons",
         skills: "HTML, JS, ReactJS",
         companyName: "Intertico",
@@ -215,7 +194,7 @@ export default defineComponent({
         color: "primary",
       },
       {
-        image: "media/avatars/150-3.jpg",
+        image: getAssetPath("media/avatars/300-2.jpg"),
         name: "Jessie Clarcson",
         skills: "C#, ASP.NET, MS SQL",
         companyName: "Agoda",
@@ -224,7 +203,7 @@ export default defineComponent({
         color: "danger",
       },
       {
-        image: "media/avatars/150-4.jpg",
+        image: getAssetPath("media/avatars/300-5.jpg"),
         name: "Lebron Wayde",
         skills: "PHP, Laravel, VueJS",
         companyName: "RoadGee",
@@ -233,7 +212,7 @@ export default defineComponent({
         color: "success",
       },
       {
-        image: "media/avatars/150-5.jpg",
+        image: getAssetPath("media/avatars/300-20.jpg"),
         name: "Natali Goodwin",
         skills: "Python, PostgreSQL, ReactJS",
         companyName: "The Hill",
@@ -242,7 +221,7 @@ export default defineComponent({
         color: "warning",
       },
       {
-        image: "media/avatars/150-6.jpg",
+        image: getAssetPath("media/avatars/300-23.jpg"),
         name: "Kevin Leonard",
         skills: "HTML, JS, ReactJS",
         companyName: "RoadGee",
@@ -254,7 +233,8 @@ export default defineComponent({
 
     return {
       list,
-      checked,
+      checkedRows,
+      getAssetPath,
     };
   },
 });

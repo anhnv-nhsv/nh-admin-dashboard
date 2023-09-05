@@ -1,22 +1,12 @@
 <template>
   <!--begin::Menu 2-->
   <div
-    class="
-      menu
-      menu-sub
-      menu-sub-dropdown
-      menu-column
-      menu-rounded
-      menu-gray-600
-      menu-state-bg-light-primary
-      fw-bold
-      w-200px
-    "
+    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semobold w-200px"
     data-kt-menu="true"
   >
     <!--begin::Menu item-->
     <div class="menu-item px-3">
-      <div class="menu-content fs-6 text-dark fw-bolder px-3 py-4">
+      <div class="menu-content fs-6 text-dark fw-bold px-3 py-4">
         Quick Actions
       </div>
     </div>

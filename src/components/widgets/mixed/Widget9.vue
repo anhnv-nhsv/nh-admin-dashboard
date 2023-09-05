@@ -6,7 +6,7 @@
       <div class="flex-grow-1">
         <!--begin::Info-->
         <div class="d-flex align-items-center pe-2 mb-5">
-          <span class="text-muted fw-bolder fs-5 flex-grow-1">
+          <span class="text-muted fw-bold fs-5 flex-grow-1">
             {{ time }}
           </span>
 
@@ -19,7 +19,7 @@
         <!--end::Info-->
 
         <!--begin::Link-->
-        <a href="#" class="text-dark fw-bolder text-hover-primary fs-4">
+        <a href="#" class="text-dark fw-bold text-hover-primary fs-4">
           {{ title }}
         </a>
         <!--end::Link-->
@@ -39,7 +39,7 @@
           data-bs-toggle="tooltip"
           title="Ana Stone"
         >
-          <img src="media/avatars/150-1.jpg" alt="" />
+          <img :src="getAssetPath('media/avatars/300-6.jpg')" alt="" />
         </a>
 
         <a
@@ -48,7 +48,7 @@
           data-bs-toggle="tooltip"
           title="Mark Larson"
         >
-          <img src="media/avatars/150-4.jpg" alt="" />
+          <img :src="getAssetPath('media/avatars/300-5.jpg')" alt="" />
         </a>
 
         <a
@@ -57,7 +57,7 @@
           data-bs-toggle="tooltip"
           title="Sam Harris"
         >
-          <img src="media/avatars/150-8.jpg" alt="" />
+          <img :src="getAssetPath('media/avatars/300-9.jpg')" alt="" />
         </a>
       </div>
       <!--end::Team-->
@@ -68,6 +68,7 @@
 </template>
 
 <script lang="ts">
+import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -79,6 +80,11 @@ export default defineComponent({
     image: String,
     title: String,
     description: String,
+  },
+  setup() {
+    return {
+      getAssetPath,
+    };
   },
 });
 </script>
