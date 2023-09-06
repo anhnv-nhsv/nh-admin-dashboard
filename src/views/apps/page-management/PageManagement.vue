@@ -1,15 +1,72 @@
 <template>
   <div class="card">
     <div class="card-header border-0 pt-6">
-      <div class="card-title">
-        <button
-          type="button"
-          class="btn btn-light-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#kt_modal_test_editor"
+      <div class="flex-column">
+        <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
+          <div>
+            <el-input
+              autofocus
+              size="large"
+              placeholder="Press enter to search"
+              clearable
+              :prefix-icon="Search"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="card-toolbar">
+        <div
+          v-if="selectedIds === 0"
+          class="d-flex justify-content-end"
+          data-kt-customer-table-toolbar="base"
         >
-          Test
-        </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#kt_news_category_modal"
+            @click="addCategory"
+          >
+            <KTIcon icon-name="plus" icon-class="fs-2" />
+            Add Category
+          </button>
+        </div>
+        <div
+          v-else
+          class="d-flex justify-content-end align-items-center"
+          data-kt-customer-table-toolbar="selected"
+        >
+          <div class="fw-bold me-5">
+            <span class="me-2">{{ selectedIds }}</span
+            >Selected
+          </div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            @click="deleteCategory()"
+          >
+            Delete Selected
+          </button>
+        </div>
+        <div
+          class="d-flex justify-content-end align-items-center d-none"
+          data-kt-customer-table-toolbar="selected"
+        >
+          <div class="fw-bold me-5">
+            <span
+              class="me-2"
+              data-kt-customer-table-select="selected_count"
+            ></span
+            >Selected
+          </div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-kt-customer-table-select="delete_selected"
+          >
+            Delete Selected
+          </button>
+        </div>
       </div>
     </div>
     <div class="card-body pt-0">
@@ -18,7 +75,7 @@
         :table-data="dataRequestStatistics"
         :pagination="pagination"
         :enable-items-per-page-dropdown="true"
-        :user-role="userRole"
+        userRole="all"
         :loading="loading"
         :show-overflow-tooltip="true"
         @change-page="changePage"
@@ -30,37 +87,50 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            v-if="userRole === 'all'"
             type="selection"
             width="55"
           />
         </template>
-        <template v-slot:action>
-          <el-button>Edit</el-button>
-          <el-popconfirm
-            title="Are you sure to delete this?"
-            icon-color="#626AEF"
-            hide-after="10"
+        <template v-slot:actionColumn>
+          <el-table-column
+            header-align="center"
+            class-name="text-center"
+            label="Thao tác"
           >
-            <template #reference>
-              <el-button size="small" type="danger" class="del-btn"
-                >Delete</el-button
+            <template #default="scope">
+              <el-button
+                size="small"
+                type="default"
+                data-bs-toggle="modal"
+                data-bs-target="#kt_news_category_modal"
+                @click.prevent="editCategory(scope.row)"
               >
+                Edit
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                @click.prevent="deleteCategory(scope.row)"
+              >
+                Delete
+              </el-button>
             </template>
-          </el-popconfirm>
+          </el-table-column>
         </template>
       </NHDatatable>
     </div>
   </div>
-  <TestEditorModal />
+  <PageManagementModal :action="newsAction" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { Search } from "@element-plus/icons-vue";
 import { useReqStatistic } from "@/stores/req-statistic";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import { pageArray, options, selectTask } from "./mock/index";
-import TestEditorModal from "@/components/editor/TestEditorModal.vue";
+import PageManagementModal from "@/components/modals/forms/PageManagementModal.vue";
+
 const value = ref("");
 const visible = ref(false);
 let userRole = ref("all");
@@ -69,7 +139,7 @@ let syncPayload = ref<any[]>([]);
 export default defineComponent({
   name: "page-management",
   components: {
-    TestEditorModal,
+    PageManagementModal,
     NHDatatable,
   },
   setup() {
@@ -105,14 +175,11 @@ export default defineComponent({
         prop: "",
         visible: true,
       },
-      {
-        label: "Actions",
-        prop: "action",
-        visible: true,
-      },
     ]);
+    let selectedIds = ref(0);
     const loading = ref<boolean>(false);
     let dataRequestStatistics = ref();
+    let newsAction = ref("");
     let pagination = ref();
     let syncKLPBtn = ref<HTMLElement | null>(null);
 
@@ -164,29 +231,28 @@ export default defineComponent({
       );
     }
     const handleSingleSelection = (val) => {
-      if (!syncKLPBtn.value) {
-        return;
-      }
-      if (val) {
-        syncKLPBtn.value.removeAttribute("disabled");
-      } else {
-        syncKLPBtn.value?.setAttribute("disabled", "");
-      }
-      syncPayload.value = [val];
-      console.log("syncPayload.value1: ", val);
+      selectedIds.value += 1;
+      console.log(`handleSingleSelection: ${val}`);
     };
 
     const handleMultipleSelection = (val) => {
-      if (!syncKLPBtn.value) {
-        return;
-      }
-      if (val.length > 0) {
-        syncKLPBtn.value.removeAttribute("disabled");
-      } else {
-        syncKLPBtn.value?.setAttribute("disabled", "");
-      }
-      syncPayload.value = val;
-      console.log("syncPayload.value2: ", syncPayload.value);
+      selectedIds.value = val.length;
+      console.log(`handleMultipleSelection: ${val}`);
+    };
+
+    const addCategory = () => {
+      newsAction.value = "add";
+      console.log("add category");
+    };
+
+    const editCategory = (val?: object | undefined) => {
+      newsAction.value = "edit";
+      console.log("edit category: ", val);
+    };
+
+    const deleteCategory = (val?: object | undefined) => {
+      console.log(val);
+      console.log("delete category");
     };
 
     function changePage(page) {
@@ -217,6 +283,7 @@ export default defineComponent({
     return {
       dataRequestStatistics,
       data,
+      selectedIds,
       userRole,
       syncKLPBtn,
       visible,
@@ -228,7 +295,12 @@ export default defineComponent({
       selectTask,
       syncPayload,
       value,
+      newsAction,
+      Search,
       handleApplyStatus,
+      addCategory,
+      editCategory,
+      deleteCategory,
       handleSingleSelection,
       handleMultipleSelection,
       changePage,
@@ -248,9 +320,6 @@ export default defineComponent({
   padding: 14px 15px;
 }
 
-.card-title {
-  width: 100%;
-}
 .my-header {
   display: flex;
   flex-direction: row;

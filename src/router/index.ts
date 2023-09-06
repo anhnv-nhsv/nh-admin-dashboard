@@ -43,6 +43,8 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Apps", "Request Statistics"],
         },
       },
+
+      // PAGE START
       {
         path: "/apps/page-management",
         name: "apps-page-management",
@@ -53,6 +55,9 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Apps", "Page Management"],
         },
       },
+      // PAGE END
+
+      // NEWS START
       {
         path: "/apps/news/category",
         name: "news-category",
@@ -71,6 +76,21 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["News", "News List"],
         },
       },
+      // NEWS END
+
+      // CONTACT START
+      {
+        path: "/apps/contact/category",
+        name: "contact-category",
+        component: () => import("@/views/apps/contact/Contact.vue"),
+        meta: {
+          pageTitle: "Contact Category",
+          breadcrumbs: ["Contact", "Contact Categories"],
+        },
+      },
+      // CONTACT END
+
+      // BANNER START
       {
         path: "/apps/banner-management",
         name: "apps-banner-management",
@@ -100,24 +120,7 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Apps", "Banner Management", "Edit"],
         },
       },
-      {
-        path: "/apps/news-management",
-        name: "apps-news-management",
-        component: () => import("@/views/apps/news/News.vue"),
-        meta: {
-          pageTitle: "News Management",
-          breadcrumbs: ["Apps", "News Management"],
-        },
-      },
-      {
-        path: "/apps/contact",
-        name: "apps-contact",
-        component: () => import("@/views/apps/contact/Contact.vue"),
-        meta: {
-          pageTitle: "Contact Management",
-          breadcrumbs: ["Apps", "Contact Management"],
-        },
-      },
+      // BANNER END
     ],
   },
   {
