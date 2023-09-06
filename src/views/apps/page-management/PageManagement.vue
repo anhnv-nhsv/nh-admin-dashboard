@@ -2,124 +2,14 @@
   <div class="card">
     <div class="card-header border-0 pt-6">
       <div class="card-title">
-        <form
-          class="form row w-100"
-          autoComplete="on"
-          @submit.prevent="submitSearch"
+        <button
+          type="button"
+          class="btn btn-light-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_modal_test_editor"
         >
-          <div class="wrapper-header">
-            <div class="col d-flex align-items-center justify-content-end mb-8">
-              <el-button
-                @click="visible = true"
-                class="btn btn-primary btn-add"
-              >
-                Add
-              </el-button>
-              <el-dialog
-                v-model="visible"
-                title="Add Page"
-                width="30%"
-                align-center
-              >
-                <span>...</span>
-                <template #footer>
-                  <span class="dialog-footer">
-                    <el-button @click="visible = false">Cancel</el-button>
-                    <el-button type="primary" @click="visible = false">
-                      Confirm
-                    </el-button>
-                  </span>
-                </template>
-              </el-dialog>
-            </div>
-            <div class="row search-page">
-              <div class="row">
-                <div class="row col-9">
-                  <div class="col-4">
-                    <el-input
-                      autofocus
-                      v-model="formSearchData.username"
-                      style=""
-                      placeholder="Search Page"
-                      clearable
-                    />
-                  </div>
-                  <div class="col-4">
-                    <el-select
-                      v-model="formSearchData.status"
-                      clearable
-                      placeholder="Status"
-                    >
-                      <el-option-group
-                        v-for="group in options"
-                        :key="group.label"
-                        :label="group.label"
-                      >
-                        <el-option
-                          v-for="item in group.options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-option-group>
-                    </el-select>
-                  </div>
-                  <div class="col-4">
-                    <button
-                      :data-kt-indicator="loading ? 'on' : null"
-                      type="submit"
-                      class="btn btn-primary"
-                    >
-                      <span v-if="!loading" class="indicator-label"
-                        >Search</span
-                      >
-                      <span v-if="loading" class="indicator-progress"
-                        >Please wait...
-                        <span
-                          class="spinner-border spinner-border-sm align-middle ms-2"
-                        ></span
-                      ></span>
-                    </button>
-                  </div>
-                </div>
-                <div class="row col-3 action-right">
-                  <div class="col-10">
-                    <el-select
-                      v-model="data.status"
-                      :disabled="!syncPayload.length"
-                      clearable
-                      placeholder="Chọn tác vụ"
-                    >
-                      <el-option
-                        v-for="item in selectTask"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                  </div>
-                  <div class="col-2">
-                    <button
-                      :data-kt-indicator="loading ? 'on' : null"
-                      @click="handleApplyStatus"
-                      ref="syncKLPBtn"
-                      disabled
-                      class="btn btn-primary"
-                    >
-                      <span v-if="!loading" class="indicator-label">Apply</span>
-                      <span v-if="loading" class="indicator-progress"
-                        >Please wait...
-                        <span
-                          class="spinner-border spinner-border-sm align-middle ms-2"
-                        ></span
-                      ></span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </form>
+          Test
+        </button>
       </div>
     </div>
     <div class="card-body pt-0">
@@ -138,6 +28,7 @@
       />
     </div>
   </div>
+  <TestEditorModal />
 </template>
 
 <script lang="ts">
@@ -145,6 +36,7 @@ import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { useReqStatistic } from "@/stores/req-statistic";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import { pageArray, options, selectTask } from "./mock/index";
+import TestEditorModal from "@/components/editor/TestEditorModal.vue";
 const value = ref("");
 const visible = ref(false);
 let userRole = ref("all");
@@ -153,6 +45,7 @@ let syncPayload = ref<any[]>([]);
 export default defineComponent({
   name: "page-management",
   components: {
+    TestEditorModal,
     NHDatatable,
   },
   setup() {

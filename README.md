@@ -1,4 +1,4 @@
-# demo1
+# NH Admin Dashboard
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -37,6 +37,12 @@ npm run dev
 
 ```sh
 npm run build
+```
+
+### Build only for Production
+
+```sh
+npm run build-only
 ```
 
 ### Lint with [ESLint](https://eslint.org/)

@@ -4,6 +4,7 @@
       <el-table
         class="customerTable el-table--border"
         ref="customerScoreTableRef"
+        row-key="id"
         :data="getItems"
         :header-cell-style="
           themeMode === 'light'
@@ -12,6 +13,7 @@
         "
         header-row-class-name="text-gray-800 fw-bolder fs-7 text-uppercase gs-0"
         :highlight-current-row="userRole === 'single'"
+        default-expand-all
         max-height="600"
         v-on="
           userRole === 'all'
