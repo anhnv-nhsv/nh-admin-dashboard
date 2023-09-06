@@ -49,13 +49,13 @@ const MainMenuConfig: Array<MenuItem> = [
       },
 
       {
-        sectionTitle: "Banner",
+        sectionTitle: "banner",
         route: "/banner-management",
         keenthemesIcon: "abstract-43",
         bootstrapIcon: "bi-graph-up",
         sub: [
           {
-            heading: "Banner Management",
+            heading: "bannerManager",
             route: "/apps/banner-management",
           },
         ],

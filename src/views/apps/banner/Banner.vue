@@ -133,8 +133,12 @@
         <template v-slot:url="{ row }">
           <a :href="row.url" target="_blank">{{ row.url }}</a>
         </template>
-        <template v-slot:action>
-          <el-button>Edit</el-button>
+        <template v-slot:action="{ row }">
+          <el-button>
+            <router-link :to="'/apps/banner-management/' + row.id + '/edit'">
+              Edit</router-link
+            >
+          </el-button>
           <el-popconfirm
             title="Are you sure to delete this?"
             icon-color="#626AEF"
@@ -157,10 +161,15 @@ import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { useReqStatistic } from "@/stores/req-statistic";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import { contactArray, options, selectTask } from "./mock/index";
+import { useRoute } from "vue-router";
+import router from "@/router/clean";
+
 const value = ref("");
 const visible = ref(false);
 let userRole = ref("all");
 let syncPayload = ref<any[]>([]);
+
+const route = useRoute();
 
 export default defineComponent({
   name: "banner-management",
@@ -309,6 +318,10 @@ export default defineComponent({
     onBeforeMount(() => {
       getRequestStatistics(1);
     });
+
+    // onMounted(() => {
+    //   route.params.editBanner;
+    // });
     return {
       dataRequestStatistics,
       data,

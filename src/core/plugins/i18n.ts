@@ -3,6 +3,8 @@ import { createI18n } from "vue-i18n";
 const messages = {
   en: {
     dashboard: "Dashboard",
+    banner: "Banner",
+    bannerManager: "Banner Mangement",
     layoutBuilder: "Layout builder",
     craft: "Crafted",
     pages: "Pages",
@@ -81,6 +83,8 @@ const messages = {
   },
   es: {
     dashboard: "Tablero",
+    banner: "Banner",
+    bannerManager: "Banner Manager",
     layoutBuilder: "Constructor de maquetación",
     craft: "Elaborado",
     pages: "Paginas",

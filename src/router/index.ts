@@ -91,6 +91,16 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "/apps/banner-management/:id/edit",
+        name: "editBanner",
+        component: () =>
+          import("@/views/apps/banner/components/EditBanner.vue"),
+        meta: {
+          pageTitle: "Edit Banner",
+          breadcrumbs: ["Apps", "Banner Management", "Edit"],
+        },
+      },
+      {
         path: "/apps/news-management",
         name: "apps-news-management",
         component: () => import("@/views/apps/news/News.vue"),

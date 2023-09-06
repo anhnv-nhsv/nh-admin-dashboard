@@ -21,8 +21,16 @@
         </el-form-item>
         <el-form-item label="Hình ảnh">
           <!-- <el-input v-model="ruleForm.img" /> -->
-          <el-upload action="#" list-type="picture-card" :auto-upload="false">
-            <i class="bi bi-file-earmark-arrow-up"></i>
+          <el-upload
+            :limit="1"
+            action="#"
+            list-type="picture-card"
+            :auto-upload="false"
+            :on-remove="handleRemove"
+          >
+            <div class="">
+              <i class="bi bi-file-earmark-arrow-up banner-icon"></i>
+            </div>
 
             <template #file="{ file }">
               <div>
@@ -36,14 +44,10 @@
                     class="el-upload-list__item-preview"
                     @click="handlePictureCardPreview(file)"
                   >
-                    <i class="bi bi-zoom-in"></i>
+                    <i class="bi bi-zoom-in banner-icon"></i>
                   </span>
-                  <span
-                    v-if="!disabled"
-                    class="el-upload-list__item-delete"
-                    @click="handleRemove(file)"
-                  >
-                    <i class="bi bi-trash"></i>
+                  <span v-if="!disabled" class="el-upload-list__item-delete">
+                    <i class="bi bi-trash banner-icon"></i>
                   </span>
                 </span>
               </div>
@@ -62,19 +66,26 @@
         <el-form-item>
           <div class="banner-btn">
             <el-button type="primary" @click="submitForm(ruleFormRef)">
-              Create
+              Update
             </el-button>
             <el-button @click="resetForm(ruleFormRef)">Reset</el-button>
           </div>
         </el-form-item>
       </el-form>
     </div>
+    <div>{{ temp }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import type { FormInstance, FormRules, UploadFile } from "element-plus";
+import type {
+  FormInstance,
+  FormRules,
+  UploadFile,
+  UploadProps,
+} from "element-plus";
 import { computed, defineComponent, ref, watch, toRaw } from "vue";
+import { useRoute } from "vue-router";
 
 import { reactive } from "vue";
 interface RuleForm {
@@ -86,10 +97,12 @@ interface RuleForm {
 }
 
 export default defineComponent({
-  name: "create-banner",
+  name: "editBanner",
   props: {},
   components: {},
   setup(props, ctx) {
+    const route = useRoute();
+    const temp = ref({});
     const dialogImageUrl = ref("");
     const dialogVisible = ref(false);
     const disabled = ref(false);
@@ -113,8 +126,11 @@ export default defineComponent({
       ],
     });
 
-    const handleRemove = (file: UploadFile) => {
-      console.log(file);
+    // const handleRemove = (file: UploadFile) => {
+    //   console.log(file);
+    // };
+    const handleRemove: UploadProps["onRemove"] = (uploadFile, uploadFiles) => {
+      console.log(uploadFile, uploadFiles);
     };
 
     const handlePictureCardPreview = (file: UploadFile) => {
@@ -138,6 +154,9 @@ export default defineComponent({
       formEl.resetFields();
     };
 
+    // onMounted(() => {
+    //   route.params.id
+    // })
     return {
       dialogVisible,
       disabled,
@@ -150,6 +169,7 @@ export default defineComponent({
       handleRemove,
       handlePictureCardPreview,
       resetForm,
+      temp,
     };
   },
 });
@@ -158,6 +178,11 @@ export default defineComponent({
 <style scoped>
 .banner-wrapper {
   margin-top: 20px;
+}
+
+.banner-icon {
+  color: white !important;
+  font-size: 20px;
 }
 .banner-btn {
   width: 100%;
