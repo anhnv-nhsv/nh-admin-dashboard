@@ -71,6 +71,33 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["News", "News List"],
         },
       },
+      {
+        path: "/apps/banner-management",
+        name: "apps-banner-management",
+        component: () => import("@/views/apps/banner/Banner.vue"),
+        meta: {
+          pageTitle: "Banner Management",
+          breadcrumbs: ["Apps", "Banner Management"],
+        },
+      },
+      {
+        path: "/apps/news-management",
+        name: "apps-news-management",
+        component: () => import("@/views/apps/news/News.vue"),
+        meta: {
+          pageTitle: "News Management",
+          breadcrumbs: ["Apps", "News Management"],
+        },
+      },
+      {
+        path: "/apps/contact",
+        name: "apps-contact",
+        component: () => import("@/views/apps/contact/Contact.vue"),
+        meta: {
+          pageTitle: "Contact Management",
+          breadcrumbs: ["Apps", "Contact Management"],
+        },
+      },
     ],
   },
   {

@@ -16,7 +16,7 @@
                       autofocus
                       v-model="formSearchData.username"
                       style=""
-                      placeholder="Search Contact"
+                      placeholder="Search Banner"
                       clearable
                     />
                   </div>
@@ -127,7 +127,7 @@ let userRole = ref("all");
 let syncPayload = ref<any[]>([]);
 
 export default defineComponent({
-  name: "contact-management",
+  name: "banner-management",
   components: {
     NHDatatable,
   },
@@ -144,23 +144,18 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "Tên người dùng",
-        prop: "clientUserName",
+        label: "Tên",
+        prop: "namePost",
         visible: true,
       },
       {
-        label: "Email",
-        prop: "clientEmail",
+        label: "Hình ảnh",
+        prop: "uriPage",
         visible: true,
       },
       {
-        label: "Nội dung",
-        prop: "fromIP",
-        visible: true,
-      },
-      {
-        label: "Thời gian",
-        prop: "contactTime",
+        label: "URL",
+        prop: "url",
         visible: true,
       },
       {

@@ -16,7 +16,7 @@
                       autofocus
                       v-model="formSearchData.username"
                       style=""
-                      placeholder="Search Contact"
+                      placeholder="Search News"
                       clearable
                     />
                   </div>
@@ -144,23 +144,18 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "Tên người dùng",
-        prop: "clientUserName",
+        label: "Tên bài viết",
+        prop: "namePost",
         visible: true,
       },
       {
-        label: "Email",
-        prop: "clientEmail",
+        label: "Chuyên mục",
+        prop: "categories",
         visible: true,
       },
       {
-        label: "Nội dung",
-        prop: "fromIP",
-        visible: true,
-      },
-      {
-        label: "Thời gian",
-        prop: "contactTime",
+        label: "Thời gian đăng bài",
+        prop: "timeNews",
         visible: true,
       },
       {

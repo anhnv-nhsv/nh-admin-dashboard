@@ -47,6 +47,19 @@ const MainMenuConfig: Array<MenuItem> = [
           },
         ],
       },
+
+      {
+        sectionTitle: "Banner",
+        route: "/banner-management",
+        keenthemesIcon: "abstract-43",
+        bootstrapIcon: "bi-graph-up",
+        sub: [
+          {
+            heading: "Banner Management",
+            route: "/apps/banner-management",
+          },
+        ],
+      },
       {
         sectionTitle: "Pages",
         route: "/page-management",

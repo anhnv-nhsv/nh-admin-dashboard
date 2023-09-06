@@ -77,11 +77,6 @@ export default defineComponent({
         visible: true,
       },
       {
-        label: "Hình ảnh",
-        prop: "uriPage",
-        visible: true,
-      },
-      {
         label: "Trạng thái",
         prop: "",
         visible: true,
