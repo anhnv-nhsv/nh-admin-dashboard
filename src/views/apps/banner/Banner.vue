@@ -7,6 +7,13 @@
           autoComplete="on"
           @submit.prevent="submitSearch"
         >
+          <div class="col d-flex align-items-center justify-content-end mb-8">
+            <router-link
+              to="/apps/banner-management/create"
+              class="btn btn-primary btn-add"
+              >Add</router-link
+            >
+          </div>
           <div class="wrapper-header">
             <div class="row search-page">
               <div class="row">
@@ -15,7 +22,6 @@
                     <el-input
                       autofocus
                       v-model="formSearchData.username"
-                      style=""
                       placeholder="Search Banner"
                       clearable
                     />
@@ -111,7 +117,37 @@
         @change-page-size="changePageSize"
         @single-select="handleSingleSelection"
         @multiple-select="handleMultipleSelection"
-      />
+      >
+        <template v-slot:indexColumn>
+          <el-table-column
+            header-align="center"
+            class-name="text-center"
+            v-if="userRole === 'all'"
+            type="selection"
+            width="55"
+          />
+        </template>
+        <template v-slot:uriPage="{ row }">
+          <img :src="row.uriPage" :alt="row.namePost" class="table-img" />
+        </template>
+        <template v-slot:url="{ row }">
+          <a :href="row.url" target="_blank">{{ row.url }}</a>
+        </template>
+        <template v-slot:action>
+          <el-button>Edit</el-button>
+          <el-popconfirm
+            title="Are you sure to delete this?"
+            icon-color="#626AEF"
+            hide-after="10"
+          >
+            <template #reference>
+              <el-button size="small" type="danger" class="del-btn"
+                >Delete</el-button
+              >
+            </template>
+          </el-popconfirm>
+        </template>
+      </NHDatatable>
     </div>
   </div>
 </template>
@@ -301,6 +337,16 @@ export default defineComponent({
 <style scoped>
 .btn {
   padding: 6px 20px !important;
+}
+
+.del-btn {
+  padding: 14px 15px;
+}
+.table-img {
+  width: 100%;
+  border-radius: 8px;
+  position: relative;
+  object-fit: contain;
 }
 
 .card-title {

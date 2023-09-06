@@ -81,6 +81,16 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       {
+        path: "/apps/banner-management/create",
+        name: "create-banner",
+        component: () =>
+          import("@/views/apps/banner/components/CreateBanner.vue"),
+        meta: {
+          pageTitle: "Create Banner",
+          breadcrumbs: ["Apps", "Banner Management", "Create"],
+        },
+      },
+      {
         path: "/apps/news-management",
         name: "apps-news-management",
         component: () => import("@/views/apps/news/News.vue"),
