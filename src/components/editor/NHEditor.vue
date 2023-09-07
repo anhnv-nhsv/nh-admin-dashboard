@@ -1,9 +1,9 @@
 <template>
-  <editor :init="init" />
+  <editor style="width: 100%" :init="init" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent, ref} from "vue";
 // TinyMCE
 import "tinymce/tinymce";
 import "tinymce/icons/default/icons";
@@ -26,12 +26,22 @@ import Editor from "@tinymce/tinymce-vue";
 
 export default defineComponent({
   name: "nh-editor",
+  props: {
+    placeholder: {
+      type: String,
+      required: false,
+      default: () => "Enter content...",
+    },
+  },
   components: {
     Editor,
   },
-  setup() {
+  setup(props, ctx) {
+    const placeholder = ref(props.placeholder);
     return {
       init: {
+        height: 300,
+        placeholder: placeholder.value,
         skin: false,
         plugins: "lists link image table wordcount",
         content_css: false,

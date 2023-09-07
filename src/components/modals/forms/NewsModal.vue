@@ -1,23 +1,16 @@
 <template>
   <div
     class="modal fade"
-    id="kt_news_category_modal"
-    ref="newsCategoryModalRef"
+    id="kt_news_modal"
+    ref="newsModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-800px">
-      <!--begin::Modal content-->
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-1000px">
       <div class="modal-content">
-        <!--begin::Modal header-->
         <div class="modal-header">
-          <!--begin::Modal title-->
-          <h2 class="fw-bolder" v-if="action === 'add'">Add News Category</h2>
-          <h2 class="fw-bolder" v-else>Edit News Category</h2>
-          <!--end::Modal title-->
-
-          <!--begin::Close-->
+          <h2 class="fw-bolder" v-if="action === 'add'">Add News</h2>
+          <h2 class="fw-bolder" v-else>Edit News</h2>
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -27,13 +20,8 @@
               <inline-svg src="media/icons/duotune/arrows/arr061.svg" />
             </span>
           </div>
-          <!--end::Close-->
         </div>
-        <!--end::Modal header-->
-
-        <!--begin::Modal body-->
-        <div class="modal-body scroll-y mx-5 mx-xl-5 my-7">
-          <!--begin::Form-->
+        <div class="modal-body mx-5 mx-xl-5 my-7">
           <NhForm seoable>
             <template v-slot:customForm>
               <el-form :model="newsForm" label-width="160px">
@@ -73,7 +61,7 @@
                     id="nh_tab_pane_1"
                     role="tabpanel"
                   >
-                    <el-form-item label="Tên chuyên mục">
+                    <el-form-item label="Tiêu đề">
                       <el-input
                         v-model="newsForm.titleVn"
                         placeholder="Tiếng Việt"
@@ -81,34 +69,35 @@
                         @input="generateSlug(newsForm.titleVn)"
                       />
                     </el-form-item>
+                    <el-form-item label="Nội dung">
+                      <NhEditor v-model="newsForm.contentVn" placeholder="Tiếng Việt" />
+                    </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
-                    <el-form-item label="Tên chuyên mục">
+                    <el-form-item label="Tiêu đề">
                       <el-input
                         v-model="newsForm.titleEn"
                         placeholder="Tiếng Anh"
                         clearable
                       />
                     </el-form-item>
+                    <el-form-item label="Nội dung">
+                      <NhEditor v-model="newsForm.contentEn" placeholder="Tiếng Anh" />
+                    </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
-                    <el-form-item label="Tên chuyên mục">
+                    <el-form-item label="Tiêu đề">
                       <el-input
                         v-model="newsForm.titleKr"
                         placeholder="Tiếng Hàn"
                         clearable
                       />
                     </el-form-item>
+                    <el-form-item label="Nội dung">
+                      <NhEditor v-model="newsForm.contentKr" placeholder="Tiếng Hàn" />
+                    </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="URL">
-                  <el-input
-                    v-model="newsForm.url"
-                    placeholder="URL"
-                    clearable
-                    disabled
-                  />
-                </el-form-item>
                 <el-form-item label="Chọn chuyên mục cha">
                   <el-cascader
                     v-model="newsForm.parentCategory"
@@ -120,21 +109,65 @@
                     @change="handleChangeCategory"
                   />
                 </el-form-item>
-                <el-form-item>
-                  <el-checkbox
-                    v-model="newsForm.isPublish"
-                    label="Publish"
-                    size="large"
+                <el-form-item label="Hình ảnh">
+                  <el-upload
+                    ref="uploadRef"
+                    action="#"
+                    list-type="picture-card"
+                    :auto-upload="false"
+                    :limit="1"
+                    :on-exceed="handleFileExceed"
+                    :on-change="handleImageChange"
+                    :class="{ 'hide-upload': fileList.length > 0 }"
+                  >
+                    <el-icon><Plus /></el-icon>
+                    <template #file="{ file }">
+                      <div>
+                        <img
+                          class="el-upload-list__item-thumbnail"
+                          :src="file.url"
+                          alt=""
+                        />
+                        <span class="el-upload-list__item-actions">
+                          <span
+                            class="el-upload-list__item-preview"
+                            @click="handlePictureCardPreview(file)"
+                          >
+                            <el-icon><zoom-in /></el-icon>
+                          </span>
+                          <span
+                            class="el-upload-list__item-delete"
+                            @click="handleRemove"
+                          >
+                            <el-icon><Delete /></el-icon>
+                          </span>
+                        </span>
+                      </div>
+                    </template>
+                  </el-upload>
+                  <el-dialog v-model="dialogVisible">
+                    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+                  </el-dialog>
+                </el-form-item>
+                <el-form-item label="URL">
+                  <el-input
+                    v-model="newsForm.url"
+                    placeholder="URL"
+                    clearable
+                    disabled
                   />
+                </el-form-item>
+                <el-form-item label="Tin nổi bật">
+                  <el-switch v-model="newsForm.isFeatured" />
+                </el-form-item>
+                <el-form-item label="Hiển thị ngay">
+                  <el-switch v-model="newsForm.isPublish" />
                 </el-form-item>
               </el-form>
             </template>
           </NhForm>
-          <!--end::Form-->
         </div>
-        <!--end::Modal body-->
         <div class="modal-footer">
-          <!--begin::Button-->
           <button
             type="reset"
             id="kt_modal_test_editor_cancel"
@@ -143,9 +176,6 @@
           >
             Discard
           </button>
-          <!--end::Button-->
-
-          <!--begin::Button-->
           <button class="btn btn-lg btn-primary" type="submit">
             <span v-if="true" class="indicator-label">
               Submit
@@ -160,26 +190,34 @@
               ></span>
             </span>
           </button>
-          <!--end::Button-->
         </div>
       </div>
-      <!--end::Modal content-->
     </div>
-    <!--end::Modal dialog-->
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
+import { Delete, Plus, Refresh, ZoomIn } from "@element-plus/icons-vue";
+import type {
+  UploadFile,
+  UploadFiles,
+  UploadInstance,
+  UploadProps,
+  UploadRawFile,
+  UploadUserFile,
+} from "element-plus";
+import { ElMessage } from "element-plus";
+import NhEditor from "@/components/editor/NHEditor.vue";
 
 export default defineComponent({
-  name: "news-category-modal",
+  name: "news-modal",
   props: {
     action: { type: String, default: () => "add", required: false },
   },
-  components: { NhForm },
-  setup() {
+  components: { NhEditor, NhForm, Delete, Plus, ZoomIn },
+  setup: function () {
     const categories = [
       {
         value: "guide",
@@ -455,17 +493,26 @@ export default defineComponent({
       titleVn: "",
       titleEn: "",
       titleKr: "",
-      url: "/chuyen-muc-tin/.html",
+      contentVn: "",
+      contentEn: "",
+      contentKr: "",
+      featuredImgUrl: "",
+      url: "/tin-tuc/.html",
       parentCategory: "",
-      isPublish: false,
+      isPublish: true,
+      isFeatured: false,
     });
+    const dialogImageUrl = ref("");
+    const dialogVisible = ref(false);
+    const uploadRef = ref<UploadInstance>();
+    const fileList = ref<any>([]);
 
     const handleChangeCategory = (value) => {
       console.log(value);
     };
 
     const generateSlug = (title) => {
-      newsForm.url = "/chuyen-muc-tin/" + toSlug(title) + ".html";
+      newsForm.url = "/tin-tuc/" + toSlug(title) + ".html";
     };
 
     const toSlug = (str) => {
@@ -496,12 +543,43 @@ export default defineComponent({
       return str;
     };
 
+    const handleRemove = (file: UploadFile) => {
+      uploadRef.value?.handleRemove(file);
+      fileList.value = [];
+    };
+
+    const handlePictureCardPreview = (file: UploadFile) => {
+      dialogImageUrl.value = file.url!;
+      dialogVisible.value = true;
+    };
+
+    const handleImageChange = (uploadFile: UploadFile) => {
+      fileList.value = [uploadFile];
+    };
+
+    const handleFileExceed = (files: File[], uploadFiles: UploadUserFile[]) => {
+      uploadRef.value?.clearFiles();
+      fileList.value = [...uploadFiles];
+      uploadRef.value?.handleStart(files[0] as UploadRawFile);
+    };
+
     return {
       categories,
       cascaderConfig,
       newsForm,
+      Delete,
+      Plus,
+      ZoomIn,
+      dialogImageUrl,
+      dialogVisible,
+      uploadRef,
+      fileList,
       handleChangeCategory,
       generateSlug,
+      handleImageChange,
+      handleRemove,
+      handlePictureCardPreview,
+      handleFileExceed,
     };
   },
 });
@@ -510,5 +588,15 @@ export default defineComponent({
 <style scoped lang="scss">
 .tab-content {
   width: 100%;
+}
+.avatar-uploader .avatar {
+  width: 100%;
+  //height: 178px;
+  display: block;
+}
+.hide-upload {
+  :deep(div.el-upload.el-upload--picture-card) {
+    display: none !important;
+  }
 }
 </style>
