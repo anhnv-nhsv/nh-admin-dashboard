@@ -3,14 +3,48 @@
     <div class="card-header border-0 pt-6">
       <div class="flex-column">
         <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
-          <div>
+          <div
+            class="col-md-6 d-flex align-items-center position-relative my-1"
+          >
             <el-input
               autofocus
+              v-model="formSearchData.name"
               size="large"
               placeholder="Press enter to search"
               clearable
               :prefix-icon="Search"
+              @submit.prevent="submitSearch"
             />
+          </div>
+          <div
+            class="col-md-3 d-flex align-items-center position-relative my-1"
+          >
+            <el-select
+              placeholder="Status"
+              size="large"
+              v-model="formSearchData.publish"
+            >
+              <el-option label="All" />
+              <el-option label="Enable" value="1" />
+              <el-option label="Disable" value="0" />
+            </el-select>
+          </div>
+          <div
+            class="col-md-3 d-flex align-items-center position-relative my-1"
+          >
+            <button
+              :data-kt-indicator="false ? 'on' : null"
+              type="submit"
+              class="btn btn-primary"
+            >
+              <span v-if="true" class="indicator-label">Search</span>
+              <span v-if="false" class="indicator-progress"
+                >Please wait...
+                <span
+                  class="spinner-border spinner-border-sm align-middle ms-2"
+                ></span
+              ></span>
+            </button>
           </div>
         </form>
       </div>
@@ -24,11 +58,11 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#kt_news_category_modal"
+            data-bs-target="#kt_page_modal"
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Category
+            Add Page
           </button>
         </div>
         <div
@@ -36,17 +70,24 @@
           class="d-flex justify-content-end align-items-center"
           data-kt-customer-table-toolbar="selected"
         >
-          <div class="fw-bold me-5">
-            <span class="me-2">{{ selectedIds }}</span
-            >Selected
+          <div class="w-auto me-5">
+            <button
+              type="button"
+              class="btn btn-success"
+              @click="deleteCategory()"
+            >
+              Change status
+            </button>
           </div>
-          <button
-            type="button"
-            class="btn btn-danger"
-            @click="deleteCategory()"
-          >
-            Delete Selected
-          </button>
+          <div class="w-auto">
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="deleteCategory()"
+            >
+              Delete {{ selectedIds }} selected
+            </button>
+          </div>
         </div>
         <div
           class="d-flex justify-content-end align-items-center d-none"
@@ -102,7 +143,7 @@
                 size="small"
                 type="default"
                 data-bs-toggle="modal"
-                data-bs-target="#kt_news_category_modal"
+                data-bs-target="#kt_page_modal"
                 @click.prevent="editCategory(scope.row)"
               >
                 Edit
@@ -117,18 +158,25 @@
             </template>
           </el-table-column>
         </template>
+        <template v-slot:publish="{ row }">
+          <span v-if="row.publish === 1">
+            <i class="bi bi-check-circle-fill v-btn"></i
+          ></span>
+          <span v-if="row.publish !== 1"
+            ><i class="bi bi-x-circle-fill x-btn"></i
+          ></span>
+        </template>
       </NHDatatable>
     </div>
   </div>
-  <PageManagementModal :action="newsAction" />
+  <PageManagementModal :action="newsAction" :rowDetail="rowDetail" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
-import { useReqStatistic } from "@/stores/req-statistic";
+import { usePageStore } from "@/stores/page";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
-import { pageArray, options, selectTask } from "./mock/index";
 import PageManagementModal from "@/components/modals/forms/PageManagementModal.vue";
 
 const value = ref("");
@@ -143,36 +191,34 @@ export default defineComponent({
     NHDatatable,
   },
   setup() {
-    console.log("syncPayload: ", syncPayload);
-
-    const store = useReqStatistic();
+    const store = usePageStore();
     const formSearchData = ref({
-      username: "",
-      status: "",
+      name: "",
+      publish: "",
     });
     const data = ref({
-      status: "",
+      publish: "",
     });
     const tableHeader = ref([
       {
         label: "ID",
-        prop: "seq",
+        prop: "id",
         visible: true,
         width: 70,
       },
       {
         label: "Parent",
-        prop: "clientUserName",
+        prop: "parent_id",
         visible: true,
       },
       {
         label: "Tên",
-        prop: "fromIP",
+        prop: "name",
         visible: true,
       },
       {
         label: "Trạng thái",
-        prop: "",
+        prop: "publish",
         visible: true,
       },
     ]);
@@ -181,29 +227,31 @@ export default defineComponent({
     let dataRequestStatistics = ref();
     let newsAction = ref("");
     let pagination = ref();
+    let rowDetail = ref();
     let syncKLPBtn = ref<HTMLElement | null>(null);
 
     async function getRequestStatistics(
-      page?: number,
-      username?: string,
-      status?: string,
-      pageSize = 15
+      pageNo?: number,
+      name?: string,
+      publish?: string,
+      pageSize = 10
     ) {
-      console.log("call API");
       loading.value = true;
-      await store.getReqStatistic({
+      await store.getAllPages({
         params: {
-          username: username ? username : "",
-          status: status ? status : "",
-          page: page,
+          name: name ? name : "",
+          publish: publish ? publish : "",
+          pageNo: pageNo,
           pageSize: pageSize,
         },
       });
-      const requestStatisticsResponse = JSON.parse(
-        JSON.stringify(store.statisticResp)
-      );
 
-      dataRequestStatistics.value = pageArray;
+      const requestStatisticsResponse = JSON.parse(
+        JSON.stringify(store.allPagesResp)
+      );
+      console.log("requestStatisticsResponse: ", requestStatisticsResponse);
+
+      dataRequestStatistics.value = requestStatisticsResponse.data;
       pagination.value = {
         totalPages: requestStatisticsResponse.totalPages,
         pageNo: requestStatisticsResponse.pageNo,
@@ -225,8 +273,8 @@ export default defineComponent({
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       getRequestStatistics(
         1,
-        formData.username,
-        formData.status ? formData.status : "",
+        formData.name,
+        formData.publish ? formData.publish : "",
         pagination.value.pageSize
       );
     }
@@ -247,7 +295,7 @@ export default defineComponent({
 
     const editCategory = (val?: object | undefined) => {
       newsAction.value = "edit";
-      console.log("edit category: ", val);
+      rowDetail.value = JSON.parse(JSON.stringify(val));
     };
 
     const deleteCategory = (val?: object | undefined) => {
@@ -259,8 +307,8 @@ export default defineComponent({
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       getRequestStatistics(
         page,
-        formData.username,
-        formData.status ? formData.status : "",
+        formData.name,
+        formData.publish ? formData.publish : "",
         pagination.value.pageSize
       );
     }
@@ -271,8 +319,8 @@ export default defineComponent({
       pagination.value.pageSize = pageSize;
       getRequestStatistics(
         1,
-        formData.username,
-        formData.status ? formData.status : "",
+        formData.name,
+        formData.publish ? formData.publish : "",
         pageSize
       );
     };
@@ -287,15 +335,14 @@ export default defineComponent({
       userRole,
       syncKLPBtn,
       visible,
-      options,
       tableHeader,
       pagination,
       loading,
       formSearchData,
-      selectTask,
       syncPayload,
       value,
       newsAction,
+      rowDetail,
       Search,
       handleApplyStatus,
       addCategory,
@@ -318,6 +365,15 @@ export default defineComponent({
 
 .del-btn {
   padding: 14px 15px;
+}
+
+.v-btn {
+  font-size: 15px;
+  color: green;
+}
+.x-btn {
+  font-size: 15px;
+  color: red;
 }
 
 .my-header {

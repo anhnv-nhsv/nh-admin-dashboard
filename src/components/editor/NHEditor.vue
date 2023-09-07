@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import { defineComponent, ref } from "vue";
 // TinyMCE
 import "tinymce/tinymce";
 import "tinymce/icons/default/icons";

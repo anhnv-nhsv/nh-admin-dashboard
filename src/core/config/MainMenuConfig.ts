@@ -94,12 +94,8 @@ const MainMenuConfig: Array<MenuItem> = [
         bootstrapIcon: "bi-graph-up",
         sub: [
           {
-            heading: "Contact Category",
+            heading: "Contact Management",
             route: "/apps/contact/category",
-          },
-          {
-            heading: "Contact List",
-            route: "/apps/contact/list",
           },
         ],
       },

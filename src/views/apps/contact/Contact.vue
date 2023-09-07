@@ -1,101 +1,72 @@
 <template>
   <div class="card">
     <div class="card-header border-0 pt-6">
-      <div class="card-title">
-        <form
-          class="form row w-100"
-          autoComplete="on"
-          @submit.prevent="submitSearch"
-        >
-          <div class="wrapper-header">
-            <div class="row search-page">
-              <div class="row">
-                <div class="row col-9">
-                  <div class="col-4">
-                    <el-input
-                      autofocus
-                      v-model="formSearchData.username"
-                      style=""
-                      placeholder="Search Contact"
-                      clearable
-                    />
-                  </div>
-                  <div class="col-4">
-                    <el-select
-                      v-model="formSearchData.status"
-                      clearable
-                      placeholder="Status"
-                    >
-                      <el-option-group
-                        v-for="group in options"
-                        :key="group.label"
-                        :label="group.label"
-                      >
-                        <el-option
-                          v-for="item in group.options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value"
-                        />
-                      </el-option-group>
-                    </el-select>
-                  </div>
-                  <div class="col-4">
-                    <button
-                      :data-kt-indicator="loading ? 'on' : null"
-                      type="submit"
-                      class="btn btn-primary"
-                    >
-                      <span v-if="!loading" class="indicator-label"
-                        >Search</span
-                      >
-                      <span v-if="loading" class="indicator-progress"
-                        >Please wait...
-                        <span
-                          class="spinner-border spinner-border-sm align-middle ms-2"
-                        ></span
-                      ></span>
-                    </button>
-                  </div>
-                </div>
-                <div class="row col-3 action-right">
-                  <div class="col-10">
-                    <el-select
-                      v-model="data.status"
-                      :disabled="!syncPayload.length"
-                      clearable
-                      placeholder="Chọn tác vụ"
-                    >
-                      <el-option
-                        v-for="item in selectTask"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
-                  </div>
-                  <div class="col-2">
-                    <button
-                      :data-kt-indicator="loading ? 'on' : null"
-                      @click="handleApplyStatus"
-                      ref="syncKLPBtn"
-                      disabled
-                      class="btn btn-primary"
-                    >
-                      <span v-if="!loading" class="indicator-label">Apply</span>
-                      <span v-if="loading" class="indicator-progress"
-                        >Please wait...
-                        <span
-                          class="spinner-border spinner-border-sm align-middle ms-2"
-                        ></span
-                      ></span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="flex-column">
+        <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
+          <div>
+            <el-input
+              autofocus
+              size="large"
+              placeholder="Press enter to search"
+              clearable
+              :prefix-icon="Search"
+            />
           </div>
         </form>
+      </div>
+      <div class="card-toolbar">
+        <div
+          v-if="selectedIds === 0"
+          class="d-flex justify-content-end"
+          data-kt-customer-table-toolbar="base"
+        >
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#kt_news_category_modal"
+            @click="addCategory"
+          >
+            <KTIcon icon-name="plus" icon-class="fs-2" />
+            Add Category
+          </button>
+        </div>
+        <div
+          v-else
+          class="d-flex justify-content-end align-items-center"
+          data-kt-customer-table-toolbar="selected"
+        >
+          <div class="fw-bold me-5">
+            <span class="me-2">{{ selectedIds }}</span
+            >Selected
+          </div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            @click="deleteCategory()"
+          >
+            Delete Selected
+          </button>
+        </div>
+        <div
+          class="d-flex justify-content-end align-items-center d-none"
+          data-kt-customer-table-toolbar="selected"
+        >
+          <div class="fw-bold me-5">
+            <span
+              class="me-2"
+              data-kt-customer-table-select="selected_count"
+            ></span
+            >Selected
+          </div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-kt-customer-table-select="delete_selected"
+          >
+            Delete Selected
+          </button>
+        </div>
       </div>
     </div>
     <div class="card-body pt-0">
@@ -116,35 +87,50 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            v-if="userRole === 'all'"
             type="selection"
             width="55"
           />
         </template>
-        <template v-slot:action>
-          <el-button>Edit</el-button>
-          <el-popconfirm
-            title="Are you sure to delete this?"
-            icon-color="#626AEF"
-            hide-after="10"
+        <template v-slot:actionColumn>
+          <el-table-column
+            header-align="center"
+            class-name="text-center"
+            label="Thao tác"
           >
-            <template #reference>
-              <el-button size="small" type="danger" class="del-btn"
-                >Delete</el-button
+            <template #default="scope">
+              <el-button
+                size="small"
+                type="default"
+                data-bs-toggle="modal"
+                data-bs-target="#kt_news_category_modal"
+                @click.prevent="editCategory(scope.row)"
               >
+                Edit
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                @click.prevent="deleteCategory(scope.row)"
+              >
+                Delete
+              </el-button>
             </template>
-          </el-popconfirm>
+          </el-table-column>
         </template>
       </NHDatatable>
     </div>
   </div>
+  <ContactManagementModal :action="newsAction" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { Search } from "@element-plus/icons-vue";
 import { useReqStatistic } from "@/stores/req-statistic";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import { contactArray, options, selectTask } from "./mock/index";
+import ContactManagementModal from "@/components/modals/forms/ContactManagementModal.vue";
+
 const value = ref("");
 const visible = ref(false);
 let userRole = ref("all");
@@ -153,6 +139,7 @@ let syncPayload = ref<any[]>([]);
 export default defineComponent({
   name: "contact-management",
   components: {
+    ContactManagementModal,
     NHDatatable,
   },
   setup() {
@@ -189,18 +176,15 @@ export default defineComponent({
       },
       {
         label: "Trạng thái",
-        width: 140,
+        width: 90,
         prop: "",
         visible: true,
       },
-      {
-        label: "Actions",
-        prop: "action",
-        visible: true,
-      },
     ]);
+    let selectedIds = ref(0);
     const loading = ref<boolean>(false);
     let dataRequestStatistics = ref();
+    let newsAction = ref("");
     let pagination = ref();
     let syncKLPBtn = ref<HTMLElement | null>(null);
 
@@ -252,29 +236,28 @@ export default defineComponent({
       );
     }
     const handleSingleSelection = (val) => {
-      if (!syncKLPBtn.value) {
-        return;
-      }
-      if (val) {
-        syncKLPBtn.value.removeAttribute("disabled");
-      } else {
-        syncKLPBtn.value?.setAttribute("disabled", "");
-      }
-      syncPayload.value = [val];
-      console.log("syncPayload.value1: ", val);
+      selectedIds.value += 1;
+      console.log(`handleSingleSelection: ${val}`);
     };
 
     const handleMultipleSelection = (val) => {
-      if (!syncKLPBtn.value) {
-        return;
-      }
-      if (val.length > 0) {
-        syncKLPBtn.value.removeAttribute("disabled");
-      } else {
-        syncKLPBtn.value?.setAttribute("disabled", "");
-      }
-      syncPayload.value = val;
-      console.log("syncPayload.value2: ", syncPayload.value);
+      selectedIds.value = val.length;
+      console.log(`handleMultipleSelection: ${val}`);
+    };
+
+    const addCategory = () => {
+      newsAction.value = "add";
+      console.log("add category");
+    };
+
+    const editCategory = (val?: object | undefined) => {
+      newsAction.value = "edit";
+      console.log("edit category: ", val);
+    };
+
+    const deleteCategory = (val?: object | undefined) => {
+      console.log(val);
+      console.log("delete category");
     };
 
     function changePage(page) {
@@ -305,6 +288,7 @@ export default defineComponent({
     return {
       dataRequestStatistics,
       data,
+      selectedIds,
       userRole,
       syncKLPBtn,
       visible,
@@ -316,7 +300,12 @@ export default defineComponent({
       selectTask,
       syncPayload,
       value,
+      newsAction,
+      Search,
       handleApplyStatus,
+      addCategory,
+      editCategory,
+      deleteCategory,
       handleSingleSelection,
       handleMultipleSelection,
       changePage,
