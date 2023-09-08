@@ -65,15 +65,15 @@
                   >
                     <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="pageForm.titleVn"
+                        v-model="pageForm.name"
                         placeholder="Tiếng Việt"
                         clearable
-                        @input="generateSlug(pageForm.titleVn)"
+                        @input="generateSlug(pageForm.name)"
                       />
                     </el-form-item>
                     <el-form-item label="Nội dung">
                       <NhEditor
-                        v-model="pageForm.contentVn"
+                        v-model="pageForm.content"
                         placeholder="Tiếng Việt"
                       />
                     </el-form-item>
@@ -81,14 +81,14 @@
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
                     <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="pageForm.titleEn"
+                        v-model="pageForm.name_english"
                         placeholder="Tiếng Anh"
                         clearable
                       />
                     </el-form-item>
                     <el-form-item label="Nội dung">
                       <NhEditor
-                        v-model="pageForm.contentEn"
+                        v-model="pageForm.content_english"
                         placeholder="Tiếng Anh"
                       />
                     </el-form-item>
@@ -96,14 +96,14 @@
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
                     <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="pageForm.titleKr"
+                        v-model="pageForm.name_korea"
                         placeholder="Tiếng Hàn"
                         clearable
                       />
                     </el-form-item>
                     <el-form-item label="Nội dung">
                       <NhEditor
-                        v-model="pageForm.contentKr"
+                        v-model="pageForm.content_korea"
                         placeholder="Tiếng Hàn"
                       />
                     </el-form-item>
@@ -122,6 +122,7 @@
                 </el-form-item>
                 <el-form-item label="Hình ảnh">
                   <el-upload
+                    v-model="pageForm.image"
                     ref="uploadRef"
                     action="#"
                     list-type="picture-card"
@@ -160,13 +161,13 @@
                     <img w-full :src="dialogImageUrl" alt="Preview Image" />
                   </el-dialog>
                 </el-form-item>
-                <el-form-item label="Slug">
+                <!-- <el-form-item label="Slug">
                   <el-input
-                    v-model="pageForm.slugPage"
+                    v-model="pageForm.slug"
                     placeholder="Slug"
                     clearable
                   />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="URL">
                   <el-input
                     v-model="pageForm.url"
@@ -176,11 +177,12 @@
                   />
                 </el-form-item>
                 <el-form-item label="Publish">
-                  <el-switch v-model="pageForm.isPublish" />
+                  <el-switch v-model="pageForm.publish" />
                 </el-form-item>
               </el-form>
             </template>
           </NhForm>
+          <!-- {{ rowValue }} -->
         </div>
         <div class="modal-footer">
           <button
@@ -191,9 +193,33 @@
           >
             Discard
           </button>
-          <button class="btn btn-lg btn-primary" type="submit">
+          <button
+            class="btn btn-lg btn-primary"
+            type="submit"
+            v-if="action === 'add'"
+            @click="handleAdd"
+          >
             <span v-if="true" class="indicator-label">
-              Submit
+              Add
+              <span class="svg-icon svg-icon-3 ms-2 me-0">
+                <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
+              </span>
+            </span>
+            <span v-if="false" class="indicator-progress">
+              Please wait...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+          <button
+            class="btn btn-lg btn-primary"
+            type="submit"
+            v-if="action === 'edit'"
+            @click="handleEdit"
+          >
+            <span v-if="true" class="indicator-label">
+              Edit
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -212,7 +238,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, watch, watchEffect } from "vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, Refresh, ZoomIn } from "@element-plus/icons-vue";
 import type {
@@ -225,6 +251,8 @@ import type {
 } from "element-plus";
 import { ElMessage } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
+import { usePageStore } from "@/stores/page";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
   name: "page-category-modal",
@@ -240,8 +268,66 @@ export default defineComponent({
   },
   components: { NhEditor, NhForm, Delete, Plus, ZoomIn },
   setup: function (props, ctx) {
+    const store = usePageStore();
     const detailData = ref(props.rowDetail);
-    console.log("detailData: ", detailData);
+    const temp = ref();
+    const temp1 = ref();
+    const temp2 = ref();
+    const temp3 = ref();
+    const temp4 = ref();
+    const temp5 = ref();
+    const temp6 = ref();
+    const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
+
+    watch(
+      () => props.rowDetail,
+      (newVal) => {
+        if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
+          console.log(JSON.parse(JSON.stringify(newVal)));
+          console.log("newVal not undefined");
+          rowValue.value = newVal;
+          pageForm.value.name = rowValue.value.name;
+          pageForm.value.name_english = rowValue.value.name_english;
+          pageForm.value.name_korea = rowValue.value.name_korea;
+          pageForm.value.slug = rowValue.value.slug;
+          pageForm.value.content = rowValue.value.content;
+          pageForm.value.content_english = rowValue.value.content_english;
+          pageForm.value.content_korea = rowValue.value.content_korea;
+          pageForm.value.image = rowValue.value.image;
+          pageForm.value.image_english = rowValue.value.image_english;
+          pageForm.value.image_korea = rowValue.value.image_korea;
+          pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
+          pageForm.value.url = rowValue.value.url || pageForm.value.url;
+          pageForm.value.parentCategory = rowValue.value.parentCategory;
+          pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
+          temp.value = rowValue.value.publish;
+          temp1.value = rowValue.value.status;
+          temp2.value = rowValue.value.type_post;
+          temp3.value = rowValue.value.category_id;
+          temp4.value = rowValue.value.parent_id;
+          temp5.value = rowValue.value.publish;
+          temp6.value = rowValue.value.id;
+        } else {
+          console.log("re-init pageForm");
+          pageForm.value = {
+            name: "",
+            name_english: "",
+            name_korea: "",
+            slug: "",
+            content: "",
+            content_english: "",
+            content_korea: "",
+            image: "",
+            image_english: "",
+            image_korea: "",
+            featuredImgUrl: "",
+            url: "/page/.html",
+            parentCategory: "",
+            publish: false,
+          };
+        }
+      }
+    );
 
     const categories = [
       {
@@ -514,19 +600,83 @@ export default defineComponent({
     const cascaderConfig = {
       expandTrigger: "hover" as const,
     };
-    const pageForm = reactive({
-      titleVn: "",
-      titleEn: "",
-      titleKr: "",
-      slugPage: "",
-      contentVn: "",
-      contentEn: "",
-      contentKr: "",
+
+    const pageForm = ref({
+      name: "",
+      name_english: "",
+      name_korea: "",
+      slug: "",
+      content: "",
+      content_english: "",
+      content_korea: "",
+      image: "",
+      image_english: "",
+      image_korea: "",
       featuredImgUrl: "",
       url: "/page/.html",
       parentCategory: "",
-      isPublish: true,
+      publish: false,
     });
+
+    const handleAdd = async () => {
+      const formData = JSON.parse(JSON.stringify(pageForm.value));
+      const result = await store.createPage({
+        ...formData,
+        status: "",
+        type_post: "page",
+        category_id: 10,
+        parent_id: 14,
+        publish: formData.publish === false ? 0 : 1,
+      });
+      if (result.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Tạo thành công!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: result.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    };
+
+    const handleEdit = async () => {
+      const formData = JSON.parse(JSON.stringify(pageForm.value));
+      const result = await store.editPage({
+        ...formData,
+        status: temp1.value,
+        type_post: temp2.value,
+        category_id: temp3.value,
+        parent_id: temp4.value,
+        publish: formData.publish === false ? 0 : 1,
+        id: temp6.value,
+      });
+      if (result.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Cập nhật thành công!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: result.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    };
+
     const dialogImageUrl = ref("");
     const dialogVisible = ref(false);
     const uploadRef = ref<UploadInstance>();
@@ -537,7 +687,7 @@ export default defineComponent({
     };
 
     const generateSlug = (title) => {
-      pageForm.url = "/tin-tuc/" + toSlug(title) + ".html";
+      pageForm.value.url = "/tin-tuc/" + toSlug(title) + ".html";
     };
 
     const toSlug = (str) => {
@@ -568,7 +718,7 @@ export default defineComponent({
       return str;
     };
 
-    const handleRemove = (file: UploadFile) => {
+    const handleRemove = (file: any) => {
       uploadRef.value?.handleRemove(file);
       fileList.value = [];
     };
@@ -599,12 +749,15 @@ export default defineComponent({
       dialogVisible,
       uploadRef,
       fileList,
+      rowValue,
       handleChangeCategory,
+      handleAdd,
       generateSlug,
       handleImageChange,
       handleRemove,
       handlePictureCardPreview,
       handleFileExceed,
+      handleEdit,
     };
   },
 });

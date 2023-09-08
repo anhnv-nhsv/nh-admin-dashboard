@@ -14,7 +14,8 @@ export const usePageStore = defineStore("page-score", () => {
     allPagesResp.value = data;
   }
 
-  function getAllPages(params) {
+  // Get All Page
+  function getAllPages(params?: any) {
     return ApiService.query("/pages/get-all-pages", params)
       .then(({ data }) => {
         setPageRes(data);
@@ -24,9 +25,25 @@ export const usePageStore = defineStore("page-score", () => {
       });
   }
 
+  // Create Page
+  function createPage(val) {
+    return ApiService.post("/pages/create-page", val);
+  }
+
+  function editPage(val) {
+    return ApiService.post("/pages/update-page", val);
+  }
+
+  function deletePage(id) {
+    return ApiService.post("/pages/delete-page", id);
+  }
+
   return {
     allPagesResp,
     errors,
     getAllPages,
+    deletePage,
+    createPage,
+    editPage,
   };
 });

@@ -112,6 +112,7 @@
     </div>
     <div class="card-body pt-0">
       <NHDatatable
+        ref="myTable"
         :table-header="tableHeader"
         :table-data="dataRequestStatistics"
         :pagination="pagination"
@@ -148,13 +149,16 @@
               >
                 Edit
               </el-button>
-              <el-button
-                size="small"
-                type="danger"
-                @click.prevent="deleteCategory(scope.row)"
+              <el-popconfirm
+                title="Are you sure to delete this?"
+                icon-color="#626AEF"
+                hide-after="10"
+                @confirm="deleteCategory(scope.row)"
               >
-                Delete
-              </el-button>
+                <template #reference>
+                  <el-button size="small" type="danger">Delete</el-button>
+                </template>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </template>
@@ -178,6 +182,7 @@ import { Search } from "@element-plus/icons-vue";
 import { usePageStore } from "@/stores/page";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import PageManagementModal from "@/components/modals/forms/PageManagementModal.vue";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const value = ref("");
 const visible = ref(false);
@@ -249,7 +254,6 @@ export default defineComponent({
       const requestStatisticsResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
-      console.log("requestStatisticsResponse: ", requestStatisticsResponse);
 
       dataRequestStatistics.value = requestStatisticsResponse.data;
       pagination.value = {
@@ -290,17 +294,36 @@ export default defineComponent({
 
     const addCategory = () => {
       newsAction.value = "add";
-      console.log("add category");
+      rowDetail.value = {};
     };
 
     const editCategory = (val?: object | undefined) => {
       newsAction.value = "edit";
+      console.log("edit", JSON.parse(JSON.stringify(val)));
+
       rowDetail.value = JSON.parse(JSON.stringify(val));
     };
 
-    const deleteCategory = (val?: object | undefined) => {
-      console.log(val);
-      console.log("delete category");
+    const deleteCategory = async (val?: any) => {
+      const oke = await store.deletePage({ id: val.id });
+      if (oke.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Success!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        // store.getAllPages();
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: oke.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     };
 
     function changePage(page) {
