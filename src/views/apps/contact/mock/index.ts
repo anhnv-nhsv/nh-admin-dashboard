@@ -1,21 +1,24 @@
-export const pageArray = [
+export const contactArray = [
   {
     id: 1,
-    seq: "511",
-    clientUserName: "14",
+    clientEmail: "hnh@gmail.com",
+    clientUserName: "Nguyễn Ngọc Hải",
     fromIP: "Bảo mật",
+    contactTime: "25/08/2023",
   },
   {
     id: 2,
-    seq: "412",
-    clientUserName: "41",
+    clientEmail: "blq@gmail.com",
+    clientUserName: "Bạch Long Quân",
     fromIP: "Quy định sử dụng website",
+    contactTime: "25/08/2023",
   },
   {
     id: 3,
-    seq: "545",
-    clientUserName: "15",
+    clientEmail: "dtd@gmail.com",
+    clientUserName: "Đỗ Trọng Đức",
     fromIP: "Hướng dẫn công bố thông tin cho nhà đầu tư",
+    contactTime: "25/08/2023",
   },
 ];
 

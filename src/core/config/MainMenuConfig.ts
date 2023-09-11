@@ -48,6 +48,18 @@ const MainMenuConfig: Array<MenuItem> = [
         ],
       },
       {
+        sectionTitle: "banner",
+        route: "/banner-management",
+        keenthemesIcon: "abstract-43",
+        bootstrapIcon: "bi-graph-up",
+        sub: [
+          {
+            heading: "bannerManager",
+            route: "/apps/banner-management",
+          },
+        ],
+      },
+      {
         sectionTitle: "Pages",
         route: "/page-management",
         keenthemesIcon: "element-equal",
@@ -72,6 +84,18 @@ const MainMenuConfig: Array<MenuItem> = [
           {
             heading: "newsList",
             route: "/apps/news/list",
+          },
+        ],
+      },
+      {
+        sectionTitle: "contact",
+        route: "/contact",
+        keenthemesIcon: "abstract-19",
+        bootstrapIcon: "bi-graph-up",
+        sub: [
+          {
+            heading: "Contact Management",
+            route: "/apps/contact/category",
           },
         ],
       },

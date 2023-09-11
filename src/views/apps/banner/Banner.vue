@@ -58,7 +58,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#kt_page_modal"
+            data-bs-target="#kt_banner_category_modal"
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
@@ -112,13 +112,13 @@
     </div>
     <div class="card-body pt-0">
       <NHDatatable
-        ref="myTable"
         :table-header="tableHeader"
-        :table-data="dataRequestPageManager"
+        :table-data="contactArray"
         :pagination="pagination"
         :enable-items-per-page-dropdown="true"
-        userRole="all"
+        :user-role="userRole"
         :loading="loading"
+        :show-overflow-tooltip="true"
         @change-page="changePage"
         @change-page-size="changePageSize"
         @single-select="handleSingleSelection"
@@ -132,6 +132,12 @@
             width="55"
           />
         </template>
+        <template v-slot:uriPage="{ row }">
+          <img :src="row.uriPage" :alt="row.namePost" class="table-img" />
+        </template>
+        <template v-slot:url="{ row }">
+          <a :href="row.url" target="_blank">{{ row.url }}</a>
+        </template>
         <template v-slot:actionColumn>
           <el-table-column
             header-align="center"
@@ -143,50 +149,34 @@
                 size="small"
                 type="default"
                 data-bs-toggle="modal"
-                data-bs-target="#kt_page_modal"
+                data-bs-target="#kt_banner_category_modal"
                 @click.prevent="editCategory(scope.row)"
               >
                 Edit
               </el-button>
-              <el-popconfirm
-                title="Are you sure to delete this?"
-                icon-color="#626AEF"
-                hide-after="10"
-                @confirm="deleteCategory(scope.row)"
+              <el-button
+                size="small"
+                type="danger"
+                @click.prevent="deleteCategory(scope.row)"
               >
-                <template #reference>
-                  <el-button size="small" type="danger">Delete</el-button>
-                </template>
-              </el-popconfirm>
+                Delete
+              </el-button>
             </template>
           </el-table-column>
-        </template>
-        <template v-slot:publish="{ row }">
-          <span v-if="row.publish === 1">
-            <i class="bi bi-check-circle-fill v-btn"></i
-          ></span>
-          <span v-if="row.publish !== 1"
-            ><i class="bi bi-x-circle-fill x-btn"></i
-          ></span>
         </template>
       </NHDatatable>
     </div>
   </div>
-  <PageManagementModal
-    :action="newsAction"
-    :rowDetail="rowDetail"
-    @submitSearch="submitSearch"
-    :abc="abc"
-  />
+  <BannerManagementModal :action="newsAction" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { useReqStatistic } from "@/stores/req-statistic";
 import { Search } from "@element-plus/icons-vue";
-import { usePageStore } from "@/stores/page";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
-import PageManagementModal from "@/components/modals/forms/PageManagementModal.vue";
-import Swal from "sweetalert2/dist/sweetalert2.js";
+import { contactArray, options, selectTask } from "./mock/index";
+import BannerManagementModal from "@/components/modals/forms/BannerManagementModal.vue";
 
 const value = ref("");
 const visible = ref(false);
@@ -194,13 +184,12 @@ let userRole = ref("all");
 let syncPayload = ref<any[]>([]);
 
 export default defineComponent({
-  name: "page-management",
+  name: "banner-management",
   components: {
-    PageManagementModal,
+    BannerManagementModal,
     NHDatatable,
   },
   setup() {
-    const store = usePageStore();
     const formSearchData = ref({
       name: "",
       publish: "",
@@ -210,199 +199,84 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "ID",
-        prop: "id",
-        visible: true,
-        width: 70,
-      },
-      {
-        label: "Parent",
-        prop: "parent_id",
-        visible: true,
-      },
-      {
         label: "Tên",
-        prop: "name",
+        prop: "namePost",
+        visible: true,
+      },
+      {
+        label: "Hình ảnh",
+        prop: "uriPage",
+        visible: true,
+      },
+      {
+        label: "URL",
+        prop: "url",
         visible: true,
       },
       {
         label: "Trạng thái",
-        prop: "publish",
+        width: 140,
+        prop: "",
         visible: true,
       },
     ]);
     let selectedIds = ref(0);
     const loading = ref<boolean>(false);
-    let dataRequestPageManager = ref();
+    let dataRequestStatistics = ref();
     let newsAction = ref("");
     let pagination = ref();
-    let rowDetail = ref();
-    let abc = ref();
-    let syncKLPBtn = ref<HTMLElement | null>(null);
-    const rowCheck = ref([]);
 
-    async function getRequestPageManager(
-      pageNo?: number,
-      name?: string,
-      publish?: string,
-      pageSize = "10"
-    ) {
-      loading.value = true;
-      await store.getAllPages({
-        params: {
-          name: name ? name : "",
-          publish: publish ? publish : "",
-          pageNo: pageNo,
-          pageSize: pageSize,
-        },
-      });
+    const handleApplyStatus = () => {};
+    const handleChangeStatus = () => {};
 
-      const requestPageResponse = JSON.parse(
-        JSON.stringify(store.allPagesResp)
-      );
-
-      dataRequestPageManager.value = requestPageResponse.data;
-      pagination.value = {
-        totalPages: requestPageResponse.totalPages,
-        pageNo: requestPageResponse.pageNo,
-        pageSize: requestPageResponse.pageSize,
-        totalCount: requestPageResponse.totalCount,
-        currentCount: requestPageResponse.currentCount,
-      };
-      loading.value = false;
-    }
-
-    function submitSearch() {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestPageManager(
-        1,
-        formData.name,
-        formData.publish ? formData.publish : "",
-        pagination.value.pageSize
-      );
-    }
+    function submitSearch() {}
     const handleSingleSelection = (val) => {
       selectedIds.value += 1;
-      console.log(`handleSingleSelection: ${val}`);
     };
 
     const handleMultipleSelection = (val) => {
       selectedIds.value = val.length;
-      rowCheck.value = JSON.parse(JSON.stringify(val));
     };
 
-    const addCategory = async () => {
+    const addCategory = () => {
       newsAction.value = "add";
-      rowDetail.value = {};
-      await store.getAllPages({
-        params: {
-          name: "",
-          publish: "",
-          pageNo: 1,
-          pageSize: 1000,
-        },
-      });
-      const requestPageResponse = JSON.parse(
-        JSON.stringify(store.allPagesResp)
-      );
-
-      abc.value = requestPageResponse;
+      console.log("add category");
     };
 
-    const editCategory = async (val?: object | undefined) => {
+    const editCategory = (val?: object | undefined) => {
       newsAction.value = "edit";
-      rowDetail.value = JSON.parse(JSON.stringify(val));
-      await store.getAllPages({
-        params: {
-          name: "",
-          publish: "",
-          pageNo: 1,
-          pageSize: 1000,
-        },
-      });
-      const requestPageResponse = JSON.parse(
-        JSON.stringify(store.allPagesResp)
-      );
-
-      abc.value = requestPageResponse;
+      console.log("edit category: ", val);
     };
 
-    const deleteCategory = async (val?: any) => {
-      const oke = await store.deletePage({ id: val.id });
-      if (oke.data.success === true) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Success!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        submitSearch();
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: oke.data.mess,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-    };
+    const deleteCategory = (val?: object | undefined) => {};
 
-    const handleChangeStatus = (val?: any) => {
-      let arr: any = [];
-      const change = JSON.parse(JSON.stringify(rowCheck.value));
-      for (let item of change) {
-        arr.push(item.id.toString());
-      }
-    };
+    function changePage(page) {}
 
-    function changePage(page) {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestPageManager(
-        page,
-        formData.name,
-        formData.publish ? formData.publish : "",
-        pagination.value.pageSize
-      );
-    }
+    const changePageSize = (pageSize) => {};
 
-    const changePageSize = (pageSize) => {
-      console.log("changePageSize");
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      pagination.value.pageSize = pageSize;
-      getRequestPageManager(
-        1,
-        formData.name,
-        formData.publish ? formData.publish : "",
-        pageSize
-      );
-    };
-
-    onBeforeMount(() => {
-      getRequestPageManager(1);
-    });
     return {
-      dataRequestPageManager,
+      dataRequestStatistics,
       data,
-      selectedIds,
       userRole,
-      syncKLPBtn,
       visible,
+      selectedIds,
+      options,
       tableHeader,
       pagination,
       loading,
       formSearchData,
+      selectTask,
       syncPayload,
-      value,
       newsAction,
-      rowDetail,
+      value,
       Search,
-      abc,
+      contactArray,
+      BannerManagementModal,
       addCategory,
-      editCategory,
-      deleteCategory,
       handleChangeStatus,
+      deleteCategory,
+      editCategory,
+      handleApplyStatus,
       handleSingleSelection,
       handleMultipleSelection,
       changePage,
@@ -421,16 +295,16 @@ export default defineComponent({
 .del-btn {
   padding: 14px 15px;
 }
-
-.v-btn {
-  font-size: 15px;
-  color: green;
-}
-.x-btn {
-  font-size: 15px;
-  color: red;
+.table-img {
+  width: 100%;
+  border-radius: 8px;
+  position: relative;
+  object-fit: contain;
 }
 
+.card-title {
+  width: 100%;
+}
 .my-header {
   display: flex;
   flex-direction: row;

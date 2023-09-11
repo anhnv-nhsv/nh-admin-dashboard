@@ -43,6 +43,8 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Apps", "Request Statistics"],
         },
       },
+
+      // PAGE START
       {
         path: "/apps/page-management",
         name: "apps-page-management",
@@ -53,6 +55,9 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Apps", "Page Management"],
         },
       },
+      // PAGE END
+
+      // NEWS START
       {
         path: "/apps/news/category",
         name: "news-category",
@@ -71,6 +76,51 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["News", "News List"],
         },
       },
+      // NEWS END
+
+      // CONTACT START
+      {
+        path: "/apps/contact/category",
+        name: "contact-category",
+        component: () => import("@/views/apps/contact/Contact.vue"),
+        meta: {
+          pageTitle: "Contact Category",
+          breadcrumbs: ["Contact", "Contact Categories"],
+        },
+      },
+      // CONTACT END
+
+      // BANNER START
+      {
+        path: "/apps/banner-management",
+        name: "apps-banner-management",
+        component: () => import("@/views/apps/banner/Banner.vue"),
+        meta: {
+          pageTitle: "Banner Management",
+          breadcrumbs: ["Apps", "Banner Management"],
+        },
+      },
+      {
+        path: "/apps/banner-management/create",
+        name: "create-banner",
+        component: () =>
+          import("@/views/apps/banner/components/CreateBanner.vue"),
+        meta: {
+          pageTitle: "Create Banner",
+          breadcrumbs: ["Apps", "Banner Management", "Create"],
+        },
+      },
+      {
+        path: "/apps/banner-management/:id/edit",
+        name: "editBanner",
+        component: () =>
+          import("@/views/apps/banner/components/EditBanner.vue"),
+        meta: {
+          pageTitle: "Edit Banner",
+          breadcrumbs: ["Apps", "Banner Management", "Edit"],
+        },
+      },
+      // BANNER END
     ],
   },
   {
