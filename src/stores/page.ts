@@ -18,6 +18,8 @@ export const usePageStore = defineStore("page-score", () => {
   function getAllPages(params?: any) {
     return ApiService.query("/pages/get-all-pages", params)
       .then(({ data }) => {
+        // console.log("data: ", data);
+
         setPageRes(data);
       })
       .catch(({ response }) => {

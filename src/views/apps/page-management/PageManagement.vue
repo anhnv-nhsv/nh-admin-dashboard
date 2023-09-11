@@ -74,7 +74,7 @@
             <button
               type="button"
               class="btn btn-success"
-              @click="deleteCategory()"
+              @click="handleChangeStatus()"
             >
               Change status
             </button>
@@ -173,7 +173,12 @@
       </NHDatatable>
     </div>
   </div>
-  <PageManagementModal :action="newsAction" :rowDetail="rowDetail" />
+  <PageManagementModal
+    :action="newsAction"
+    :rowDetail="rowDetail"
+    @submitSearch="submitSearch"
+    :abc="abc"
+  />
 </template>
 
 <script lang="ts">
@@ -233,13 +238,15 @@ export default defineComponent({
     let newsAction = ref("");
     let pagination = ref();
     let rowDetail = ref();
+    let abc = ref();
     let syncKLPBtn = ref<HTMLElement | null>(null);
+    const rowCheck = ref([]);
 
     async function getRequestStatistics(
       pageNo?: number,
       name?: string,
       publish?: string,
-      pageSize = 10
+      pageSize = "10"
     ) {
       loading.value = true;
       await store.getAllPages({
@@ -254,6 +261,8 @@ export default defineComponent({
       const requestStatisticsResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
+
+      console.log("requestStatisticsResponse: ", requestStatisticsResponse);
 
       dataRequestStatistics.value = requestStatisticsResponse.data;
       pagination.value = {
@@ -289,22 +298,51 @@ export default defineComponent({
 
     const handleMultipleSelection = (val) => {
       selectedIds.value = val.length;
-      console.log(`handleMultipleSelection: ${val}`);
+      console.log("handleMultipleSelection :", JSON.parse(JSON.stringify(val)));
+      rowCheck.value = JSON.parse(JSON.stringify(val));
     };
 
-    const addCategory = () => {
+    const addCategory = async () => {
       newsAction.value = "add";
       rowDetail.value = {};
+      await store.getAllPages({
+        params: {
+          name: "",
+          publish: "",
+          pageNo: 1,
+          pageSize: 1000,
+        },
+      });
+      const requestStatisticsResponse = JSON.parse(
+        JSON.stringify(store.allPagesResp)
+      );
+
+      abc.value = requestStatisticsResponse;
     };
 
-    const editCategory = (val?: object | undefined) => {
+    const editCategory = async (val?: object | undefined) => {
       newsAction.value = "edit";
       console.log("edit", JSON.parse(JSON.stringify(val)));
 
       rowDetail.value = JSON.parse(JSON.stringify(val));
+      await store.getAllPages({
+        params: {
+          name: "",
+          publish: "",
+          pageNo: 1,
+          pageSize: 1000,
+        },
+      });
+      const requestStatisticsResponse = JSON.parse(
+        JSON.stringify(store.allPagesResp)
+      );
+
+      abc.value = requestStatisticsResponse;
     };
 
     const deleteCategory = async (val?: any) => {
+      console.log("val: ", val.id);
+
       const oke = await store.deletePage({ id: val.id });
       if (oke.data.success === true) {
         Swal.fire({
@@ -314,7 +352,7 @@ export default defineComponent({
           showConfirmButton: false,
           timer: 1500,
         });
-        // store.getAllPages();
+        submitSearch();
       } else {
         Swal.fire({
           position: "center",
@@ -324,6 +362,19 @@ export default defineComponent({
           timer: 1500,
         });
       }
+    };
+
+    const handleChangeStatus = (val?: any) => {
+      console.log(
+        "handleChangeStatus",
+        JSON.parse(JSON.stringify(rowCheck.value))
+      );
+      let arr: any = [];
+      const change = JSON.parse(JSON.stringify(rowCheck.value));
+      for (let item of change) {
+        arr.push(item.id.toString());
+      }
+      console.log("item: ", arr);
     };
 
     function changePage(page) {
@@ -367,10 +418,12 @@ export default defineComponent({
       newsAction,
       rowDetail,
       Search,
+      abc,
       handleApplyStatus,
       addCategory,
       editCategory,
       deleteCategory,
+      handleChangeStatus,
       handleSingleSelection,
       handleMultipleSelection,
       changePage,

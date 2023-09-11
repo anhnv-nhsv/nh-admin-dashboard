@@ -112,7 +112,7 @@
                 <el-form-item label="Bài viết cha">
                   <el-cascader
                     v-model="pageForm.parentCategory"
-                    :options="categories"
+                    :options="parents"
                     :props="cascaderConfig"
                     clearable
                     filterable
@@ -182,7 +182,7 @@
               </el-form>
             </template>
           </NhForm>
-          <!-- {{ rowValue }} -->
+          {{ qwe.data }}
         </div>
         <div class="modal-footer">
           <button
@@ -238,7 +238,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watch, watchEffect } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+  watchEffect,
+} from "vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, Refresh, ZoomIn } from "@element-plus/icons-vue";
 import type {
@@ -253,6 +260,7 @@ import { ElMessage } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import { usePageStore } from "@/stores/page";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import News from "@/views/apps/news/News.vue";
 
 export default defineComponent({
   name: "page-category-modal",
@@ -265,26 +273,63 @@ export default defineComponent({
         return {};
       },
     },
+    abc: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {};
+      },
+    },
+    submitSearch: {
+      type: Function,
+    },
   },
   components: { NhEditor, NhForm, Delete, Plus, ZoomIn },
   setup: function (props, ctx) {
     const store = usePageStore();
     const detailData = ref(props.rowDetail);
-    const temp = ref();
-    const temp1 = ref();
-    const temp2 = ref();
-    const temp3 = ref();
-    const temp4 = ref();
-    const temp5 = ref();
-    const temp6 = ref();
+    const asd = ref(props.abc);
+    const publish = ref();
+    const status = ref();
+    const typePost = ref();
+    const categoryId = ref();
+    const parentId = ref();
+    const idRow = ref();
     const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
+    const qwe = ref(JSON.parse(JSON.stringify(asd.value)));
+    const parents = ref();
+
+    function buildHierarchy(arr) {
+      const hierarchy = {};
+
+      // Create a map of id to item and initialize children
+      for (const item of arr) {
+        item.children = [];
+        item.value = item.name;
+        item.label = item.name;
+        hierarchy[item.id] = item;
+      }
+
+      const tree: any = [];
+
+      // Build the hierarchy
+      for (const item of arr) {
+        if (item.parent_id !== null) {
+          if (hierarchy[item.parent_id]) {
+            hierarchy[item.parent_id].children.push(item);
+          }
+        } else {
+          tree.push(item);
+        }
+      }
+      return tree;
+    }
 
     watch(
       () => props.rowDetail,
       (newVal) => {
         if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
           console.log(JSON.parse(JSON.stringify(newVal)));
-          console.log("newVal not undefined");
           rowValue.value = newVal;
           pageForm.value.name = rowValue.value.name;
           pageForm.value.name_english = rowValue.value.name_english;
@@ -300,15 +345,13 @@ export default defineComponent({
           pageForm.value.url = rowValue.value.url || pageForm.value.url;
           pageForm.value.parentCategory = rowValue.value.parentCategory;
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
-          temp.value = rowValue.value.publish;
-          temp1.value = rowValue.value.status;
-          temp2.value = rowValue.value.type_post;
-          temp3.value = rowValue.value.category_id;
-          temp4.value = rowValue.value.parent_id;
-          temp5.value = rowValue.value.publish;
-          temp6.value = rowValue.value.id;
+          publish.value = rowValue.value.publish;
+          status.value = rowValue.value.status;
+          typePost.value = rowValue.value.type_post;
+          categoryId.value = rowValue.value.category_id;
+          parentId.value = rowValue.value.parent_id;
+          idRow.value = rowValue.value.id;
         } else {
-          console.log("re-init pageForm");
           pageForm.value = {
             name: "",
             name_english: "",
@@ -329,274 +372,15 @@ export default defineComponent({
       }
     );
 
-    const categories = [
-      {
-        value: "guide",
-        label: "Guide",
-        children: [
-          {
-            value: "disciplines",
-            label: "Disciplines",
-            children: [
-              {
-                value: "consistency",
-                label: "Consistency",
-              },
-              {
-                value: "feedback",
-                label: "Feedback",
-              },
-              {
-                value: "efficiency",
-                label: "Efficiency",
-              },
-              {
-                value: "controllability",
-                label: "Controllability",
-              },
-            ],
-          },
-          {
-            value: "navigation",
-            label: "Navigation",
-            children: [
-              {
-                value: "side nav",
-                label: "Side Navigation",
-              },
-              {
-                value: "top nav",
-                label: "Top Navigation",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: "component",
-        label: "Component",
-        children: [
-          {
-            value: "basic",
-            label: "Basic",
-            children: [
-              {
-                value: "layout",
-                label: "Layout",
-              },
-              {
-                value: "color",
-                label: "Color",
-              },
-              {
-                value: "typography",
-                label: "Typography",
-              },
-              {
-                value: "icon",
-                label: "Icon",
-              },
-              {
-                value: "button",
-                label: "Button",
-              },
-            ],
-          },
-          {
-            value: "form",
-            label: "Form",
-            children: [
-              {
-                value: "radio",
-                label: "Radio",
-              },
-              {
-                value: "checkbox",
-                label: "Checkbox",
-              },
-              {
-                value: "input",
-                label: "Input",
-              },
-              {
-                value: "input-number",
-                label: "InputNumber",
-              },
-              {
-                value: "select",
-                label: "Select",
-              },
-              {
-                value: "cascader",
-                label: "Cascader",
-              },
-              {
-                value: "switch",
-                label: "Switch",
-              },
-              {
-                value: "slider",
-                label: "Slider",
-              },
-              {
-                value: "time-picker",
-                label: "TimePicker",
-              },
-              {
-                value: "date-picker",
-                label: "DatePicker",
-              },
-              {
-                value: "datetime-picker",
-                label: "DateTimePicker",
-              },
-              {
-                value: "upload",
-                label: "Upload",
-              },
-              {
-                value: "rate",
-                label: "Rate",
-              },
-              {
-                value: "form",
-                label: "Form",
-              },
-            ],
-          },
-          {
-            value: "data",
-            label: "Data",
-            children: [
-              {
-                value: "table",
-                label: "Table",
-              },
-              {
-                value: "tag",
-                label: "Tag",
-              },
-              {
-                value: "progress",
-                label: "Progress",
-              },
-              {
-                value: "tree",
-                label: "Tree",
-              },
-              {
-                value: "pagination",
-                label: "Pagination",
-              },
-              {
-                value: "badge",
-                label: "Badge",
-              },
-            ],
-          },
-          {
-            value: "notice",
-            label: "Notice",
-            children: [
-              {
-                value: "alert",
-                label: "Alert",
-              },
-              {
-                value: "loading",
-                label: "Loading",
-              },
-              {
-                value: "message",
-                label: "Message",
-              },
-              {
-                value: "message-box",
-                label: "MessageBox",
-              },
-              {
-                value: "notification",
-                label: "Notification",
-              },
-            ],
-          },
-          {
-            value: "navigation",
-            label: "Navigation",
-            children: [
-              {
-                value: "menu",
-                label: "Menu",
-              },
-              {
-                value: "tabs",
-                label: "Tabs",
-              },
-              {
-                value: "breadcrumb",
-                label: "Breadcrumb",
-              },
-              {
-                value: "dropdown",
-                label: "Dropdown",
-              },
-              {
-                value: "steps",
-                label: "Steps",
-              },
-            ],
-          },
-          {
-            value: "others",
-            label: "Others",
-            children: [
-              {
-                value: "dialog",
-                label: "Dialog",
-              },
-              {
-                value: "tooltip",
-                label: "Tooltip",
-              },
-              {
-                value: "popover",
-                label: "Popover",
-              },
-              {
-                value: "card",
-                label: "Card",
-              },
-              {
-                value: "carousel",
-                label: "Carousel",
-              },
-              {
-                value: "collapse",
-                label: "Collapse",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: "resource",
-        label: "Resource",
-        children: [
-          {
-            value: "axure",
-            label: "Axure Components",
-          },
-          {
-            value: "sketch",
-            label: "Sketch Templates",
-          },
-          {
-            value: "docs",
-            label: "Design Documentation",
-          },
-        ],
-      },
-    ];
+    watch(
+      () => props.abc,
+      (newVal) => {
+        console.log("newVal: ", JSON.parse(JSON.stringify(newVal.data)));
+        console.log("res", buildHierarchy(newVal.data));
+        parents.value = buildHierarchy(newVal.data);
+      }
+    );
+
     const cascaderConfig = {
       expandTrigger: "hover" as const,
     };
@@ -645,18 +429,19 @@ export default defineComponent({
           timer: 1500,
         });
       }
+      ctx.emit("submitSearch");
     };
 
     const handleEdit = async () => {
       const formData = JSON.parse(JSON.stringify(pageForm.value));
       const result = await store.editPage({
         ...formData,
-        status: temp1.value,
-        type_post: temp2.value,
-        category_id: temp3.value,
-        parent_id: temp4.value,
+        status: status.value,
+        type_post: typePost.value,
+        category_id: categoryId.value,
+        parent_id: parentId.value,
         publish: formData.publish === false ? 0 : 1,
-        id: temp6.value,
+        id: idRow.value,
       });
       if (result.data.success === true) {
         Swal.fire({
@@ -675,6 +460,7 @@ export default defineComponent({
           timer: 1500,
         });
       }
+      ctx.emit("submitSearch");
     };
 
     const dialogImageUrl = ref("");
@@ -684,6 +470,12 @@ export default defineComponent({
 
     const handleChangeCategory = (value) => {
       console.log(value);
+      for (const item123 of parents.value) {
+        console.log("sdfsdf: ", JSON.parse(JSON.stringify(item123.children)));
+        for (const asd of item123.children) {
+          console.log("asd: ", JSON.parse(JSON.stringify(asd.name)));
+        }
+      }
     };
 
     const generateSlug = (title) => {
@@ -739,17 +531,18 @@ export default defineComponent({
     };
 
     return {
-      categories,
       cascaderConfig,
       pageForm,
       Delete,
       Plus,
       ZoomIn,
       dialogImageUrl,
+      parents,
       dialogVisible,
       uploadRef,
       fileList,
       rowValue,
+      qwe,
       handleChangeCategory,
       handleAdd,
       generateSlug,
