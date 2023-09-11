@@ -1,8 +1,8 @@
 <template>
   <div
     class="modal fade"
-    id="kt_news_category_modal"
-    ref="newsCategoryModalRef"
+    id="kt_contact_category_modal"
+    ref="contactCategoryModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -38,7 +38,7 @@
           <!--begin::Form-->
           <NhForm seoable>
             <template v-slot:customForm>
-              <el-form :model="newsForm" label-width="160px">
+              <el-form :model="contactForm" label-width="160px">
                 <el-form-item label="Tên chuyên mục">
                   <ul
                     class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6"
@@ -75,10 +75,10 @@
                       role="tabpanel"
                     >
                       <el-input
-                        v-model="newsForm.titleVn"
+                        v-model="contactForm.titleVn"
                         placeholder="Tiếng Việt"
                         clearable
-                        @input="generateSlug(newsForm.titleVn)"
+                        @input="generateSlug(contactForm.titleVn)"
                       />
                     </div>
                     <div
@@ -87,7 +87,7 @@
                       role="tabpanel"
                     >
                       <el-input
-                        v-model="newsForm.titleEn"
+                        v-model="contactForm.titleEn"
                         placeholder="Tiếng Anh"
                         clearable
                       />
@@ -98,7 +98,7 @@
                       role="tabpanel"
                     >
                       <el-input
-                        v-model="newsForm.titleKr"
+                        v-model="contactForm.titleKr"
                         placeholder="Tiếng Hàn"
                         clearable
                       />
@@ -107,7 +107,7 @@
                 </el-form-item>
                 <el-form-item label="URL">
                   <el-input
-                    v-model="newsForm.url"
+                    v-model="contactForm.url"
                     placeholder="URL"
                     clearable
                     disabled
@@ -115,7 +115,7 @@
                 </el-form-item>
                 <el-form-item label="Chọn chuyên mục cha">
                   <el-cascader
-                    v-model="newsForm.parentCategory"
+                    v-model="contactForm.parentCategory"
                     :options="categories"
                     :props="cascaderConfig"
                     clearable
@@ -126,7 +126,7 @@
                 </el-form-item>
                 <el-form-item>
                   <el-checkbox
-                    v-model="newsForm.isPublish"
+                    v-model="contactForm.isPublish"
                     label="Publish"
                     size="large"
                   />
@@ -455,7 +455,7 @@ export default defineComponent({
     const cascaderConfig = {
       expandTrigger: "hover" as const,
     };
-    const newsForm = reactive({
+    const contactForm = reactive({
       titleVn: "",
       titleEn: "",
       titleKr: "",
@@ -469,7 +469,7 @@ export default defineComponent({
     };
 
     const generateSlug = (title) => {
-      newsForm.url = "/chuyen-muc-tin/" + toSlug(title) + ".html";
+      contactForm.url = "/chuyen-muc-tin/" + toSlug(title) + ".html";
     };
 
     const toSlug = (str) => {
@@ -503,7 +503,7 @@ export default defineComponent({
     return {
       categories,
       cascaderConfig,
-      newsForm,
+      contactForm,
       handleChangeCategory,
       generateSlug,
     };

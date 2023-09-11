@@ -24,7 +24,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#kt_news_category_modal"
+            data-bs-target="#kt_banner_category_modal"
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
@@ -72,7 +72,7 @@
     <div class="card-body pt-0">
       <NHDatatable
         :table-header="tableHeader"
-        :table-data="dataRequestStatistics"
+        :table-data="contactArray"
         :pagination="pagination"
         :enable-items-per-page-dropdown="true"
         :user-role="userRole"
@@ -108,7 +108,7 @@
                 size="small"
                 type="default"
                 data-bs-toggle="modal"
-                data-bs-target="#kt_news_category_modal"
+                data-bs-target="#kt_banner_category_modal"
                 @click.prevent="editCategory(scope.row)"
               >
                 Edit
@@ -135,15 +135,12 @@ import { useReqStatistic } from "@/stores/req-statistic";
 import { Search } from "@element-plus/icons-vue";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import { contactArray, options, selectTask } from "./mock/index";
-import { useRoute } from "vue-router";
 import BannerManagementModal from "@/components/modals/forms/BannerManagementModal.vue";
 
 const value = ref("");
 const visible = ref(false);
 let userRole = ref("all");
 let syncPayload = ref<any[]>([]);
-
-const route = useRoute();
 
 export default defineComponent({
   name: "banner-management",
@@ -152,9 +149,6 @@ export default defineComponent({
     NHDatatable,
   },
   setup() {
-    console.log("syncPayload: ", syncPayload);
-
-    const store = useReqStatistic();
     const formSearchData = ref({
       username: "",
       status: "",
@@ -190,63 +184,16 @@ export default defineComponent({
     let dataRequestStatistics = ref();
     let newsAction = ref("");
     let pagination = ref();
-    let syncKLPBtn = ref<HTMLElement | null>(null);
 
-    async function getRequestStatistics(
-      page?: number,
-      username?: string,
-      status?: string,
-      pageSize = 15
-    ) {
-      console.log("call API");
-      loading.value = true;
-      await store.getReqStatistic({
-        params: {
-          username: username ? username : "",
-          status: status ? status : "",
-          page: page,
-          pageSize: pageSize,
-        },
-      });
-      const requestStatisticsResponse = JSON.parse(
-        JSON.stringify(store.statisticResp)
-      );
+    const handleApplyStatus = () => {};
 
-      dataRequestStatistics.value = contactArray;
-      pagination.value = {
-        totalPages: requestStatisticsResponse.totalPages,
-        pageNo: requestStatisticsResponse.pageNo,
-        pageSize: requestStatisticsResponse.pageSize,
-        totalCount: requestStatisticsResponse.totalCount,
-        currentCount: requestStatisticsResponse.currentCount,
-      };
-      loading.value = false;
-    }
-
-    const handleApplyStatus = () => {
-      console.log(
-        "handleApplyStatus: ",
-        JSON.parse(JSON.stringify(data.value))
-      );
-    };
-
-    function submitSearch() {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestStatistics(
-        1,
-        formData.username,
-        formData.status ? formData.status : "",
-        pagination.value.pageSize
-      );
-    }
+    function submitSearch() {}
     const handleSingleSelection = (val) => {
       selectedIds.value += 1;
-      console.log(`handleSingleSelection: ${val}`);
     };
 
     const handleMultipleSelection = (val) => {
       selectedIds.value = val.length;
-      console.log(`handleMultipleSelection: ${val}`);
     };
 
     const addCategory = () => {
@@ -259,45 +206,16 @@ export default defineComponent({
       console.log("edit category: ", val);
     };
 
-    const deleteCategory = (val?: object | undefined) => {
-      console.log(val);
-      console.log("delete category");
-    };
+    const deleteCategory = (val?: object | undefined) => {};
 
-    function changePage(page) {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestStatistics(
-        page,
-        formData.username,
-        formData.status ? formData.status : "",
-        pagination.value.pageSize
-      );
-    }
+    function changePage(page) {}
 
-    const changePageSize = (pageSize) => {
-      console.log("changePageSize");
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      pagination.value.pageSize = pageSize;
-      getRequestStatistics(
-        1,
-        formData.username,
-        formData.status ? formData.status : "",
-        pageSize
-      );
-    };
+    const changePageSize = (pageSize) => {};
 
-    onBeforeMount(() => {
-      getRequestStatistics(1);
-    });
-
-    // onMounted(() => {
-    //   route.params.editBanner;
-    // });
     return {
       dataRequestStatistics,
       data,
       userRole,
-      syncKLPBtn,
       visible,
       selectedIds,
       options,
@@ -310,6 +228,7 @@ export default defineComponent({
       newsAction,
       value,
       Search,
+      contactArray,
       BannerManagementModal,
       addCategory,
       deleteCategory,

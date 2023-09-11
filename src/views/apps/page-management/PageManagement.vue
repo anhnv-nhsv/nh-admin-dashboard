@@ -114,12 +114,11 @@
       <NHDatatable
         ref="myTable"
         :table-header="tableHeader"
-        :table-data="dataRequestStatistics"
+        :table-data="dataRequestPageManager"
         :pagination="pagination"
         :enable-items-per-page-dropdown="true"
         userRole="all"
         :loading="loading"
-        :show-overflow-tooltip="false"
         @change-page="changePage"
         @change-page-size="changePageSize"
         @single-select="handleSingleSelection"
@@ -234,7 +233,7 @@ export default defineComponent({
     ]);
     let selectedIds = ref(0);
     const loading = ref<boolean>(false);
-    let dataRequestStatistics = ref();
+    let dataRequestPageManager = ref();
     let newsAction = ref("");
     let pagination = ref();
     let rowDetail = ref();
@@ -242,7 +241,7 @@ export default defineComponent({
     let syncKLPBtn = ref<HTMLElement | null>(null);
     const rowCheck = ref([]);
 
-    async function getRequestStatistics(
+    async function getRequestPageManager(
       pageNo?: number,
       name?: string,
       publish?: string,
@@ -258,33 +257,24 @@ export default defineComponent({
         },
       });
 
-      const requestStatisticsResponse = JSON.parse(
+      const requestPageResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
 
-      console.log("requestStatisticsResponse: ", requestStatisticsResponse);
-
-      dataRequestStatistics.value = requestStatisticsResponse.data;
+      dataRequestPageManager.value = requestPageResponse.data;
       pagination.value = {
-        totalPages: requestStatisticsResponse.totalPages,
-        pageNo: requestStatisticsResponse.pageNo,
-        pageSize: requestStatisticsResponse.pageSize,
-        totalCount: requestStatisticsResponse.totalCount,
-        currentCount: requestStatisticsResponse.currentCount,
+        totalPages: requestPageResponse.totalPages,
+        pageNo: requestPageResponse.pageNo,
+        pageSize: requestPageResponse.pageSize,
+        totalCount: requestPageResponse.totalCount,
+        currentCount: requestPageResponse.currentCount,
       };
       loading.value = false;
     }
 
-    const handleApplyStatus = () => {
-      console.log(
-        "handleApplyStatus: ",
-        JSON.parse(JSON.stringify(data.value))
-      );
-    };
-
     function submitSearch() {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestStatistics(
+      getRequestPageManager(
         1,
         formData.name,
         formData.publish ? formData.publish : "",
@@ -313,11 +303,11 @@ export default defineComponent({
           pageSize: 1000,
         },
       });
-      const requestStatisticsResponse = JSON.parse(
+      const requestPageResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
 
-      abc.value = requestStatisticsResponse;
+      abc.value = requestPageResponse;
     };
 
     const editCategory = async (val?: object | undefined) => {
@@ -333,16 +323,14 @@ export default defineComponent({
           pageSize: 1000,
         },
       });
-      const requestStatisticsResponse = JSON.parse(
+      const requestPageResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
 
-      abc.value = requestStatisticsResponse;
+      abc.value = requestPageResponse;
     };
 
     const deleteCategory = async (val?: any) => {
-      console.log("val: ", val.id);
-
       const oke = await store.deletePage({ id: val.id });
       if (oke.data.success === true) {
         Swal.fire({
@@ -365,10 +353,6 @@ export default defineComponent({
     };
 
     const handleChangeStatus = (val?: any) => {
-      console.log(
-        "handleChangeStatus",
-        JSON.parse(JSON.stringify(rowCheck.value))
-      );
       let arr: any = [];
       const change = JSON.parse(JSON.stringify(rowCheck.value));
       for (let item of change) {
@@ -379,7 +363,7 @@ export default defineComponent({
 
     function changePage(page) {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestStatistics(
+      getRequestPageManager(
         page,
         formData.name,
         formData.publish ? formData.publish : "",
@@ -391,7 +375,7 @@ export default defineComponent({
       console.log("changePageSize");
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       pagination.value.pageSize = pageSize;
-      getRequestStatistics(
+      getRequestPageManager(
         1,
         formData.name,
         formData.publish ? formData.publish : "",
@@ -400,10 +384,10 @@ export default defineComponent({
     };
 
     onBeforeMount(() => {
-      getRequestStatistics(1);
+      getRequestPageManager(1);
     });
     return {
-      dataRequestStatistics,
+      dataRequestPageManager,
       data,
       selectedIds,
       userRole,
@@ -419,7 +403,6 @@ export default defineComponent({
       rowDetail,
       Search,
       abc,
-      handleApplyStatus,
       addCategory,
       editCategory,
       deleteCategory,

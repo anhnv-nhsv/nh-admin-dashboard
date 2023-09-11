@@ -24,7 +24,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#kt_news_category_modal"
+            data-bs-target="#kt_contact_category_modal"
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
@@ -102,7 +102,7 @@
                 size="small"
                 type="default"
                 data-bs-toggle="modal"
-                data-bs-target="#kt_news_category_modal"
+                data-bs-target="#kt_contact_category_modal"
                 @click.prevent="editCategory(scope.row)"
               >
                 Edit
