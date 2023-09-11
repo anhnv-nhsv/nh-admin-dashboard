@@ -101,7 +101,7 @@
     <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
       <!--begin::Logo-->
       <a href="#" class="mb-12">
-        <img alt="Logo" src="media/logos/nhsv-logo-horizontal-light.svg" class="h-70px" />
+        <img alt="Logo" src="/media/logos/nhsv-logo-horizontal-light.svg" class="h-70px" />
       </a>
       <!--end::Logo-->
 

@@ -4,7 +4,6 @@
       <el-table
         class="customerTable el-table--border"
         ref="customerScoreTableRef"
-        row-key="id"
         :data="getItems"
         :header-cell-style="
           themeMode === 'light'
@@ -117,7 +116,7 @@ import { ThemeModeComponent } from "@/assets/ts/layout";
 export default defineComponent({
   name: "nh-datatable",
   props: {
-    tableHeader: { type: Array, required: true, default: () => [] },
+    tableHeader: { type: Array as any, required: true, default: () => [] },
     tableData: { type: Array, required: true, default: () => [] },
     pagination: {
       type: Object,
@@ -221,7 +220,6 @@ export default defineComponent({
   border-collapse: separate !important;
   border-spacing: 0;
 }
-
 :deep(.cell) {
   word-break: break-word;
 }

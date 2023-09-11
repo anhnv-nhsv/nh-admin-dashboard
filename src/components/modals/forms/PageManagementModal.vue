@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="kt_news_modal"
+    id="kt_page_modal"
     ref="newsModalRef"
     tabindex="-1"
     aria-hidden="true"
@@ -11,8 +11,8 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder" v-if="action === 'add'">Add News</h2>
-          <h2 class="fw-bolder" v-else>Edit News</h2>
+          <h2 class="fw-bolder" v-if="action === 'add'">Add Page</h2>
+          <h2 class="fw-bolder" v-else>Edit Page</h2>
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -26,7 +26,12 @@
         <div class="modal-body mx-5 mx-xl-5 my-7">
           <NhForm seoable>
             <template v-slot:customForm>
-              <el-form :model="newsForm" label-width="160px">
+              <el-form
+                :model="pageForm"
+                label-width="160px"
+                class="demo-ruleForm"
+                status-icon
+              >
                 <el-form-item>
                   <ul
                     class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6"
@@ -65,15 +70,15 @@
                   >
                     <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="newsForm.titleVn"
+                        v-model="pageForm.name"
                         placeholder="Tiếng Việt"
                         clearable
-                        @input="generateSlug(newsForm.titleVn)"
+                        @input="generateSlug(pageForm.name)"
                       />
                     </el-form-item>
                     <el-form-item label="Nội dung">
                       <NhEditor
-                        v-model="newsForm.contentVn"
+                        v-model="pageForm.content"
                         placeholder="Tiếng Việt"
                       />
                     </el-form-item>
@@ -81,14 +86,14 @@
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
                     <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="newsForm.titleEn"
+                        v-model="pageForm.name_english"
                         placeholder="Tiếng Anh"
                         clearable
                       />
                     </el-form-item>
                     <el-form-item label="Nội dung">
                       <NhEditor
-                        v-model="newsForm.contentEn"
+                        v-model="pageForm.content_english"
                         placeholder="Tiếng Anh"
                       />
                     </el-form-item>
@@ -96,23 +101,23 @@
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
                     <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="newsForm.titleKr"
+                        v-model="pageForm.name_korea"
                         placeholder="Tiếng Hàn"
                         clearable
                       />
                     </el-form-item>
                     <el-form-item label="Nội dung">
                       <NhEditor
-                        v-model="newsForm.contentKr"
+                        v-model="pageForm.content_korea"
                         placeholder="Tiếng Hàn"
                       />
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="Chọn chuyên mục cha">
+                <el-form-item label="Bài viết cha">
                   <el-cascader
-                    v-model="newsForm.parentCategory"
-                    :options="categories"
+                    v-model="pageForm.parentCategory"
+                    :options="parents"
                     :props="cascaderConfig"
                     clearable
                     filterable
@@ -122,6 +127,7 @@
                 </el-form-item>
                 <el-form-item label="Hình ảnh">
                   <el-upload
+                    v-model="pageForm.image"
                     ref="uploadRef"
                     action="#"
                     list-type="picture-card"
@@ -162,17 +168,14 @@
                 </el-form-item>
                 <el-form-item label="URL">
                   <el-input
-                    v-model="newsForm.url"
+                    v-model="pageForm.url"
                     placeholder="URL"
                     clearable
                     disabled
                   />
                 </el-form-item>
-                <el-form-item label="Tin nổi bật">
-                  <el-switch v-model="newsForm.isFeatured" />
-                </el-form-item>
-                <el-form-item label="Hiển thị ngay">
-                  <el-switch v-model="newsForm.isPublish" />
+                <el-form-item label="Publish">
+                  <el-switch v-model="pageForm.publish" />
                 </el-form-item>
               </el-form>
             </template>
@@ -187,9 +190,33 @@
           >
             Discard
           </button>
-          <button class="btn btn-lg btn-primary" type="submit">
+          <button
+            class="btn btn-lg btn-primary"
+            type="submit"
+            v-if="action === 'add'"
+            @click="handleAdd"
+          >
             <span v-if="true" class="indicator-label">
-              Submit
+              Add
+              <span class="svg-icon svg-icon-3 ms-2 me-0">
+                <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
+              </span>
+            </span>
+            <span v-if="false" class="indicator-progress">
+              Please wait...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
+          <button
+            class="btn btn-lg btn-primary"
+            type="submit"
+            v-if="action === 'edit'"
+            @click="handleEdit"
+          >
+            <span v-if="true" class="indicator-label">
+              Edit
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -208,10 +235,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, Refresh, ZoomIn } from "@element-plus/icons-vue";
 import type {
+  FormInstance,
+  FormRules,
   UploadFile,
   UploadFiles,
   UploadInstance,
@@ -221,309 +250,223 @@ import type {
 } from "element-plus";
 import { ElMessage } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
+import { usePageStore } from "@/stores/page";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
-  name: "news-modal",
+  name: "page-category-modal",
   props: {
     action: { type: String, default: () => "add", required: false },
+    rowDetail: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {};
+      },
+    },
+    abc: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {};
+      },
+    },
+    submitSearch: {
+      type: Function,
+    },
   },
   components: { NhEditor, NhForm, Delete, Plus, ZoomIn },
-  setup: function () {
-    const categories = [
-      {
-        value: "guide",
-        label: "Guide",
-        children: [
-          {
-            value: "disciplines",
-            label: "Disciplines",
-            children: [
-              {
-                value: "consistency",
-                label: "Consistency",
-              },
-              {
-                value: "feedback",
-                label: "Feedback",
-              },
-              {
-                value: "efficiency",
-                label: "Efficiency",
-              },
-              {
-                value: "controllability",
-                label: "Controllability",
-              },
-            ],
-          },
-          {
-            value: "navigation",
-            label: "Navigation",
-            children: [
-              {
-                value: "side nav",
-                label: "Side Navigation",
-              },
-              {
-                value: "top nav",
-                label: "Top Navigation",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: "component",
-        label: "Component",
-        children: [
-          {
-            value: "basic",
-            label: "Basic",
-            children: [
-              {
-                value: "layout",
-                label: "Layout",
-              },
-              {
-                value: "color",
-                label: "Color",
-              },
-              {
-                value: "typography",
-                label: "Typography",
-              },
-              {
-                value: "icon",
-                label: "Icon",
-              },
-              {
-                value: "button",
-                label: "Button",
-              },
-            ],
-          },
-          {
-            value: "form",
-            label: "Form",
-            children: [
-              {
-                value: "radio",
-                label: "Radio",
-              },
-              {
-                value: "checkbox",
-                label: "Checkbox",
-              },
-              {
-                value: "input",
-                label: "Input",
-              },
-              {
-                value: "input-number",
-                label: "InputNumber",
-              },
-              {
-                value: "select",
-                label: "Select",
-              },
-              {
-                value: "cascader",
-                label: "Cascader",
-              },
-              {
-                value: "switch",
-                label: "Switch",
-              },
-              {
-                value: "slider",
-                label: "Slider",
-              },
-              {
-                value: "time-picker",
-                label: "TimePicker",
-              },
-              {
-                value: "date-picker",
-                label: "DatePicker",
-              },
-              {
-                value: "datetime-picker",
-                label: "DateTimePicker",
-              },
-              {
-                value: "upload",
-                label: "Upload",
-              },
-              {
-                value: "rate",
-                label: "Rate",
-              },
-              {
-                value: "form",
-                label: "Form",
-              },
-            ],
-          },
-          {
-            value: "data",
-            label: "Data",
-            children: [
-              {
-                value: "table",
-                label: "Table",
-              },
-              {
-                value: "tag",
-                label: "Tag",
-              },
-              {
-                value: "progress",
-                label: "Progress",
-              },
-              {
-                value: "tree",
-                label: "Tree",
-              },
-              {
-                value: "pagination",
-                label: "Pagination",
-              },
-              {
-                value: "badge",
-                label: "Badge",
-              },
-            ],
-          },
-          {
-            value: "notice",
-            label: "Notice",
-            children: [
-              {
-                value: "alert",
-                label: "Alert",
-              },
-              {
-                value: "loading",
-                label: "Loading",
-              },
-              {
-                value: "message",
-                label: "Message",
-              },
-              {
-                value: "message-box",
-                label: "MessageBox",
-              },
-              {
-                value: "notification",
-                label: "Notification",
-              },
-            ],
-          },
-          {
-            value: "navigation",
-            label: "Navigation",
-            children: [
-              {
-                value: "menu",
-                label: "Menu",
-              },
-              {
-                value: "tabs",
-                label: "Tabs",
-              },
-              {
-                value: "breadcrumb",
-                label: "Breadcrumb",
-              },
-              {
-                value: "dropdown",
-                label: "Dropdown",
-              },
-              {
-                value: "steps",
-                label: "Steps",
-              },
-            ],
-          },
-          {
-            value: "others",
-            label: "Others",
-            children: [
-              {
-                value: "dialog",
-                label: "Dialog",
-              },
-              {
-                value: "tooltip",
-                label: "Tooltip",
-              },
-              {
-                value: "popover",
-                label: "Popover",
-              },
-              {
-                value: "card",
-                label: "Card",
-              },
-              {
-                value: "carousel",
-                label: "Carousel",
-              },
-              {
-                value: "collapse",
-                label: "Collapse",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: "resource",
-        label: "Resource",
-        children: [
-          {
-            value: "axure",
-            label: "Axure Components",
-          },
-          {
-            value: "sketch",
-            label: "Sketch Templates",
-          },
-          {
-            value: "docs",
-            label: "Design Documentation",
-          },
-        ],
-      },
-    ];
+  setup: function (props, ctx) {
+    const store = usePageStore();
+    const detailData = ref(props.rowDetail);
+    const getAllRes = ref(props.abc);
+    const publish = ref();
+    const status = ref();
+    const typePost = ref();
+    const categoryId = ref();
+    const parentId = ref();
+    const idRow = ref();
+    const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
+    const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
+    const parents = ref();
+    const idSelect = ref();
+
+    function buildHierarchy(arr) {
+      const hierarchy = {};
+      // Create a map of id to item and initialize children
+      for (const item of arr) {
+        item.children = [];
+        item.value = item.name;
+        item.label = item.name;
+        hierarchy[item.id] = item;
+      }
+
+      const tree: any = [];
+      // Build the hierarchy
+      for (const item of arr) {
+        if (item.parent_id !== null) {
+          if (hierarchy[item.parent_id]) {
+            hierarchy[item.parent_id].children.push(item);
+          }
+        } else {
+          tree.push(item);
+        }
+      }
+      return tree;
+    }
+
+    watch(
+      () => props.rowDetail,
+      (newVal) => {
+        if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
+          console.log(JSON.parse(JSON.stringify(newVal)));
+          rowValue.value = newVal;
+          pageForm.value.name = rowValue.value.name;
+          pageForm.value.name_english = rowValue.value.name_english;
+          pageForm.value.name_korea = rowValue.value.name_korea;
+          pageForm.value.slug = rowValue.value.slug;
+          pageForm.value.content = rowValue.value.content;
+          pageForm.value.content_english = rowValue.value.content_english;
+          pageForm.value.content_korea = rowValue.value.content_korea;
+          pageForm.value.image = rowValue.value.image;
+          pageForm.value.image_english = rowValue.value.image_english;
+          pageForm.value.image_korea = rowValue.value.image_korea;
+          pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
+          pageForm.value.url = toSlug(rowValue.value.name);
+          pageForm.value.parentCategory = rowValue.value.parentCategory;
+          pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
+          publish.value = rowValue.value.publish;
+          status.value = rowValue.value.status;
+          typePost.value = rowValue.value.type_post;
+          categoryId.value = rowValue.value.category_id;
+          parentId.value = rowValue.value.parent_id;
+          idRow.value = rowValue.value.id;
+        } else {
+          pageForm.value = {
+            name: "",
+            name_english: "",
+            name_korea: "",
+            slug: "",
+            content: "",
+            content_english: "",
+            content_korea: "",
+            image: "",
+            image_english: "",
+            image_korea: "",
+            featuredImgUrl: "",
+            url: "/page/.html",
+            parentCategory: "",
+            publish: false,
+          };
+        }
+      }
+    );
+
+    watch(
+      () => props.abc,
+      (newVal) => {
+        parents.value = buildHierarchy(newVal.data);
+      }
+    );
+
     const cascaderConfig = {
       expandTrigger: "hover" as const,
+      value: "id",
     };
-    const newsForm = reactive({
-      titleVn: "",
-      titleEn: "",
-      titleKr: "",
-      contentVn: "",
-      contentEn: "",
-      contentKr: "",
+
+    const pageForm = ref({
+      name: "",
+      name_english: "",
+      name_korea: "",
+      slug: "",
+      content: "",
+      content_english: "",
+      content_korea: "",
+      image: "",
+      image_english: "",
+      image_korea: "",
       featuredImgUrl: "",
-      url: "/tin-tuc/.html",
+      url: "/page/.html",
       parentCategory: "",
-      isPublish: true,
-      isFeatured: false,
+      publish: false,
     });
+
+    const handleAdd = async () => {
+      const formData = JSON.parse(JSON.stringify(pageForm.value));
+      const result = await store.createPage({
+        ...formData,
+        status: "",
+        type_post: "page",
+        category_id: 10,
+        parent_id: idSelect.value,
+        slug: formData.url,
+        publish: formData.publish === false ? 0 : 1,
+      });
+      if (result.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Tạo thành công!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: result.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      ctx.emit("submitSearch");
+    };
+
+    const handleEdit = async () => {
+      const formData = JSON.parse(JSON.stringify(pageForm.value));
+      const result = await store.editPage({
+        ...formData,
+        status: status.value,
+        type_post: typePost.value,
+        category_id: categoryId.value,
+        parent_id: idSelect.value,
+        publish: formData.publish === false ? 0 : 1,
+        id: idRow.value,
+        slug: formData.url,
+      });
+      if (result.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Cập nhật thành công!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: result.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      ctx.emit("submitSearch");
+    };
+
     const dialogImageUrl = ref("");
     const dialogVisible = ref(false);
     const uploadRef = ref<UploadInstance>();
     const fileList = ref<any>([]);
 
     const handleChangeCategory = (value) => {
-      console.log(value);
+      const temp = JSON.parse(JSON.stringify(value));
+      const a = temp[temp.length - 1];
+      idSelect.value = a.toString();
     };
 
     const generateSlug = (title) => {
-      newsForm.url = "/tin-tuc/" + toSlug(title) + ".html";
+      pageForm.value.url = "/tin-tuc/" + toSlug(title) + ".html";
     };
 
     const toSlug = (str) => {
@@ -554,7 +497,7 @@ export default defineComponent({
       return str;
     };
 
-    const handleRemove = (file: UploadFile) => {
+    const handleRemove = (file: any) => {
       uploadRef.value?.handleRemove(file);
       fileList.value = [];
     };
@@ -575,22 +518,26 @@ export default defineComponent({
     };
 
     return {
-      categories,
       cascaderConfig,
-      newsForm,
+      pageForm,
       Delete,
       Plus,
       ZoomIn,
       dialogImageUrl,
+      parents,
       dialogVisible,
       uploadRef,
       fileList,
+      rowValue,
+      qwe,
       handleChangeCategory,
+      handleAdd,
       generateSlug,
       handleImageChange,
       handleRemove,
       handlePictureCardPreview,
       handleFileExceed,
+      handleEdit,
     };
   },
 });

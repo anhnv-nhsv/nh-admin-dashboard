@@ -12,10 +12,6 @@
       <div class="text-gray-600">Tên</div>
       <el-input :value="dataRow.fromIP" placeholder="Enter Name" />
     </div>
-    <div class="mt-4">
-      <div class="text-gray-600">Hình Ảnh</div>
-      <el-input :value="dataRow.uriPage" placeholder="Enter Image" />
-    </div>
   </div>
   <div class="mt-3 text-end">
     <el-button type="" @click="handleClose">Cancel</el-button>
