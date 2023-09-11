@@ -3,14 +3,48 @@
     <div class="card-header border-0 pt-6">
       <div class="flex-column">
         <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
-          <div>
+          <div
+            class="col-md-6 d-flex align-items-center position-relative my-1"
+          >
             <el-input
               autofocus
+              v-model="formSearchData.name"
               size="large"
               placeholder="Press enter to search"
               clearable
               :prefix-icon="Search"
+              @submit.prevent="submitSearch"
             />
+          </div>
+          <div
+            class="col-md-3 d-flex align-items-center position-relative my-1"
+          >
+            <el-select
+              placeholder="Status"
+              size="large"
+              v-model="formSearchData.publish"
+            >
+              <el-option label="All" />
+              <el-option label="Enable" value="1" />
+              <el-option label="Disable" value="0" />
+            </el-select>
+          </div>
+          <div
+            class="col-md-3 d-flex align-items-center position-relative my-1"
+          >
+            <button
+              :data-kt-indicator="false ? 'on' : null"
+              type="submit"
+              class="btn btn-primary"
+            >
+              <span v-if="true" class="indicator-label">Search</span>
+              <span v-if="false" class="indicator-progress"
+                >Please wait...
+                <span
+                  class="spinner-border spinner-border-sm align-middle ms-2"
+                ></span
+              ></span>
+            </button>
           </div>
         </form>
       </div>
@@ -28,7 +62,7 @@
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Category
+            Add Page
           </button>
         </div>
         <div
@@ -36,17 +70,24 @@
           class="d-flex justify-content-end align-items-center"
           data-kt-customer-table-toolbar="selected"
         >
-          <div class="fw-bold me-5">
-            <span class="me-2">{{ selectedIds }}</span
-            >Selected
+          <div class="w-auto me-5">
+            <button
+              type="button"
+              class="btn btn-success"
+              @click="handleChangeStatus()"
+            >
+              Change status
+            </button>
           </div>
-          <button
-            type="button"
-            class="btn btn-danger"
-            @click="deleteCategory()"
-          >
-            Delete Selected
-          </button>
+          <div class="w-auto">
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="deleteCategory()"
+            >
+              Delete {{ selectedIds }} selected
+            </button>
+          </div>
         </div>
         <div
           class="d-flex justify-content-end align-items-center d-none"
@@ -150,11 +191,11 @@ export default defineComponent({
   },
   setup() {
     const formSearchData = ref({
-      username: "",
-      status: "",
+      name: "",
+      publish: "",
     });
     const data = ref({
-      status: "",
+      publish: "",
     });
     const tableHeader = ref([
       {
@@ -186,6 +227,7 @@ export default defineComponent({
     let pagination = ref();
 
     const handleApplyStatus = () => {};
+    const handleChangeStatus = () => {};
 
     function submitSearch() {}
     const handleSingleSelection = (val) => {
@@ -231,6 +273,7 @@ export default defineComponent({
       contactArray,
       BannerManagementModal,
       addCategory,
+      handleChangeStatus,
       deleteCategory,
       editCategory,
       handleApplyStatus,
