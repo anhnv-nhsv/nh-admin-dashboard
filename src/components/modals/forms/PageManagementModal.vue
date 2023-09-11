@@ -26,7 +26,12 @@
         <div class="modal-body mx-5 mx-xl-5 my-7">
           <NhForm seoable>
             <template v-slot:customForm>
-              <el-form :model="pageForm" label-width="160px">
+              <el-form
+                :model="pageForm"
+                label-width="160px"
+                class="demo-ruleForm"
+                status-icon
+              >
                 <el-form-item>
                   <ul
                     class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6"
@@ -161,13 +166,6 @@
                     <img w-full :src="dialogImageUrl" alt="Preview Image" />
                   </el-dialog>
                 </el-form-item>
-                <!-- <el-form-item label="Slug">
-                  <el-input
-                    v-model="pageForm.slug"
-                    placeholder="Slug"
-                    clearable
-                  />
-                </el-form-item> -->
                 <el-form-item label="URL">
                   <el-input
                     v-model="pageForm.url"
@@ -182,7 +180,6 @@
               </el-form>
             </template>
           </NhForm>
-          {{ qwe.data }}
         </div>
         <div class="modal-footer">
           <button
@@ -238,17 +235,12 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  watch,
-  watchEffect,
-} from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, Refresh, ZoomIn } from "@element-plus/icons-vue";
 import type {
+  FormInstance,
+  FormRules,
   UploadFile,
   UploadFiles,
   UploadInstance,
@@ -288,7 +280,7 @@ export default defineComponent({
   setup: function (props, ctx) {
     const store = usePageStore();
     const detailData = ref(props.rowDetail);
-    const asd = ref(props.abc);
+    const getAllRes = ref(props.abc);
     const publish = ref();
     const status = ref();
     const typePost = ref();
@@ -296,12 +288,12 @@ export default defineComponent({
     const parentId = ref();
     const idRow = ref();
     const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
-    const qwe = ref(JSON.parse(JSON.stringify(asd.value)));
+    const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
+    const idSelect = ref();
 
     function buildHierarchy(arr) {
       const hierarchy = {};
-
       // Create a map of id to item and initialize children
       for (const item of arr) {
         item.children = [];
@@ -311,7 +303,6 @@ export default defineComponent({
       }
 
       const tree: any = [];
-
       // Build the hierarchy
       for (const item of arr) {
         if (item.parent_id !== null) {
@@ -342,7 +333,7 @@ export default defineComponent({
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
-          pageForm.value.url = rowValue.value.url || pageForm.value.url;
+          pageForm.value.url = toSlug(rowValue.value.name);
           pageForm.value.parentCategory = rowValue.value.parentCategory;
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
           publish.value = rowValue.value.publish;
@@ -375,14 +366,13 @@ export default defineComponent({
     watch(
       () => props.abc,
       (newVal) => {
-        console.log("newVal: ", JSON.parse(JSON.stringify(newVal.data)));
-        console.log("res", buildHierarchy(newVal.data));
         parents.value = buildHierarchy(newVal.data);
       }
     );
 
     const cascaderConfig = {
       expandTrigger: "hover" as const,
+      value: "id",
     };
 
     const pageForm = ref({
@@ -409,7 +399,8 @@ export default defineComponent({
         status: "",
         type_post: "page",
         category_id: 10,
-        parent_id: 14,
+        parent_id: idSelect.value,
+        slug: formData.url,
         publish: formData.publish === false ? 0 : 1,
       });
       if (result.data.success === true) {
@@ -439,9 +430,10 @@ export default defineComponent({
         status: status.value,
         type_post: typePost.value,
         category_id: categoryId.value,
-        parent_id: parentId.value,
+        parent_id: idSelect.value,
         publish: formData.publish === false ? 0 : 1,
         id: idRow.value,
+        slug: formData.url,
       });
       if (result.data.success === true) {
         Swal.fire({
@@ -469,13 +461,9 @@ export default defineComponent({
     const fileList = ref<any>([]);
 
     const handleChangeCategory = (value) => {
-      console.log(value);
-      for (const item123 of parents.value) {
-        console.log("sdfsdf: ", JSON.parse(JSON.stringify(item123.children)));
-        for (const asd of item123.children) {
-          console.log("asd: ", JSON.parse(JSON.stringify(asd.name)));
-        }
-      }
+      const temp = JSON.parse(JSON.stringify(value));
+      const a = temp[temp.length - 1];
+      idSelect.value = a.toString();
     };
 
     const generateSlug = (title) => {
