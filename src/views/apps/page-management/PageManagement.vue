@@ -288,7 +288,6 @@ export default defineComponent({
 
     const handleMultipleSelection = (val) => {
       selectedIds.value = val.length;
-      console.log("handleMultipleSelection :", JSON.parse(JSON.stringify(val)));
       rowCheck.value = JSON.parse(JSON.stringify(val));
     };
 
@@ -312,8 +311,6 @@ export default defineComponent({
 
     const editCategory = async (val?: object | undefined) => {
       newsAction.value = "edit";
-      console.log("edit", JSON.parse(JSON.stringify(val)));
-
       rowDetail.value = JSON.parse(JSON.stringify(val));
       await store.getAllPages({
         params: {
@@ -358,7 +355,6 @@ export default defineComponent({
       for (let item of change) {
         arr.push(item.id.toString());
       }
-      console.log("item: ", arr);
     };
 
     function changePage(page) {

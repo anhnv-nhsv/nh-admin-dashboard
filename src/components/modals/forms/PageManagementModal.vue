@@ -252,7 +252,6 @@ import { ElMessage } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import { usePageStore } from "@/stores/page";
 import Swal from "sweetalert2/dist/sweetalert2.js";
-import News from "@/views/apps/news/News.vue";
 
 export default defineComponent({
   name: "page-category-modal",
