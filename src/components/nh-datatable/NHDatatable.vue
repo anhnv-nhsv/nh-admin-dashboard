@@ -24,6 +24,7 @@
         <slot name="indexColumn"></slot>
         <template v-for="(item, i) in tableHeader" :key="i">
           <el-table-column
+            :show-overflow-tooltip="showOverflowTooltip"
             header-align="center"
             class-name="text-center"
             v-if="item.visible"

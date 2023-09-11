@@ -119,7 +119,7 @@
         :enable-items-per-page-dropdown="true"
         userRole="all"
         :loading="loading"
-        :show-overflow-tooltip="true"
+        :show-overflow-tooltip="false"
         @change-page="changePage"
         @change-page-size="changePageSize"
         @single-select="handleSingleSelection"
