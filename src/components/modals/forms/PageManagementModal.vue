@@ -27,10 +27,13 @@
           <NhForm seoable>
             <template v-slot:customForm>
               <el-form
+                ref="ruleFormRef"
                 :model="pageForm"
                 label-width="160px"
                 class="demo-ruleForm"
                 status-icon
+                :size="formSize"
+                :rules="rules"
               >
                 <el-form-item>
                   <ul
@@ -68,7 +71,7 @@
                     id="nh_tab_pane_1"
                     role="tabpanel"
                   >
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item label="Tiêu đề" prop="name">
                       <el-input
                         v-model="pageForm.name"
                         placeholder="Tiếng Việt"
@@ -76,7 +79,7 @@
                         @input="generateSlug(pageForm.name)"
                       />
                     </el-form-item>
-                    <el-form-item label="Nội dung">
+                    <el-form-item label="Nội dung" prop="content">
                       <NhEditor
                         v-model="pageForm.content"
                         placeholder="Tiếng Việt"
@@ -84,7 +87,7 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item label="Tiêu đề" prop="name_english">
                       <el-input
                         v-model="pageForm.name_english"
                         placeholder="Tiếng Anh"
@@ -99,7 +102,7 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item label="Tiêu đề" prop="name_korea">
                       <el-input
                         v-model="pageForm.name_korea"
                         placeholder="Tiếng Hàn"
@@ -114,7 +117,7 @@
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="Bài viết cha">
+                <el-form-item label="Bài viết cha" prop="parentCategory">
                   <el-cascader
                     v-model="pageForm.parentCategory"
                     :options="parents"
@@ -126,45 +129,14 @@
                   />
                 </el-form-item>
                 <el-form-item label="Hình ảnh">
-                  <el-upload
-                    v-model="pageForm.image"
-                    ref="uploadRef"
-                    action="#"
-                    list-type="picture-card"
-                    :auto-upload="false"
-                    :limit="1"
-                    :on-exceed="handleFileExceed"
-                    :on-change="handleImageChange"
-                    :class="{ 'hide-upload': fileList.length > 0 }"
+                  <el-button
+                    size="small"
+                    type="default"
+                    data-bs-toggle="modal"
+                    data-bs-target="#kt_file_manager_modal"
                   >
-                    <el-icon><Plus /></el-icon>
-                    <template #file="{ file }">
-                      <div>
-                        <img
-                          class="el-upload-list__item-thumbnail"
-                          :src="file.url"
-                          alt=""
-                        />
-                        <span class="el-upload-list__item-actions">
-                          <span
-                            class="el-upload-list__item-preview"
-                            @click="handlePictureCardPreview(file)"
-                          >
-                            <el-icon><zoom-in /></el-icon>
-                          </span>
-                          <span
-                            class="el-upload-list__item-delete"
-                            @click="handleRemove"
-                          >
-                            <el-icon><Delete /></el-icon>
-                          </span>
-                        </span>
-                      </div>
-                    </template>
-                  </el-upload>
-                  <el-dialog v-model="dialogVisible">
-                    <img w-full :src="dialogImageUrl" alt="Preview Image" />
-                  </el-dialog>
+                    image
+                  </el-button>
                 </el-form-item>
                 <el-form-item label="URL">
                   <el-input
@@ -194,7 +166,7 @@
             class="btn btn-lg btn-primary"
             type="submit"
             v-if="action === 'add'"
-            @click="handleAdd"
+            @click="handleAdd(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
               Add
@@ -213,7 +185,7 @@
             class="btn btn-lg btn-primary"
             type="submit"
             v-if="action === 'edit'"
-            @click="handleEdit"
+            @click="handleEdit(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
               Edit
@@ -232,26 +204,25 @@
       </div>
     </div>
   </div>
+  <FileManagerModal @file-selected="getFileUrl" />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
+import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
-import { Delete, Plus, Refresh, ZoomIn } from "@element-plus/icons-vue";
+import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
 import type {
   FormInstance,
-  FormRules,
   UploadFile,
-  UploadFiles,
   UploadInstance,
-  UploadProps,
   UploadRawFile,
   UploadUserFile,
 } from "element-plus";
-import { ElMessage } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import { usePageStore } from "@/stores/page";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { hideModal } from "@/core/helpers/dom";
 
 export default defineComponent({
   name: "page-category-modal",
@@ -275,7 +246,7 @@ export default defineComponent({
       type: Function,
     },
   },
-  components: { NhEditor, NhForm, Delete, Plus, ZoomIn },
+  components: { NhEditor, NhForm, FileManagerModal },
   setup: function (props, ctx) {
     const store = usePageStore();
     const detailData = ref(props.rowDetail);
@@ -290,6 +261,77 @@ export default defineComponent({
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
     const idSelect = ref();
+    const formSize = ref("default");
+    const ruleFormRef = ref<FormInstance>();
+    const newsModalRef = ref<null | HTMLElement>(null);
+    const rules = reactive({
+      name: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "blur",
+        },
+      ],
+      name_korea: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "blur",
+        },
+      ],
+      name_english: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "blur",
+        },
+      ],
+      parentCategory: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+      content: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+      content_english: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+      content_korea: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+    });
+
+    let pageForm = ref({
+      name: "",
+      name_english: "",
+      name_korea: "",
+      slug: "",
+      content: "",
+      content_english: "",
+      content_korea: "",
+      image: "",
+      image_english: "",
+      image_korea: "",
+      featuredImgUrl: "",
+      url: "/page/.html",
+      parentCategory: "",
+      publish: false,
+    });
 
     function buildHierarchy(arr) {
       const hierarchy = {};
@@ -319,7 +361,6 @@ export default defineComponent({
       () => props.rowDetail,
       (newVal) => {
         if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
-          console.log(JSON.parse(JSON.stringify(newVal)));
           rowValue.value = newVal;
           pageForm.value.name = rowValue.value.name;
           pageForm.value.name_english = rowValue.value.name_english;
@@ -371,87 +412,87 @@ export default defineComponent({
 
     const cascaderConfig = {
       expandTrigger: "hover" as const,
+      checkStrictly: true,
       value: "id",
     };
 
-    const pageForm = ref({
-      name: "",
-      name_english: "",
-      name_korea: "",
-      slug: "",
-      content: "",
-      content_english: "",
-      content_korea: "",
-      image: "",
-      image_english: "",
-      image_korea: "",
-      featuredImgUrl: "",
-      url: "/page/.html",
-      parentCategory: "",
-      publish: false,
-    });
-
-    const handleAdd = async () => {
-      const formData = JSON.parse(JSON.stringify(pageForm.value));
-      const result = await store.createPage({
-        ...formData,
-        status: "",
-        type_post: "page",
-        category_id: 10,
-        parent_id: idSelect.value,
-        slug: formData.url,
-        publish: formData.publish === false ? 0 : 1,
+    const handleAdd = async (formEl: FormInstance | undefined) => {
+      if (!formEl) return;
+      await formEl.validate(async (valid, fields) => {
+        if (valid) {
+          const formData = JSON.parse(JSON.stringify(pageForm.value));
+          const result = await store.createPage({
+            ...formData,
+            status: "",
+            type_post: "page",
+            category_id: 10,
+            parent_id: idSelect.value,
+            slug: formData.url,
+            publish: formData.publish === false ? 0 : 1,
+          });
+          if (result.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Tạo thành công!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: result.data.mess,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+          ctx.emit("submitSearch");
+          hideModal(newsModalRef.value);
+        } else {
+          console.log("error submit!", fields);
+        }
       });
-      if (result.data.success === true) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Tạo thành công!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: result.data.mess,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-      ctx.emit("submitSearch");
     };
 
-    const handleEdit = async () => {
-      const formData = JSON.parse(JSON.stringify(pageForm.value));
-      const result = await store.editPage({
-        ...formData,
-        status: status.value,
-        type_post: typePost.value,
-        category_id: categoryId.value,
-        parent_id: idSelect.value,
-        publish: formData.publish === false ? 0 : 1,
-        id: idRow.value,
-        slug: formData.url,
+    const handleEdit = async (formEl: FormInstance | undefined) => {
+      if (!formEl) return;
+      await formEl.validate(async (valid, fields) => {
+        if (valid) {
+          const formData = JSON.parse(JSON.stringify(pageForm.value));
+          const result = await store.editPage({
+            ...formData,
+            status: status.value,
+            type_post: typePost.value,
+            category_id: categoryId.value,
+            parent_id: idSelect.value,
+            publish: formData.publish === false ? 0 : 1,
+            id: idRow.value,
+            slug: formData.url,
+          });
+          if (result.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Cập nhật thành công!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: result.data.mess,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+          ctx.emit("submitSearch");
+          hideModal(newsModalRef.value);
+        } else {
+          console.log("error submit!", fields);
+        }
       });
-      if (result.data.success === true) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Cập nhật thành công!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: result.data.mess,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
-      ctx.emit("submitSearch");
     };
 
     const dialogImageUrl = ref("");
@@ -466,7 +507,7 @@ export default defineComponent({
     };
 
     const generateSlug = (title) => {
-      pageForm.value.url = "/tin-tuc/" + toSlug(title) + ".html";
+      pageForm.value.url = "/page/" + toSlug(title) + ".html";
     };
 
     const toSlug = (str) => {
@@ -517,6 +558,10 @@ export default defineComponent({
       uploadRef.value?.handleStart(files[0] as UploadRawFile);
     };
 
+    const getFileUrl = (val) => {
+      console.log(val);
+    };
+
     return {
       cascaderConfig,
       pageForm,
@@ -530,6 +575,10 @@ export default defineComponent({
       fileList,
       rowValue,
       qwe,
+      rules,
+      formSize,
+      ruleFormRef,
+      newsModalRef,
       handleChangeCategory,
       handleAdd,
       generateSlug,
@@ -538,6 +587,7 @@ export default defineComponent({
       handlePictureCardPreview,
       handleFileExceed,
       handleEdit,
+      getFileUrl,
     };
   },
 });
