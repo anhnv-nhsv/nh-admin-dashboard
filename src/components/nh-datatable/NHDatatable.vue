@@ -2,8 +2,9 @@
   <div class="dataTables_wrapper dt-bootstrap4 no-footer">
     <div class="table-responsive">
       <el-table
-        class="customerTable el-table--border"
+        class="nhTable nhTable-draggable el-table--border"
         ref="customerScoreTableRef"
+        row-key="id"
         :data="getItems"
         :header-cell-style="
           themeMode === 'light'
@@ -109,9 +110,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch, toRaw } from "vue";
+import { computed, defineComponent, ref, watch, toRaw, onMounted } from "vue";
 import { useThemeStore } from "@/stores/theme";
 import { ThemeModeComponent } from "@/assets/ts/layout";
+import Sortable from "sortablejs";
 
 export default defineComponent({
   name: "nh-datatable",
@@ -192,6 +194,43 @@ export default defineComponent({
       ctx.emit("single-select", val);
     };
 
+    const initSortable = (className) => {
+      const table = document.querySelector(
+        "." + className + " .el-table__body-wrapper tbody"
+      );
+      let dragTable = Sortable.create(table, {
+        animation: 250,
+        disabled: false,
+        handle: ".draggable",
+        filter: ".disabled",
+        dragClass: "dragClass",
+        //设置拖拽停靠样式类名
+        ghostClass: "ghostClass",
+        //设置选中样式类名
+        chosenClass: "chosenClass",
+        // 开始拖动事件
+        onStart: () => {
+          console.log("Start drag");
+        },
+        // 结束拖动事件
+        onEnd: async ({ newIndex, oldIndex }) => {
+          console.log(
+            "Drag:",
+            `Index before: ${oldIndex}---Index after: ${newIndex}`
+          );
+          const currRow = getItems.value.splice(oldIndex, 1)[0];
+          getItems.value.splice(newIndex, 0, currRow);
+          console.log("End drag", getItems.value);
+        },
+      });
+
+      console.log("dragTable", dragTable);
+    };
+
+    onMounted(() => {
+      initSortable("nhTable-draggable");
+    });
+
     return {
       paginationObj,
       getItems,
@@ -212,7 +251,7 @@ export default defineComponent({
 <style scoped lang="scss">
 //@import "~element-plus/theme-chalk/el-table.css";
 
-.customerTable {
+.nhTable {
   clear: both;
   margin-top: 6px !important;
   margin-bottom: 6px !important;
@@ -245,6 +284,18 @@ export default defineComponent({
 :deep(.el-scrollbar__bar.is-vertical) {
   width: 8px;
 }
+
+//.dragClass {
+//  background: rgba($color: #41c21a, $alpha: 0.5) !important;
+//}
+//
+//.ghostClass {
+//  background: rgba($color: #6cacf5, $alpha: 0.5) !important;
+//}
+//
+//.chosenClass:hover > td {
+//  background: rgba($color: #f56c6c, $alpha: 0.5) !important;
+//}
 
 /*Scroll bar nav*/
 //:deep(::-webkit-scrollbar) {

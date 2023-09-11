@@ -4,18 +4,21 @@ export const contactArray = [
     namePost: "a",
     uriPage: "https://deviet.vn/wp-content/uploads/2019/04/vuong-quoc-anh.jpg",
     url: "https://deviet.vn/wp-content/uploads/2019/04/vuong-quoc-anh.jpg",
+    orderId: 1,
   },
   {
     id: 2,
     namePost: "b",
     uriPage: "https://deviet.vn/wp-content/uploads/2019/04/vuong-quoc-anh.jpg",
     url: "https://deviet.vn/wp-content/uploads/2019/04/vuong-quoc-anh.jpg",
+    orderId: 2,
   },
   {
     id: 3,
     namePost: "c",
     uriPage: "https://deviet.vn/wp-content/uploads/2019/04/vuong-quoc-anh.jpg",
     url: "https://deviet.vn/wp-content/uploads/2019/04/vuong-quoc-anh.jpg",
+    orderId: 3,
   },
 ];
 

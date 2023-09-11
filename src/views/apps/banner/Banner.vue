@@ -115,7 +115,6 @@
         :table-header="tableHeader"
         :table-data="contactArray"
         :pagination="pagination"
-        :enable-items-per-page-dropdown="true"
         :user-role="userRole"
         :loading="loading"
         :show-overflow-tooltip="true"
@@ -127,10 +126,14 @@
         <template v-slot:indexColumn>
           <el-table-column
             header-align="center"
-            class-name="text-center"
-            type="selection"
+            class-name="text-center draggable"
             width="55"
-          />
+            label="#"
+          >
+            <template #default>
+              <KTIcon icon-name="abstract-14" icon-type="solid" icon-class="fs-4 me-1" />
+            </template>
+          </el-table-column>
         </template>
         <template v-slot:uriPage="{ row }">
           <img :src="row.uriPage" :alt="row.namePost" class="table-img" />
@@ -171,8 +174,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
-import { useReqStatistic } from "@/stores/req-statistic";
+import { defineComponent, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import { contactArray, options, selectTask } from "./mock/index";
