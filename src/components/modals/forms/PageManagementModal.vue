@@ -87,7 +87,7 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
-                    <el-form-item label="Tiêu đề" prop="name_english">
+                    <el-form-item label="Tiêu đề">
                       <el-input
                         v-model="pageForm.name_english"
                         placeholder="Tiếng Anh"
@@ -102,7 +102,7 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
-                    <el-form-item label="Tiêu đề" prop="name_korea">
+                    <el-form-item label="Tiêu đề">
                       <el-input
                         v-model="pageForm.name_korea"
                         placeholder="Tiếng Hàn"
@@ -134,6 +134,7 @@
                     type="default"
                     data-bs-toggle="modal"
                     data-bs-target="#kt_file_manager_modal"
+                    @click="handleSave"
                   >
                     image
                   </el-button>
@@ -204,7 +205,7 @@
       </div>
     </div>
   </div>
-  <FileManagerModal @file-selected="getFileUrl" />
+  <FileManagerModal @file-selected="getFileUrl" @handle-save="handleSave" />
 </template>
 
 <script lang="ts">
@@ -249,6 +250,7 @@ export default defineComponent({
   components: { NhEditor, NhForm, FileManagerModal },
   setup: function (props, ctx) {
     const store = usePageStore();
+    const formStep = ref(sessionStorage.getItem("formStep") || "1");
     const detailData = ref(props.rowDetail);
     const getAllRes = ref(props.abc);
     const publish = ref();
@@ -257,6 +259,7 @@ export default defineComponent({
     const categoryId = ref();
     const parentId = ref();
     const idRow = ref();
+    const urlIma = ref();
     const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
@@ -427,8 +430,9 @@ export default defineComponent({
             type_post: "page",
             category_id: 10,
             parent_id: idSelect.value,
-            slug: formData.url,
+            slug: resSlug(formData.url),
             publish: formData.publish === false ? 0 : 1,
+            image: urlIma.value,
           });
           if (result.data.success === true) {
             Swal.fire({
@@ -468,7 +472,8 @@ export default defineComponent({
             parent_id: idSelect.value,
             publish: formData.publish === false ? 0 : 1,
             id: idRow.value,
-            slug: formData.url,
+            slug: resSlug(formData.url),
+            image: urlIma.value,
           });
           if (result.data.success === true) {
             Swal.fire({
@@ -538,32 +543,34 @@ export default defineComponent({
       return str;
     };
 
+    const resSlug = (val) => {
+      let a = 6;
+      let b = val.length - 5;
+
+      if (a < b) {
+        return val.substring(a, b);
+      }
+    };
+
     const handleRemove = (file: any) => {
       uploadRef.value?.handleRemove(file);
       fileList.value = [];
     };
 
-    const handlePictureCardPreview = (file: UploadFile) => {
-      dialogImageUrl.value = file.url!;
-      dialogVisible.value = true;
-    };
-
-    const handleImageChange = (uploadFile: UploadFile) => {
-      fileList.value = [uploadFile];
-    };
-
-    const handleFileExceed = (files: File[], uploadFiles: UploadUserFile[]) => {
-      uploadRef.value?.clearFiles();
-      fileList.value = [...uploadFiles];
-      uploadRef.value?.handleStart(files[0] as UploadRawFile);
-    };
-
     const getFileUrl = (val) => {
-      console.log(val);
+      console.log("val: ", val);
+      urlIma.value = val;
+    };
+
+    const handleSave = () => {
+      formStep.value = "2";
+      sessionStorage.setItem("formStep", "2");
     };
 
     return {
       cascaderConfig,
+      formStep,
+      handleSave,
       pageForm,
       Delete,
       Plus,
@@ -582,10 +589,7 @@ export default defineComponent({
       handleChangeCategory,
       handleAdd,
       generateSlug,
-      handleImageChange,
       handleRemove,
-      handlePictureCardPreview,
-      handleFileExceed,
       handleEdit,
       getFileUrl,
     };
