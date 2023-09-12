@@ -134,6 +134,7 @@ export default defineComponent({
     },
     loading: { type: Boolean, required: false, default: false },
     showOverflowTooltip: { type: Boolean, required: false, default: false },
+    draggable: { type: Boolean, required: false, default: false },
     userRole: { type: String, required: false, default: "none" },
   },
   components: {},
@@ -194,13 +195,13 @@ export default defineComponent({
       ctx.emit("single-select", val);
     };
 
-    const initSortable = (className) => {
+    const initSortable = (className, draggable) => {
       const table = document.querySelector(
         "." + className + " .el-table__body-wrapper tbody"
       );
       let dragTable = Sortable.create(table, {
         animation: 250,
-        disabled: false,
+        disabled: !draggable,
         handle: ".draggable",
         filter: ".disabled",
         dragClass: "dragClass",
@@ -208,9 +209,20 @@ export default defineComponent({
         ghostClass: "ghostClass",
         //设置选中样式类名
         chosenClass: "chosenClass",
+        forceFallback: true,
+        onChoose: (e) => {
+          e.target.classList.add("grabbing");
+        },
+        onUnchoose: (e) => {
+          e.target.classList.remove("grabbing");
+        },
+        onMove: (e) => {
+          e.target.classList.add("grabbing");
+        },
         // 开始拖动事件
-        onStart: () => {
+        onStart: (e) => {
           console.log("Start drag");
+          e.target.classList.add("grabbing");
         },
         // 结束拖动事件
         onEnd: async ({ newIndex, oldIndex }) => {
@@ -220,6 +232,7 @@ export default defineComponent({
           );
           const currRow = getItems.value.splice(oldIndex, 1)[0];
           getItems.value.splice(newIndex, 0, currRow);
+          ctx.emit("on-drag-end", { newTableData: JSON.parse(JSON.stringify(getItems.value)) });
           console.log("End drag", getItems.value);
         },
       });
@@ -228,7 +241,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      initSortable("nhTable-draggable");
+      initSortable("nhTable-draggable", props.draggable);
     });
 
     return {
@@ -285,17 +298,38 @@ export default defineComponent({
   width: 8px;
 }
 
-//.dragClass {
-//  background: rgba($color: #41c21a, $alpha: 0.5) !important;
-//}
-//
-//.ghostClass {
-//  background: rgba($color: #6cacf5, $alpha: 0.5) !important;
-//}
-//
-//.chosenClass:hover > td {
-//  background: rgba($color: #f56c6c, $alpha: 0.5) !important;
-//}
+:deep(.draggable) {
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+:deep(.grabbing *) {
+  cursor: grabbing !important;
+}
+
+:deep(.dragClass) {
+  background-image: linear-gradient(
+    rgba($color: #41c21a, $alpha: 0.5),
+    rgba(255, 0, 0, 0)
+  );
+}
+
+:deep(.ghostClass) {
+  background-image: linear-gradient(
+    rgba($color: #6cacf5, $alpha: 0.5),
+    rgba(255, 0, 0, 0)
+  );
+}
+
+:deep(.chosenClass:hover > td) {
+  //background-image: linear-gradient(
+  //  rgba($color: #f56c6c, $alpha: 0.5),
+  //  rgba(255, 0, 0, 0)
+  //);
+  background-color: rgba($color: #f56c6c, $alpha: 0.5) !important;
+}
 
 /*Scroll bar nav*/
 //:deep(::-webkit-scrollbar) {

@@ -118,10 +118,12 @@
         :user-role="userRole"
         :loading="loading"
         :show-overflow-tooltip="true"
+        draggable
         @change-page="changePage"
         @change-page-size="changePageSize"
         @single-select="handleSingleSelection"
         @multiple-select="handleMultipleSelection"
+        @on-drag-end="handleDragEnd"
       >
         <template v-slot:indexColumn>
           <el-table-column
@@ -256,6 +258,13 @@ export default defineComponent({
 
     const changePageSize = (pageSize) => {};
 
+    const handleDragEnd = (data) => {
+      for (let i = 0; i < data.newTableData.length; i++) {
+        data.newTableData[i].orderId = i + 1;
+      }
+      console.log(data.newTableData);
+    };
+
     return {
       dataRequestStatistics,
       data,
@@ -284,6 +293,7 @@ export default defineComponent({
       changePage,
       changePageSize,
       submitSearch,
+      handleDragEnd,
     };
   },
 });
