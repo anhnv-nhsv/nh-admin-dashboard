@@ -166,17 +166,17 @@
         </template>
         <template v-slot:publish="{ row }">
           <span v-if="row.publish === 1">
-            <i class="bi bi-check-circle-fill v-btn"></i
+            <i class="bi bi-check-circle-fill text-success"></i
           ></span>
           <span v-if="row.publish !== 1"
-            ><i class="bi bi-x-circle-fill x-btn"></i
+            ><i class="bi bi-x-circle-fill text-danger"></i
           ></span>
         </template>
       </NHDatatable>
     </div>
   </div>
   <PageManagementModal
-    :action="newsAction"
+    :action="pageAction"
     :rowDetail="rowDetail"
     @submitSearch="submitSearch"
     :abc="abc"
@@ -239,7 +239,7 @@ export default defineComponent({
     let selectedIds = ref(0);
     const loading = ref<boolean>(false);
     let dataRequestPageManager = ref();
-    let newsAction = ref("");
+    let pageAction = ref("");
     let pagination = ref();
     let rowDetail = ref();
     let abc = ref();
@@ -297,7 +297,7 @@ export default defineComponent({
     };
 
     const addCategory = async () => {
-      newsAction.value = "add";
+      pageAction.value = "add";
       rowDetail.value = {};
       await store.getAllPages({
         params: {
@@ -315,7 +315,7 @@ export default defineComponent({
     };
 
     const editCategory = async (val?: object | undefined) => {
-      newsAction.value = "edit";
+      pageAction.value = "edit";
       rowDetail.value = JSON.parse(JSON.stringify(val));
       await store.getAllPages({
         params: {
@@ -447,7 +447,7 @@ export default defineComponent({
       formSearchData,
       syncPayload,
       value,
-      newsAction,
+      pageAction,
       rowDetail,
       Search,
       abc,
@@ -473,15 +473,6 @@ export default defineComponent({
 
 .del-btn {
   padding: 14px 15px;
-}
-
-.v-btn {
-  font-size: 15px;
-  color: green;
-}
-.x-btn {
-  font-size: 15px;
-  color: red;
 }
 
 .my-header {

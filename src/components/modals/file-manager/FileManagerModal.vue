@@ -4,6 +4,7 @@
     id="kt_file_manager_modal"
     ref="fileManagerModalRef"
     aria-hidden="true"
+    tabindex="-1"
   >
     <div
       class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-1000px mh-100"
@@ -69,7 +70,6 @@ export default {
           // ...
           // hideModal(fileManagerModalRef.value);
           // ctx.emit("isShown", false);
-          ctx.emit("handle-save", sessionStorage.setItem("formStep", "1"));
         }
       }
     };
