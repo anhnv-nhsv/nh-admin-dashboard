@@ -232,7 +232,9 @@ export default defineComponent({
           );
           const currRow = getItems.value.splice(oldIndex, 1)[0];
           getItems.value.splice(newIndex, 0, currRow);
-          ctx.emit("on-drag-end", { newTableData: JSON.parse(JSON.stringify(getItems.value)) });
+          ctx.emit("on-drag-end", {
+            newTableData: JSON.parse(JSON.stringify(getItems.value)),
+          });
           console.log("End drag", getItems.value);
         },
       });
