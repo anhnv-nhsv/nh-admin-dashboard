@@ -70,20 +70,11 @@
           class="d-flex justify-content-end align-items-center"
           data-kt-customer-table-toolbar="selected"
         >
-          <div class="w-auto me-5">
-            <button
-              type="button"
-              class="btn btn-success"
-              @click="handleChangeStatus()"
-            >
-              Change status
-            </button>
-          </div>
           <div class="w-auto">
             <button
               type="button"
               class="btn btn-danger"
-              @click="deleteCategory()"
+              @click="deleteMutiRow()"
             >
               Delete {{ selectedIds }} selected
             </button>
@@ -132,32 +123,44 @@
             width="55"
           />
         </template>
+        <template v-slot:name="{ row }">
+          <div class="left-name">{{ row.name }}</div>
+        </template>
         <template v-slot:actionColumn>
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Thao tác"
+            label="Operation"
           >
             <template #default="scope">
-              <el-button
-                size="small"
-                type="default"
-                data-bs-toggle="modal"
-                data-bs-target="#kt_page_modal"
-                @click.prevent="editCategory(scope.row)"
-              >
-                Edit
-              </el-button>
-              <el-popconfirm
-                title="Are you sure to delete this?"
-                icon-color="#626AEF"
-                hide-after="10"
-                @confirm="deleteCategory(scope.row)"
-              >
-                <template #reference>
-                  <el-button size="small" type="danger">Delete</el-button>
-                </template>
-              </el-popconfirm>
+              <div class="change-status">
+                <el-button
+                  size="small"
+                  type="default"
+                  data-bs-toggle="modal"
+                  data-bs-target="#kt_page_modal"
+                  @click.prevent="editCategory(scope.row)"
+                >
+                  Edit
+                </el-button>
+                <el-popconfirm
+                  title="Are you sure to delete this?"
+                  icon-color="#626AEF"
+                  hide-after="10"
+                  @confirm="deleteCategory(scope.row)"
+                >
+                  <template #reference>
+                    <el-button size="small" type="danger">Delete</el-button>
+                  </template>
+                </el-popconfirm>
+                <el-button
+                  size="small"
+                  type="default"
+                  @click.prevent="handleChangeStatus(scope.row)"
+                >
+                  Change status
+                </el-button>
+              </div>
             </template>
           </el-table-column>
         </template>
@@ -219,16 +222,18 @@ export default defineComponent({
         label: "Parent",
         prop: "parent_id",
         visible: true,
+        width: 170,
       },
       {
-        label: "Tên",
+        label: "Name",
         prop: "name",
         visible: true,
       },
       {
-        label: "Trạng thái",
+        label: "Status",
         prop: "publish",
         visible: true,
+        width: 120,
       },
     ]);
     let selectedIds = ref(0);
@@ -349,11 +354,58 @@ export default defineComponent({
       }
     };
 
-    const handleChangeStatus = (val?: any) => {
+    const deleteMutiRow = async () => {
       let arr: any = [];
       const change = JSON.parse(JSON.stringify(rowCheck.value));
-      for (let item of change) {
-        arr.push(item.id.toString());
+      for (const item of change) {
+        arr.push(item.id);
+      }
+
+      const oke = await store.deletePage({
+        id: arr,
+      });
+      if (oke.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Success!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        submitSearch();
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: oke.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    };
+
+    const handleChangeStatus = async (val?: any) => {
+      console.log(JSON.parse(JSON.stringify(val)));
+      const Tpublish = JSON.parse(JSON.stringify(val));
+      const result = Tpublish.publish === 0 ? 1 : 0;
+      const oke = await store.changeStatus({ id: val.id, publish: result });
+      if (oke.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Success!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        submitSearch();
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: oke.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     };
 
@@ -402,6 +454,7 @@ export default defineComponent({
       addCategory,
       editCategory,
       deleteCategory,
+      deleteMutiRow,
       handleChangeStatus,
       handleSingleSelection,
       handleMultipleSelection,
@@ -433,8 +486,11 @@ export default defineComponent({
 
 .my-header {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
+}
+
+.left-name {
+  text-align: left;
 }
 
 .action-right {
@@ -443,6 +499,13 @@ export default defineComponent({
 
 .search-page {
   flex-flow: row;
+}
+
+.change-status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 .dialog-footer button:first-child {

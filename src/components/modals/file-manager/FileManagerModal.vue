@@ -3,13 +3,25 @@
     class="modal fade"
     id="kt_file_manager_modal"
     ref="fileManagerModalRef"
-    tabindex="-1"
     aria-hidden="true"
   >
     <div
       class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-1000px mh-100"
     >
       <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="fw-bolder">File Manager</h2>
+          <div
+            class="btn btn-icon btn-sm btn-active-light-primary ms-2"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          >
+            <span class="svg-icon svg-icon-1">
+              <inline-svg src="media/icons/duotune/arrows/arr061.svg" />
+            </span>
+          </div>
+        </div>
+
         <div class="modal-body mx-5 mx-xl-5 my-7">
           <iframe
             ref="fileManagerIframe"
@@ -46,7 +58,7 @@ export default {
     const onMessage = (event) => {
       // Handle messages received from the iframe
       if (event.data.sender === "responsivefilemanager") {
-        console.log(event);
+        console.log("event: ", event);
         if (event.data.field_id) {
           var fileUrl = event.data.url;
 
@@ -55,7 +67,9 @@ export default {
 
           // Close modal or perform other actions
           // ...
-          hideModal(fileManagerModalRef.value);
+          // hideModal(fileManagerModalRef.value);
+          // ctx.emit("isShown", false);
+          ctx.emit("handle-save", sessionStorage.setItem("formStep", "1"));
         }
       }
     };

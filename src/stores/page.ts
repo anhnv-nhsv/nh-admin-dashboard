@@ -40,6 +40,10 @@ export const usePageStore = defineStore("page-score", () => {
     return ApiService.post("/pages/delete-page", id);
   }
 
+  function changeStatus(val) {
+    return ApiService.post("/pages/publish-page", val);
+  }
+
   return {
     allPagesResp,
     errors,
@@ -47,5 +51,6 @@ export const usePageStore = defineStore("page-score", () => {
     deletePage,
     createPage,
     editPage,
+    changeStatus,
   };
 });
