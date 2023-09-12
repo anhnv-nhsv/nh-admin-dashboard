@@ -2,7 +2,7 @@
   <div
     class="modal fade"
     id="kt_page_modal"
-    ref="newsModalRef"
+    ref="pageModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
@@ -250,7 +250,6 @@ export default defineComponent({
   components: { NhEditor, NhForm, FileManagerModal },
   setup: function (props, ctx) {
     const store = usePageStore();
-    const formStep = ref(sessionStorage.getItem("formStep") || "1");
     const detailData = ref(props.rowDetail);
     const getAllRes = ref(props.abc);
     const publish = ref();
@@ -266,7 +265,7 @@ export default defineComponent({
     const idSelect = ref();
     const formSize = ref("default");
     const ruleFormRef = ref<FormInstance>();
-    const newsModalRef = ref<null | HTMLElement>(null);
+    const pageModalRef = ref<null | HTMLElement>(null);
     const rules = reactive({
       name: [
         {
@@ -337,6 +336,7 @@ export default defineComponent({
     });
 
     function buildHierarchy(arr) {
+      console.log("arr: ", arr);
       const hierarchy = {};
       // Create a map of id to item and initialize children
       for (const item of arr) {
@@ -357,6 +357,9 @@ export default defineComponent({
           tree.push(item);
         }
       }
+
+      console.log("tree: ", tree);
+
       return tree;
     }
 
@@ -432,7 +435,7 @@ export default defineComponent({
             parent_id: idSelect.value,
             slug: resSlug(formData.url),
             publish: formData.publish === false ? 0 : 1,
-            image: urlIma.value,
+            image: urlIma.value || "",
           });
           if (result.data.success === true) {
             Swal.fire({
@@ -452,7 +455,7 @@ export default defineComponent({
             });
           }
           ctx.emit("submitSearch");
-          hideModal(newsModalRef.value);
+          hideModal(pageModalRef.value);
         } else {
           console.log("error submit!", fields);
         }
@@ -473,7 +476,7 @@ export default defineComponent({
             publish: formData.publish === false ? 0 : 1,
             id: idRow.value,
             slug: resSlug(formData.url),
-            image: urlIma.value,
+            image: urlIma.value || "",
           });
           if (result.data.success === true) {
             Swal.fire({
@@ -493,7 +496,7 @@ export default defineComponent({
             });
           }
           ctx.emit("submitSearch");
-          hideModal(newsModalRef.value);
+          hideModal(pageModalRef.value);
         } else {
           console.log("error submit!", fields);
         }
@@ -508,6 +511,9 @@ export default defineComponent({
     const handleChangeCategory = (value) => {
       const temp = JSON.parse(JSON.stringify(value));
       const a = temp[temp.length - 1];
+      console.log("temp: ", temp);
+      console.log("value: ", value);
+
       idSelect.value = a.toString();
     };
 
@@ -562,14 +568,10 @@ export default defineComponent({
       urlIma.value = val;
     };
 
-    const handleSave = () => {
-      formStep.value = "2";
-      sessionStorage.setItem("formStep", "2");
-    };
+    const handleSave = () => {};
 
     return {
       cascaderConfig,
-      formStep,
       handleSave,
       pageForm,
       Delete,
@@ -585,7 +587,7 @@ export default defineComponent({
       rules,
       formSize,
       ruleFormRef,
-      newsModalRef,
+      pageModalRef,
       handleChangeCategory,
       handleAdd,
       generateSlug,
