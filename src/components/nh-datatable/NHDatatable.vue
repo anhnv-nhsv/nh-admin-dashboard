@@ -2,8 +2,9 @@
   <div class="dataTables_wrapper dt-bootstrap4 no-footer">
     <div class="table-responsive">
       <el-table
-        class="customerTable el-table--border"
+        class="nhTable nhTable-draggable el-table--border"
         ref="customerScoreTableRef"
+        row-key="id"
         :data="getItems"
         :header-cell-style="
           themeMode === 'light'
@@ -109,9 +110,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watch, toRaw } from "vue";
+import { computed, defineComponent, ref, watch, toRaw, onMounted } from "vue";
 import { useThemeStore } from "@/stores/theme";
 import { ThemeModeComponent } from "@/assets/ts/layout";
+import Sortable from "sortablejs";
 
 export default defineComponent({
   name: "nh-datatable",
@@ -132,6 +134,7 @@ export default defineComponent({
     },
     loading: { type: Boolean, required: false, default: false },
     showOverflowTooltip: { type: Boolean, required: false, default: false },
+    draggable: { type: Boolean, required: false, default: false },
     userRole: { type: String, required: false, default: "none" },
   },
   components: {},
@@ -192,6 +195,57 @@ export default defineComponent({
       ctx.emit("single-select", val);
     };
 
+    const initSortable = (className, draggable) => {
+      const table = document.querySelector(
+        "." + className + " .el-table__body-wrapper tbody"
+      );
+      let dragTable = Sortable.create(table, {
+        animation: 250,
+        disabled: !draggable,
+        handle: ".draggable",
+        filter: ".disabled",
+        dragClass: "dragClass",
+        //设置拖拽停靠样式类名
+        ghostClass: "ghostClass",
+        //设置选中样式类名
+        chosenClass: "chosenClass",
+        forceFallback: true,
+        onChoose: (e) => {
+          e.target.classList.add("grabbing");
+        },
+        onUnchoose: (e) => {
+          e.target.classList.remove("grabbing");
+        },
+        onMove: (e) => {
+          e.target.classList.add("grabbing");
+        },
+        // 开始拖动事件
+        onStart: (e) => {
+          console.log("Start drag");
+          e.target.classList.add("grabbing");
+        },
+        // 结束拖动事件
+        onEnd: async ({ newIndex, oldIndex }) => {
+          console.log(
+            "Drag:",
+            `Index before: ${oldIndex}---Index after: ${newIndex}`
+          );
+          const currRow = getItems.value.splice(oldIndex, 1)[0];
+          getItems.value.splice(newIndex, 0, currRow);
+          ctx.emit("on-drag-end", {
+            newTableData: JSON.parse(JSON.stringify(getItems.value)),
+          });
+          console.log("End drag", getItems.value);
+        },
+      });
+
+      console.log("dragTable", dragTable);
+    };
+
+    onMounted(() => {
+      initSortable("nhTable-draggable", props.draggable);
+    });
+
     return {
       paginationObj,
       getItems,
@@ -212,7 +266,7 @@ export default defineComponent({
 <style scoped lang="scss">
 //@import "~element-plus/theme-chalk/el-table.css";
 
-.customerTable {
+.nhTable {
   clear: both;
   margin-top: 6px !important;
   margin-bottom: 6px !important;
@@ -244,6 +298,39 @@ export default defineComponent({
 
 :deep(.el-scrollbar__bar.is-vertical) {
   width: 8px;
+}
+
+:deep(.draggable) {
+  cursor: move; /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+:deep(.grabbing *) {
+  cursor: grabbing !important;
+}
+
+:deep(.dragClass) {
+  background-image: linear-gradient(
+    rgba($color: #41c21a, $alpha: 0.5),
+    rgba(255, 0, 0, 0)
+  );
+}
+
+:deep(.ghostClass) {
+  background-image: linear-gradient(
+    rgba($color: #6cacf5, $alpha: 0.5),
+    rgba(255, 0, 0, 0)
+  );
+}
+
+:deep(.chosenClass:hover > td) {
+  //background-image: linear-gradient(
+  //  rgba($color: #f56c6c, $alpha: 0.5),
+  //  rgba(255, 0, 0, 0)
+  //);
+  background-color: rgba($color: #f56c6c, $alpha: 0.5) !important;
 }
 
 /*Scroll bar nav*/

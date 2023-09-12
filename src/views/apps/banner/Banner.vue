@@ -1,142 +1,78 @@
 <template>
   <div class="card">
     <div class="card-header border-0 pt-6">
-      <div class="flex-column">
-        <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
-          <div
-            class="col-md-6 d-flex align-items-center position-relative my-1"
-          >
-            <el-input
-              autofocus
-              v-model="formSearchData.name"
-              size="large"
-              placeholder="Press enter to search"
-              clearable
-              :prefix-icon="Search"
-              @submit.prevent="submitSearch"
-            />
-          </div>
-          <div
-            class="col-md-3 d-flex align-items-center position-relative my-1"
-          >
-            <el-select
-              placeholder="Status"
-              size="large"
-              v-model="formSearchData.publish"
-            >
-              <el-option label="All" />
-              <el-option label="Enable" value="1" />
-              <el-option label="Disable" value="0" />
-            </el-select>
-          </div>
-          <div
-            class="col-md-3 d-flex align-items-center position-relative my-1"
-          >
-            <button
-              :data-kt-indicator="false ? 'on' : null"
-              type="submit"
-              class="btn btn-primary"
-            >
-              <span v-if="true" class="indicator-label">Search</span>
-              <span v-if="false" class="indicator-progress"
-                >Please wait...
-                <span
-                  class="spinner-border spinner-border-sm align-middle ms-2"
-                ></span
-              ></span>
-            </button>
-          </div>
-        </form>
-      </div>
+      <div class="flex-column"></div>
       <div class="card-toolbar">
-        <div
-          v-if="selectedIds === 0"
-          class="d-flex justify-content-end"
-          data-kt-customer-table-toolbar="base"
+        <button
+          v-if="isRearrange"
+          type="button"
+          class="btn btn-success me-3"
+          @click="updateBannerOrderId"
         >
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#kt_banner_category_modal"
-            @click="addCategory"
-          >
-            <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Page
-          </button>
-        </div>
-        <div
-          v-else
-          class="d-flex justify-content-end align-items-center"
-          data-kt-customer-table-toolbar="selected"
+          <KTIcon
+            icon-name="arrows-circle"
+            icon-type="solid"
+            icon-class="fs-2"
+          />
+          Rearrange
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#kt_banner_category_modal"
+          @click="addBanner"
         >
-          <div class="w-auto me-5">
-            <button
-              type="button"
-              class="btn btn-success"
-              @click="handleChangeStatus()"
-            >
-              Change status
-            </button>
-          </div>
-          <div class="w-auto">
-            <button
-              type="button"
-              class="btn btn-danger"
-              @click="deleteCategory()"
-            >
-              Delete {{ selectedIds }} selected
-            </button>
-          </div>
-        </div>
-        <div
-          class="d-flex justify-content-end align-items-center d-none"
-          data-kt-customer-table-toolbar="selected"
-        >
-          <div class="fw-bold me-5">
-            <span
-              class="me-2"
-              data-kt-customer-table-select="selected_count"
-            ></span
-            >Selected
-          </div>
-          <button
-            type="button"
-            class="btn btn-danger"
-            data-kt-customer-table-select="delete_selected"
-          >
-            Delete Selected
-          </button>
-        </div>
+          <KTIcon icon-name="plus" icon-class="fs-2" />
+          Add banner
+        </button>
       </div>
     </div>
     <div class="card-body pt-0">
       <NHDatatable
         :table-header="tableHeader"
-        :table-data="contactArray"
-        :pagination="pagination"
-        :enable-items-per-page-dropdown="true"
-        :user-role="userRole"
+        :table-data="bannerList"
         :loading="loading"
         :show-overflow-tooltip="true"
-        @change-page="changePage"
-        @change-page-size="changePageSize"
-        @single-select="handleSingleSelection"
-        @multiple-select="handleMultipleSelection"
+        draggable
+        @on-drag-end="handleDragEnd"
       >
         <template v-slot:indexColumn>
           <el-table-column
             header-align="center"
+            class-name="text-center draggable"
+            width="55"
+            label="#"
+          >
+            <template #default>
+              <KTIcon
+                icon-name="abstract-14"
+                icon-type="solid"
+                icon-class="fs-4 me-1"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column
+            header-align="center"
             class-name="text-center"
-            type="selection"
+            label="STT"
+            type="index"
             width="55"
           />
         </template>
-        <template v-slot:uriPage="{ row }">
-          <img :src="row.uriPage" :alt="row.namePost" class="table-img" />
+        <template v-slot:image="{ row }">
+          <img :src="row.image" :alt="row.image" class="table-img" />
         </template>
-        <template v-slot:url="{ row }">
-          <a :href="row.url" target="_blank">{{ row.url }}</a>
+        <template v-slot:link="{ row }">
+          <a :href="row.link" target="_blank">{{ row.link }}</a>
+        </template>
+        <template v-slot:publish="{ row }">
+          <span v-if="row.publish === 1">
+            <i class="bi bi-check-circle-fill text-success"></i>
+          </span>
+          <span v-if="row.publish !== 1">
+            <i class="bi bi-x-circle-fill text-danger"></i>
+          </span>
         </template>
         <template v-slot:actionColumn>
           <el-table-column
@@ -150,14 +86,14 @@
                 type="default"
                 data-bs-toggle="modal"
                 data-bs-target="#kt_banner_category_modal"
-                @click.prevent="editCategory(scope.row)"
+                @click.prevent="editBanner(scope.row)"
               >
                 Edit
               </el-button>
               <el-button
                 size="small"
                 type="danger"
-                @click.prevent="deleteCategory(scope.row)"
+                @click.prevent="deleteBanner(scope.row)"
               >
                 Delete
               </el-button>
@@ -167,21 +103,16 @@
       </NHDatatable>
     </div>
   </div>
-  <BannerManagementModal :action="newsAction" />
+  <BannerManagementModal :action="bannerAction" />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
-import { useReqStatistic } from "@/stores/req-statistic";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
-import { contactArray, options, selectTask } from "./mock/index";
 import BannerManagementModal from "@/components/modals/forms/BannerManagementModal.vue";
-
-const value = ref("");
-const visible = ref(false);
-let userRole = ref("all");
-let syncPayload = ref<any[]>([]);
+import { useBanner } from "@/stores/banner";
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 export default defineComponent({
   name: "banner-management",
@@ -190,98 +121,173 @@ export default defineComponent({
     NHDatatable,
   },
   setup() {
-    const formSearchData = ref({
-      name: "",
-      publish: "",
-    });
-    const data = ref({
-      publish: "",
-    });
+    const store = useBanner();
     const tableHeader = ref([
       {
         label: "Tên",
-        prop: "namePost",
+        prop: "name",
         visible: true,
       },
       {
         label: "Hình ảnh",
-        prop: "uriPage",
+        prop: "image",
         visible: true,
       },
       {
         label: "URL",
-        prop: "url",
+        prop: "link",
         visible: true,
       },
       {
         label: "Trạng thái",
         width: 140,
-        prop: "",
+        prop: "publish",
         visible: true,
       },
     ]);
-    let selectedIds = ref(0);
     const loading = ref<boolean>(false);
-    let dataRequestStatistics = ref();
-    let newsAction = ref("");
-    let pagination = ref();
+    const isRearrange = ref<boolean>(false);
+    let bannerAction = ref("");
+    const bannerList = ref([]);
+    const newTableData = ref<any>([]);
 
     const handleApplyStatus = () => {};
     const handleChangeStatus = () => {};
 
-    function submitSearch() {}
-    const handleSingleSelection = (val) => {
-      selectedIds.value += 1;
+    const getAllBanner = async (pageNo?: number, pageSize = 1000) => {
+      loading.value = true;
+      await store.getBannerList({
+        params: {
+          pageNo: pageNo,
+          pageSize: pageSize,
+        },
+      });
+      const response = JSON.parse(JSON.stringify(store.bannerList));
+      bannerList.value = response.data;
+      loading.value = false;
     };
 
-    const handleMultipleSelection = (val) => {
-      selectedIds.value = val.length;
+    onBeforeMount(() => {
+      getAllBanner(1);
+    });
+
+    const addBanner = () => {
+      bannerAction.value = "add";
+      console.log("add banner");
     };
 
-    const addCategory = () => {
-      newsAction.value = "add";
-      console.log("add category");
+    const editBanner = (val?: object | undefined) => {
+      bannerAction.value = "edit";
+      console.log("edit banner: ", val);
     };
 
-    const editCategory = (val?: object | undefined) => {
-      newsAction.value = "edit";
-      console.log("edit category: ", val);
+    const deleteBanner = (val) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        customClass: {
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-secondary",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await store.deleteBanner({ id: val.id });
+          if (response.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Success!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            await getAllBanner(1);
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: response.data.mess,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        }
+      });
     };
 
-    const deleteCategory = (val?: object | undefined) => {};
+    const handleDragEnd = (data) => {
+      // if (JSON.parse(JSON.stringify(bannerList.value)) == data.newTableData) {
+      //   isRearrange.value = false;
+      // } else {
+      //   isRearrange.value = true;
+      // }
+      isRearrange.value = true;
+      for (let i = 0; i < data.newTableData.length; i++) {
+        data.newTableData[i].orderId = i + 1;
+      }
+      newTableData.value = data.newTableData;
+    };
 
-    function changePage(page) {}
-
-    const changePageSize = (pageSize) => {};
+    const updateBannerOrderId = async () => {
+      Swal.fire({
+        title: "Are you sure?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Confirm",
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-secondary",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const payload = newTableData.value.map((e) => {
+            return {
+              id: e.id,
+              orderId: e.orderId,
+            };
+          });
+          const params = new URLSearchParams();
+          params.append("data", JSON.stringify(payload));
+          const response = await store.updateBannerOrderId(params);
+          if (response.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Success!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+            await getAllBanner(1);
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: response.data.mess,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+        }
+      });
+    };
 
     return {
-      dataRequestStatistics,
-      data,
-      userRole,
-      visible,
-      selectedIds,
-      options,
+      bannerList,
       tableHeader,
-      pagination,
       loading,
-      formSearchData,
-      selectTask,
-      syncPayload,
-      newsAction,
-      value,
+      bannerAction,
+      isRearrange,
       Search,
-      contactArray,
       BannerManagementModal,
-      addCategory,
+      addBanner,
       handleChangeStatus,
-      deleteCategory,
-      editCategory,
+      deleteBanner,
+      editBanner,
       handleApplyStatus,
-      handleSingleSelection,
-      handleMultipleSelection,
-      changePage,
-      changePageSize,
-      submitSearch,
+      handleDragEnd,
+      updateBannerOrderId,
     };
   },
 });
@@ -295,6 +301,7 @@ export default defineComponent({
 .del-btn {
   padding: 14px 15px;
 }
+
 .table-img {
   width: 100%;
   border-radius: 8px;
@@ -305,6 +312,7 @@ export default defineComponent({
 .card-title {
   width: 100%;
 }
+
 .my-header {
   display: flex;
   flex-direction: row;
@@ -322,10 +330,12 @@ export default defineComponent({
 .dialog-footer button:first-child {
   margin-right: 0;
 }
+
 .btn-add {
   position: relative;
   left: 24px;
 }
+
 .wrapper-header {
   flex-flow: row;
 }
