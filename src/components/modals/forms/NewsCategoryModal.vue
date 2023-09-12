@@ -6,18 +6,13 @@
     tabindex="-1"
     aria-hidden="true"
   >
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-800px">
-      <!--begin::Modal content-->
+    <div
+      class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-1000px"
+    >
       <div class="modal-content">
-        <!--begin::Modal header-->
         <div class="modal-header">
-          <!--begin::Modal title-->
           <h2 class="fw-bolder" v-if="action === 'add'">Add News Category</h2>
           <h2 class="fw-bolder" v-else>Edit News Category</h2>
-          <!--end::Modal title-->
-
-          <!--begin::Close-->
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -27,16 +22,19 @@
               <inline-svg src="media/icons/duotune/arrows/arr061.svg" />
             </span>
           </div>
-          <!--end::Close-->
         </div>
-        <!--end::Modal header-->
-
-        <!--begin::Modal body-->
-        <div class="modal-body scroll-y mx-5 mx-xl-5 my-7">
-          <!--begin::Form-->
+        <div class="modal-body mx-5 mx-xl-5 my-7">
           <NhForm seoable>
             <template v-slot:customForm>
-              <el-form :model="newsForm" label-width="160px">
+              <el-form
+                ref="ruleFormRef"
+                :model="pageForm"
+                label-width="160px"
+                class="demo-ruleForm"
+                status-icon
+                :size="formSize"
+                :rules="rules"
+              >
                 <el-form-item>
                   <ul
                     class="nav nav-tabs nav-line-tabs nav-line-tabs-2x mb-5 fs-6"
@@ -73,46 +71,38 @@
                     id="nh_tab_pane_1"
                     role="tabpanel"
                   >
-                    <el-form-item label="Tên chuyên mục">
+                    <el-form-item label="Tiêu đề" prop="name">
                       <el-input
-                        v-model="newsForm.titleVn"
+                        v-model="pageForm.name"
                         placeholder="Tiếng Việt"
                         clearable
-                        @input="generateSlug(newsForm.titleVn)"
+                        @input="generateSlug(pageForm.name)"
                       />
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
-                    <el-form-item label="Tên chuyên mục">
+                    <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="newsForm.titleEn"
+                        v-model="pageForm.name_english"
                         placeholder="Tiếng Anh"
                         clearable
                       />
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
-                    <el-form-item label="Tên chuyên mục">
+                    <el-form-item label="Tiêu đề">
                       <el-input
-                        v-model="newsForm.titleKr"
+                        v-model="pageForm.name_korea"
                         placeholder="Tiếng Hàn"
                         clearable
                       />
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="URL">
-                  <el-input
-                    v-model="newsForm.url"
-                    placeholder="URL"
-                    clearable
-                    disabled
-                  />
-                </el-form-item>
-                <el-form-item label="Chọn chuyên mục cha">
+                <el-form-item label="Chuyên mục cha" prop="parentCategory">
                   <el-cascader
-                    v-model="newsForm.parentCategory"
-                    :options="categories"
+                    v-model="pageForm.parentCategory"
+                    :options="parents"
                     :props="cascaderConfig"
                     clearable
                     filterable
@@ -120,21 +110,22 @@
                     @change="handleChangeCategory"
                   />
                 </el-form-item>
-                <el-form-item>
-                  <el-checkbox
-                    v-model="newsForm.isPublish"
-                    label="Publish"
-                    size="large"
+                <el-form-item label="URL">
+                  <el-input
+                    v-model="pageForm.url"
+                    placeholder="URL"
+                    clearable
+                    disabled
                   />
+                </el-form-item>
+                <el-form-item label="Publish">
+                  <el-switch v-model="pageForm.publish" />
                 </el-form-item>
               </el-form>
             </template>
           </NhForm>
-          <!--end::Form-->
         </div>
-        <!--end::Modal body-->
         <div class="modal-footer">
-          <!--begin::Button-->
           <button
             type="reset"
             id="kt_modal_test_editor_cancel"
@@ -143,12 +134,14 @@
           >
             Discard
           </button>
-          <!--end::Button-->
-
-          <!--begin::Button-->
-          <button class="btn btn-lg btn-primary" type="submit">
+          <button
+            class="btn btn-lg btn-primary"
+            type="submit"
+            v-if="action === 'add'"
+            @click="handleAdd(ruleFormRef)"
+          >
             <span v-if="true" class="indicator-label">
-              Submit
+              Add
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -160,312 +153,271 @@
               ></span>
             </span>
           </button>
-          <!--end::Button-->
+          <button
+            class="btn btn-lg btn-primary"
+            type="submit"
+            v-if="action === 'edit'"
+            @click="handleEdit(ruleFormRef)"
+          >
+            <span v-if="true" class="indicator-label">
+              Edit
+              <span class="svg-icon svg-icon-3 ms-2 me-0">
+                <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
+              </span>
+            </span>
+            <span v-if="false" class="indicator-progress">
+              Please wait...
+              <span
+                class="spinner-border spinner-border-sm align-middle ms-2"
+              ></span>
+            </span>
+          </button>
         </div>
       </div>
-      <!--end::Modal content-->
     </div>
-    <!--end::Modal dialog-->
   </div>
+  <FileManagerModal @file-selected="getFileUrl" @handle-save="handleSave" />
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
+import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
+import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
+import type {
+  FormInstance,
+  UploadFile,
+  UploadInstance,
+  UploadRawFile,
+  UploadUserFile,
+} from "element-plus";
+import NhEditor from "@/components/editor/NHEditor.vue";
+import { useNewsStore } from "@/stores/news-category";
+import Swal from "sweetalert2/dist/sweetalert2.js";
+import { hideModal } from "@/core/helpers/dom";
 
 export default defineComponent({
-  name: "news-category-modal",
+  name: "page-category-modal",
   props: {
     action: { type: String, default: () => "add", required: false },
+    rowDetail: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {};
+      },
+    },
+    abc: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {};
+      },
+    },
+    submitSearch: {
+      type: Function,
+    },
   },
-  components: { NhForm },
-  setup() {
-    const categories = [
-      {
-        value: "guide",
-        label: "Guide",
-        children: [
-          {
-            value: "disciplines",
-            label: "Disciplines",
-            children: [
-              {
-                value: "consistency",
-                label: "Consistency",
-              },
-              {
-                value: "feedback",
-                label: "Feedback",
-              },
-              {
-                value: "efficiency",
-                label: "Efficiency",
-              },
-              {
-                value: "controllability",
-                label: "Controllability",
-              },
-            ],
-          },
-          {
-            value: "navigation",
-            label: "Navigation",
-            children: [
-              {
-                value: "side nav",
-                label: "Side Navigation",
-              },
-              {
-                value: "top nav",
-                label: "Top Navigation",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: "component",
-        label: "Component",
-        children: [
-          {
-            value: "basic",
-            label: "Basic",
-            children: [
-              {
-                value: "layout",
-                label: "Layout",
-              },
-              {
-                value: "color",
-                label: "Color",
-              },
-              {
-                value: "typography",
-                label: "Typography",
-              },
-              {
-                value: "icon",
-                label: "Icon",
-              },
-              {
-                value: "button",
-                label: "Button",
-              },
-            ],
-          },
-          {
-            value: "form",
-            label: "Form",
-            children: [
-              {
-                value: "radio",
-                label: "Radio",
-              },
-              {
-                value: "checkbox",
-                label: "Checkbox",
-              },
-              {
-                value: "input",
-                label: "Input",
-              },
-              {
-                value: "input-number",
-                label: "InputNumber",
-              },
-              {
-                value: "select",
-                label: "Select",
-              },
-              {
-                value: "cascader",
-                label: "Cascader",
-              },
-              {
-                value: "switch",
-                label: "Switch",
-              },
-              {
-                value: "slider",
-                label: "Slider",
-              },
-              {
-                value: "time-picker",
-                label: "TimePicker",
-              },
-              {
-                value: "date-picker",
-                label: "DatePicker",
-              },
-              {
-                value: "datetime-picker",
-                label: "DateTimePicker",
-              },
-              {
-                value: "upload",
-                label: "Upload",
-              },
-              {
-                value: "rate",
-                label: "Rate",
-              },
-              {
-                value: "form",
-                label: "Form",
-              },
-            ],
-          },
-          {
-            value: "data",
-            label: "Data",
-            children: [
-              {
-                value: "table",
-                label: "Table",
-              },
-              {
-                value: "tag",
-                label: "Tag",
-              },
-              {
-                value: "progress",
-                label: "Progress",
-              },
-              {
-                value: "tree",
-                label: "Tree",
-              },
-              {
-                value: "pagination",
-                label: "Pagination",
-              },
-              {
-                value: "badge",
-                label: "Badge",
-              },
-            ],
-          },
-          {
-            value: "notice",
-            label: "Notice",
-            children: [
-              {
-                value: "alert",
-                label: "Alert",
-              },
-              {
-                value: "loading",
-                label: "Loading",
-              },
-              {
-                value: "message",
-                label: "Message",
-              },
-              {
-                value: "message-box",
-                label: "MessageBox",
-              },
-              {
-                value: "notification",
-                label: "Notification",
-              },
-            ],
-          },
-          {
-            value: "navigation",
-            label: "Navigation",
-            children: [
-              {
-                value: "menu",
-                label: "Menu",
-              },
-              {
-                value: "tabs",
-                label: "Tabs",
-              },
-              {
-                value: "breadcrumb",
-                label: "Breadcrumb",
-              },
-              {
-                value: "dropdown",
-                label: "Dropdown",
-              },
-              {
-                value: "steps",
-                label: "Steps",
-              },
-            ],
-          },
-          {
-            value: "others",
-            label: "Others",
-            children: [
-              {
-                value: "dialog",
-                label: "Dialog",
-              },
-              {
-                value: "tooltip",
-                label: "Tooltip",
-              },
-              {
-                value: "popover",
-                label: "Popover",
-              },
-              {
-                value: "card",
-                label: "Card",
-              },
-              {
-                value: "carousel",
-                label: "Carousel",
-              },
-              {
-                value: "collapse",
-                label: "Collapse",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        value: "resource",
-        label: "Resource",
-        children: [
-          {
-            value: "axure",
-            label: "Axure Components",
-          },
-          {
-            value: "sketch",
-            label: "Sketch Templates",
-          },
-          {
-            value: "docs",
-            label: "Design Documentation",
-          },
-        ],
-      },
-    ];
-    const cascaderConfig = {
-      expandTrigger: "hover" as const,
-    };
-    const newsForm = reactive({
-      titleVn: "",
-      titleEn: "",
-      titleKr: "",
-      url: "/chuyen-muc-tin/.html",
-      parentCategory: "",
-      isPublish: false,
+  components: { NhForm, FileManagerModal },
+  setup: function (props, ctx) {
+    const store = useNewsStore();
+    const detailData = ref(props.rowDetail);
+    const getAllRes = ref(props.abc);
+    const publish = ref();
+    const status = ref();
+    const typePost = ref();
+    const categoryId = ref();
+    const parentId = ref();
+    const idRow = ref();
+    const urlIma = ref();
+    const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
+    const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
+    const parents = ref();
+    const idSelect = ref();
+    const formSize = ref("default");
+    const ruleFormRef = ref<FormInstance>();
+    const newsCategoryModalRef = ref<null | HTMLElement>(null);
+    const rules = reactive({
+      name: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "blur",
+        },
+      ],
+      parentCategory: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
     });
 
+    let pageForm = ref({
+      name: "",
+      name_english: "",
+      name_korea: "",
+      slug: "",
+      featuredImgUrl: "",
+      url: "/chuyen-muc-tin/.html",
+      parentCategory: "",
+      publish: false,
+    });
+
+    function buildHierarchy(arr) {
+      const hierarchy: any = [];
+      // Create a map of id to item and initialize children
+      for (const item of arr) {
+        item.value = item.name;
+        item.label = item.name;
+        hierarchy.push(item);
+      }
+
+      console.log("hierarchy: ", hierarchy);
+
+      return hierarchy;
+    }
+
+    watch(
+      () => props.rowDetail,
+      (newVal) => {
+        if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
+          rowValue.value = newVal;
+          pageForm.value.name = rowValue.value.name;
+          pageForm.value.name_english = rowValue.value.name_english;
+          pageForm.value.name_korea = rowValue.value.name_korea;
+          pageForm.value.slug = rowValue.value.slug;
+          pageForm.value.url = toSlug(rowValue.value.name);
+          pageForm.value.parentCategory = rowValue.value.parentCategory;
+          pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
+          publish.value = rowValue.value.publish;
+          status.value = rowValue.value.status;
+          typePost.value = rowValue.value.type_post;
+          categoryId.value = rowValue.value.category_id;
+          parentId.value = rowValue.value.parent_id;
+          idRow.value = rowValue.value.id;
+        } else {
+          pageForm.value = {
+            name: "",
+            name_english: "",
+            name_korea: "",
+            slug: "",
+            featuredImgUrl: "",
+            url: "/chuyen-muc-tin/.html",
+            parentCategory: "",
+            publish: false,
+          };
+        }
+      }
+    );
+
+    watch(
+      () => props.abc,
+      (newVal) => {
+        parents.value = buildHierarchy(newVal.data);
+      }
+    );
+
+    const cascaderConfig = {
+      expandTrigger: "hover" as const,
+      checkStrictly: true,
+      value: "id",
+    };
+
+    const handleAdd = async (formEl: FormInstance | undefined) => {
+      if (!formEl) return;
+      await formEl.validate(async (valid, fields) => {
+        if (valid) {
+          const formData = JSON.parse(JSON.stringify(pageForm.value));
+          const result = await store.createNewsCategory({
+            ...formData,
+            status: "",
+            type_post: "page",
+            category_id: 10,
+            parent_id: idSelect.value,
+            slug: resSlug(formData.url),
+            publish: formData.publish === false ? 0 : 1,
+          });
+          if (result.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Tạo thành công!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: result.data.mess,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+          ctx.emit("submitSearch");
+          hideModal(newsCategoryModalRef.value);
+        } else {
+          console.log("error submit!", fields);
+        }
+      });
+    };
+
+    const handleEdit = async (formEl: FormInstance | undefined) => {
+      if (!formEl) return;
+      await formEl.validate(async (valid, fields) => {
+        if (valid) {
+          const formData = JSON.parse(JSON.stringify(pageForm.value));
+          const result = await store.editNewsCategory({
+            ...formData,
+            status: status.value,
+            type_post: typePost.value,
+            category_id: categoryId.value,
+            parent_id: idSelect.value,
+            publish: formData.publish === false ? 0 : 1,
+            id: idRow.value,
+            slug: resSlug(formData.url),
+          });
+          if (result.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Cập nhật thành công!",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: result.data.mess,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          }
+          ctx.emit("submitSearch");
+          hideModal(newsCategoryModalRef.value);
+        } else {
+          console.log("error submit!", fields);
+        }
+      });
+    };
+
+    const dialogImageUrl = ref("");
+    const dialogVisible = ref(false);
+    const uploadRef = ref<UploadInstance>();
+    const fileList = ref<any>([]);
+
     const handleChangeCategory = (value) => {
-      console.log(value);
+      const temp = JSON.parse(JSON.stringify(value));
+      const a = temp[temp.length - 1];
+
+      idSelect.value = a.toString();
     };
 
     const generateSlug = (title) => {
-      newsForm.url = "/chuyen-muc-tin/" + toSlug(title) + ".html";
+      pageForm.value.url = "/chuyen-muc-tin/" + toSlug(title) + ".html";
     };
 
     const toSlug = (str) => {
@@ -496,12 +448,51 @@ export default defineComponent({
       return str;
     };
 
+    const resSlug = (val) => {
+      let a = 16;
+      let b = val.length - 5;
+
+      if (a < b) {
+        return val.substring(a, b);
+      }
+    };
+
+    const handleRemove = (file: any) => {
+      uploadRef.value?.handleRemove(file);
+      fileList.value = [];
+    };
+
+    const getFileUrl = (val) => {
+      console.log("val: ", val);
+      urlIma.value = val;
+    };
+
+    const handleSave = () => {};
+
     return {
-      categories,
       cascaderConfig,
-      newsForm,
+      handleSave,
+      pageForm,
+      Delete,
+      Plus,
+      ZoomIn,
+      dialogImageUrl,
+      parents,
+      dialogVisible,
+      uploadRef,
+      fileList,
+      rowValue,
+      qwe,
+      rules,
+      formSize,
+      ruleFormRef,
+      newsCategoryModalRef,
       handleChangeCategory,
+      handleAdd,
       generateSlug,
+      handleRemove,
+      handleEdit,
+      getFileUrl,
     };
   },
 });
@@ -510,5 +501,15 @@ export default defineComponent({
 <style scoped lang="scss">
 .tab-content {
   width: 100%;
+}
+.avatar-uploader .avatar {
+  width: 100%;
+  //height: 178px;
+  display: block;
+}
+.hide-upload {
+  :deep(div.el-upload.el-upload--picture-card) {
+    display: none !important;
+  }
 }
 </style>
