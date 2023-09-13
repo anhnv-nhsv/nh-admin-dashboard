@@ -221,25 +221,17 @@ export default defineComponent({
         },
         // 开始拖动事件
         onStart: (e) => {
-          console.log("Start drag");
           e.target.classList.add("grabbing");
         },
         // 结束拖动事件
         onEnd: async ({ newIndex, oldIndex }) => {
-          console.log(
-            "Drag:",
-            `Index before: ${oldIndex}---Index after: ${newIndex}`
-          );
           const currRow = getItems.value.splice(oldIndex, 1)[0];
           getItems.value.splice(newIndex, 0, currRow);
           ctx.emit("on-drag-end", {
             newTableData: JSON.parse(JSON.stringify(getItems.value)),
           });
-          console.log("End drag", getItems.value);
         },
       });
-
-      console.log("dragTable", dragTable);
     };
 
     onMounted(() => {
