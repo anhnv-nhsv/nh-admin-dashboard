@@ -103,7 +103,7 @@
       </NHDatatable>
     </div>
   </div>
-  <BannerManagementModal :action="bannerAction" />
+  <BannerManagementModal :action="bannerAction" :data="bannerFormData" @on-close="handleCloseModal" />
 </template>
 
 <script lang="ts">
@@ -147,7 +147,8 @@ export default defineComponent({
     ]);
     const loading = ref<boolean>(false);
     const isRearrange = ref<boolean>(false);
-    let bannerAction = ref("");
+    const bannerAction = ref("");
+    const bannerFormData = ref({});
     const bannerList = ref([]);
     const newTableData = ref<any>([]);
 
@@ -173,12 +174,26 @@ export default defineComponent({
 
     const addBanner = () => {
       bannerAction.value = "add";
-      console.log("add banner");
+      bannerFormData.value = {
+        name: "",
+        attachUrl: "",
+        imageUrl: "",
+        content: "",
+        isPublish: false,
+      };
     };
 
     const editBanner = (val?: object | undefined) => {
       bannerAction.value = "edit";
-      console.log("edit banner: ", val);
+      const row = JSON.parse(JSON.stringify(val));
+      bannerFormData.value = {
+        id: row.id,
+        name: row.name,
+        attachUrl: row.link,
+        imageUrl: row.image,
+        content: row.content,
+        isPublish: row.publish,
+      };
     };
 
     const deleteBanner = (val) => {
@@ -274,12 +289,17 @@ export default defineComponent({
       });
     };
 
+    const handleCloseModal = () => {
+      getAllBanner(1);
+    };
+
     return {
       bannerList,
       tableHeader,
       loading,
       bannerAction,
       isRearrange,
+      bannerFormData,
       Search,
       BannerManagementModal,
       addBanner,
@@ -289,6 +309,7 @@ export default defineComponent({
       handleApplyStatus,
       handleDragEnd,
       updateBannerOrderId,
+      handleCloseModal,
     };
   },
 });
