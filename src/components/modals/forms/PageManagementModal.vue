@@ -213,13 +213,7 @@ import { defineComponent, reactive, ref, watch } from "vue";
 import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
-import type {
-  FormInstance,
-  UploadFile,
-  UploadInstance,
-  UploadRawFile,
-  UploadUserFile,
-} from "element-plus";
+import type { FormInstance, UploadInstance } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import { usePageStore } from "@/stores/page";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -263,6 +257,10 @@ export default defineComponent({
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
     const idSelect = ref();
+    const dialogImageUrl = ref("");
+    const dialogVisible = ref(false);
+    const uploadRef = ref<UploadInstance>();
+    const fileList = ref<any>([]);
     const formSize = ref("default");
     const ruleFormRef = ref<FormInstance>();
     const pageModalRef = ref<null | HTMLElement>(null);
@@ -331,12 +329,11 @@ export default defineComponent({
       image_korea: "",
       featuredImgUrl: "",
       url: "/page/.html",
-      parentCategory: "",
+      parentCategory: [],
       publish: false,
     });
 
     function buildHierarchy(arr) {
-      console.log("arr: ", arr);
       const hierarchy = {};
       // Create a map of id to item and initialize children
       for (const item of arr) {
@@ -358,8 +355,6 @@ export default defineComponent({
         }
       }
 
-      console.log("tree: ", tree);
-
       return tree;
     }
 
@@ -380,7 +375,6 @@ export default defineComponent({
           pageForm.value.image_korea = rowValue.value.image_korea;
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
           pageForm.value.url = toSlug(rowValue.value.name);
-          pageForm.value.parentCategory = rowValue.value.parentCategory;
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
           publish.value = rowValue.value.publish;
           status.value = rowValue.value.status;
@@ -388,6 +382,18 @@ export default defineComponent({
           categoryId.value = rowValue.value.category_id;
           parentId.value = rowValue.value.parent_id;
           idRow.value = rowValue.value.id;
+          const test = JSON.parse(JSON.stringify(rowValue.value.allPages));
+          parents.value = buildHierarchy(test.data);
+          pageForm.value.parentCategory = parents.value;
+          for (let i = 0; i < parents.value.length; i++) {
+            const resultCatId: any = searchTree(
+              rowValue.value.id,
+              parents.value[i]
+            );
+            if (resultCatId !== undefined) {
+              pageForm.value.parentCategory = resultCatId;
+            }
+          }
         } else {
           pageForm.value = {
             name: "",
@@ -402,19 +408,25 @@ export default defineComponent({
             image_korea: "",
             featuredImgUrl: "",
             url: "/page/.html",
-            parentCategory: "",
+            parentCategory: [],
             publish: false,
           };
         }
       }
     );
 
-    watch(
-      () => props.abc,
-      (newVal) => {
-        parents.value = buildHierarchy(newVal.data);
+    const searchTree = (nodeId, parent) => {
+      const stack = [[parent, []]];
+      while (stack.length) {
+        const [node, path]: any = stack.pop();
+        if (node.id === nodeId) {
+          return [node.parent_id, node.id];
+        }
+        if (node.children) {
+          stack.push(...node.children.map((node, i) => [node, [...path, i]]));
+        }
       }
-    );
+    };
 
     const cascaderConfig = {
       expandTrigger: "hover" as const,
@@ -503,15 +515,9 @@ export default defineComponent({
       });
     };
 
-    const dialogImageUrl = ref("");
-    const dialogVisible = ref(false);
-    const uploadRef = ref<UploadInstance>();
-    const fileList = ref<any>([]);
-
     const handleChangeCategory = (value) => {
       const temp = JSON.parse(JSON.stringify(value));
       const a = temp[temp.length - 1];
-      console.log("temp: ", temp);
       console.log("value: ", value);
 
       idSelect.value = a.toString();

@@ -179,7 +179,6 @@
     :action="pageAction"
     :rowDetail="rowDetail"
     @submitSearch="submitSearch"
-    :abc="abc"
   />
 </template>
 
@@ -310,13 +309,11 @@ export default defineComponent({
       const requestPageResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
-
-      abc.value = requestPageResponse;
+      rowDetail.value.allPages = requestPageResponse;
     };
 
     const editCategory = async (val?: object | undefined) => {
       pageAction.value = "edit";
-      rowDetail.value = JSON.parse(JSON.stringify(val));
       await store.getAllPages({
         params: {
           name: "",
@@ -328,8 +325,8 @@ export default defineComponent({
       const requestPageResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
-
-      abc.value = requestPageResponse;
+      rowDetail.value = JSON.parse(JSON.stringify(val));
+      rowDetail.value.allPages = requestPageResponse;
     };
 
     const deleteCategory = async (val?: any) => {
