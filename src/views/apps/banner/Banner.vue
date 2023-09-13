@@ -259,6 +259,7 @@ export default defineComponent({
               showConfirmButton: false,
               timer: 1500,
             });
+            isRearrange.value = false;
             await getAllBanner(1);
           } else {
             Swal.fire({
