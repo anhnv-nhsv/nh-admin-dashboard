@@ -143,16 +143,13 @@
                 >
                   Edit
                 </el-button>
-                <el-popconfirm
-                  title="Are you sure to delete this?"
-                  icon-color="#626AEF"
-                  hide-after="10"
-                  @confirm="deleteCategory(scope.row)"
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click.prevent="deleteCategory(scope.row)"
                 >
-                  <template #reference>
-                    <el-button size="small" type="danger">Delete</el-button>
-                  </template>
-                </el-popconfirm>
+                  Delete
+                </el-button>
                 <el-button
                   size="small"
                   type="default"
@@ -329,26 +326,40 @@ export default defineComponent({
       rowDetail.value.allPages = requestPageResponse;
     };
 
-    const deleteCategory = async (val?: any) => {
-      const oke = await store.deletePage({ id: val.id });
-      if (oke.data.success === true) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Success!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        submitSearch();
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: oke.data.mess,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
+    const deleteCategory = (val?: any) => {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        customClass: {
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-secondary",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await store.deletePage({ id: val.id });
+          if (response.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Success!",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            submitSearch();
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: response.data.mess,
+              showConfirmButton: false,
+              timer: 1000,
+            });
+          }
+        }
+      });
     };
 
     const deleteMutiRow = async () => {
@@ -358,27 +369,39 @@ export default defineComponent({
         arr.push(item.id);
       }
 
-      const oke = await store.deletePage({
-        id: arr,
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        customClass: {
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-secondary",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await store.deletePage({ id: arr });
+          if (response.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Success!",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            submitSearch();
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: response.data.mess,
+              showConfirmButton: false,
+              timer: 1000,
+            });
+          }
+        }
       });
-      if (oke.data.success === true) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Success!",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        submitSearch();
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: oke.data.mess,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
     };
 
     const handleChangeStatus = async (val?: any) => {

@@ -135,16 +135,19 @@
                     @change="handleChangeCategory"
                   />
                 </el-form-item>
-                <el-form-item label="Hình ảnh">
-                  <el-button
-                    size="small"
-                    type="default"
-                    data-bs-toggle="modal"
-                    data-bs-target="#kt_file_manager_modal"
-                    @click="handleSave"
+                <el-form-item label="Hình ảnh" prop="imageUrl">
+                  <el-input
+                    v-model="pageForm.image"
+                    placeholder="Hình ảnh"
+                    clearable
+                    disabled
                   >
-                    image
-                  </el-button>
+                    <template #prepend>
+                      <el-button type="primary" @click.prevent="chooseImage"
+                        >Choose file
+                      </el-button>
+                    </template>
+                  </el-input>
                 </el-form-item>
                 <el-form-item label="Thời gian đăng bài" prop="time_post">
                   <div class="demo-datetime-picker" style="width: 100%">
@@ -236,6 +239,7 @@ import type { FormInstance, UploadInstance } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import { useNewsListStore } from "@/stores/news-list";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import qs from "qs";
 import { hideModal } from "@/core/helpers/dom";
 
 export default defineComponent({
@@ -448,17 +452,19 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const result = await store.createNewsList({
-            ...formData,
-            status: formData.status === 2 ? "Noi_bat" : "",
-            type_post: "page",
-            category_id: 10,
-            parent_id: idSelect.value,
-            slug: resSlug(formData.url),
-            publish: formData.publish === false ? 0 : 1,
-            time_post: formData.time_post,
-            image: urlIma.value || "",
-          });
+          const result = await store.createNewsList(
+            qs.stringify({
+              ...formData,
+              status: formData.status === 2 ? "Noi_bat" : "",
+              type_post: "page",
+              category_id: 10,
+              parent_id: idSelect.value,
+              slug: resSlug(formData.url),
+              publish: formData.publish === false ? 0 : 1,
+              time_post: formData.time_post,
+              image: formData.image || "",
+            })
+          );
           if (result.data.success === true) {
             Swal.fire({
               position: "center",
@@ -489,18 +495,20 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const result = await store.editNewsList({
-            ...formData,
-            status: formData.status === 2 ? "Noi_bat" : "",
-            type_post: typePost.value,
-            category_id: categoryId.value,
-            parent_id: idSelect.value,
-            publish: formData.publish === false ? 0 : 1,
-            id: idRow.value,
-            slug: resSlug(formData.url),
-            time_post: formatDate(formData.time_post),
-            image: urlIma.value || "",
-          });
+          const result = await store.editNewsList(
+            qs.stringify({
+              ...formData,
+              status: formData.status === 2 ? "Noi_bat" : "",
+              type_post: typePost.value,
+              category_id: categoryId.value,
+              parent_id: idSelect.value,
+              publish: formData.publish === false ? 0 : 1,
+              id: idRow.value,
+              slug: resSlug(formData.url),
+              time_post: formatDate(formData.time_post),
+              image: formData.image || "",
+            })
+          );
           if (result.data.success === true) {
             Swal.fire({
               position: "center",
@@ -591,6 +599,37 @@ export default defineComponent({
       urlIma.value = val;
     };
 
+    const chooseImage = () => {
+      window.addEventListener("message", handleMessage);
+      Swal.fire({
+        width: "80%",
+        heightAuto: false,
+        html: `<iframe
+                    ref="fileManagerIframe"
+                    class="rounded h-600px w-100"
+                    src="http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1"
+                    :allowfullscreen="true"
+               ></iframe>`,
+        closeButtonAriaLabel: "Close file manager",
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+          htmlContainer: "rfm-height-100",
+        },
+      });
+    };
+
+    const handleMessage = (event) => {
+      if (event.data.sender === "responsivefilemanager") {
+        if (event.data.field_id) {
+          pageForm.value.image = event.data.url;
+          Swal.close();
+          // Delete handler of the message from ResponsiveFilemanager
+          window.removeEventListener("message", handleMessage);
+        }
+      }
+    };
+
     const handleSave = () => {};
 
     const formatDate = (val) => {
@@ -609,6 +648,7 @@ export default defineComponent({
     return {
       cascaderConfig,
       handleSave,
+      chooseImage,
       pageForm,
       Delete,
       Plus,
