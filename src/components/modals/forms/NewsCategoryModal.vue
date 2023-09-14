@@ -103,6 +103,7 @@
                   <el-cascader
                     v-model="pageForm.parentCategory"
                     :options="parents"
+                    :teleported="false"
                     :props="cascaderConfig"
                     clearable
                     filterable
@@ -261,7 +262,7 @@ export default defineComponent({
       slug: "",
       featuredImgUrl: "",
       url: "/chuyen-muc-tin/.html",
-      parentCategory: "",
+      parentCategory: [] as any,
       publish: false,
     });
 
@@ -289,7 +290,7 @@ export default defineComponent({
           pageForm.value.name_korea = rowValue.value.name_korea;
           pageForm.value.slug = rowValue.value.slug;
           pageForm.value.url = toSlug(rowValue.value.name);
-          pageForm.value.parentCategory = rowValue.value.parentCategory;
+          pageForm.value.parentCategory = [rowValue.value.id];
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
           publish.value = rowValue.value.publish;
           status.value = rowValue.value.status;
@@ -305,7 +306,7 @@ export default defineComponent({
             slug: "",
             featuredImgUrl: "",
             url: "/chuyen-muc-tin/.html",
-            parentCategory: "",
+            parentCategory: [],
             publish: false,
           };
         }

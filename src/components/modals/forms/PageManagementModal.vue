@@ -120,6 +120,7 @@
                 <el-form-item label="Bài viết cha" prop="parentCategory">
                   <el-cascader
                     v-model="pageForm.parentCategory"
+                    :teleported="false"
                     :options="parents"
                     :props="cascaderConfig"
                     clearable
@@ -257,6 +258,7 @@ export default defineComponent({
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
     const idSelect = ref();
+    const firstID = ref();
     const dialogImageUrl = ref("");
     const dialogVisible = ref(false);
     const uploadRef = ref<UploadInstance>();
@@ -361,7 +363,7 @@ export default defineComponent({
     watch(
       () => props.rowDetail,
       (newVal) => {
-        if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
+        if (Object.keys(newVal).length > 1 && newVal.constructor === Object) {
           rowValue.value = newVal;
           pageForm.value.name = rowValue.value.name;
           pageForm.value.name_english = rowValue.value.name_english;
@@ -380,21 +382,31 @@ export default defineComponent({
           status.value = rowValue.value.status;
           typePost.value = rowValue.value.type_post;
           categoryId.value = rowValue.value.category_id;
-          parentId.value = rowValue.value.parent_id;
           idRow.value = rowValue.value.id;
           const test = JSON.parse(JSON.stringify(rowValue.value.allPages));
           parents.value = buildHierarchy(test.data);
           pageForm.value.parentCategory = parents.value;
           for (let i = 0; i < parents.value.length; i++) {
             const resultCatId: any = searchTree(
-              rowValue.value.id,
-              parents.value[i]
+              parents.value[i],
+              rowValue.value.id
             );
-            if (resultCatId !== undefined) {
+
+            console.log("row", rowValue.value.id);
+            parentId.value = rowValue.value.id.toString();
+            console.log("pa", parents.value[i]);
+            console.log("resultCatId: ", resultCatId);
+
+            if (resultCatId !== null) {
               pageForm.value.parentCategory = resultCatId;
+              const result = resultCatId[resultCatId.length - 1];
+              console.log("result: ", result);
+              firstID.value = result;
             }
           }
-        } else {
+        } else if (Object.keys(newVal).length === 1) {
+          parents.value = buildHierarchy(newVal.allPages.data);
+
           pageForm.value = {
             name: "",
             name_english: "",
@@ -408,25 +420,32 @@ export default defineComponent({
             image_korea: "",
             featuredImgUrl: "",
             url: "/page/.html",
-            parentCategory: [],
+            parentCategory: parents.value,
             publish: false,
           };
         }
       }
     );
 
-    const searchTree = (nodeId, parent) => {
-      const stack = [[parent, []]];
-      while (stack.length) {
-        const [node, path]: any = stack.pop();
-        if (node.id === nodeId) {
-          return [node.parent_id, node.id];
-        }
-        if (node.children) {
-          stack.push(...node.children.map((node, i) => [node, [...path, i]]));
+    function searchTree(tree, targetId, currentPath: any = []) {
+      if (tree.id === targetId) {
+        return [...currentPath, tree.id];
+      }
+
+      if (tree.children && tree.children.length > 0) {
+        for (const child of tree.children) {
+          const childPath = searchTree(child, targetId, [
+            ...currentPath,
+            tree.id,
+          ]);
+          if (childPath) {
+            return childPath;
+          }
         }
       }
-    };
+
+      return null;
+    }
 
     const cascaderConfig = {
       expandTrigger: "hover" as const,
@@ -483,8 +502,8 @@ export default defineComponent({
             ...formData,
             status: status.value,
             type_post: typePost.value,
-            category_id: categoryId.value,
-            parent_id: idSelect.value,
+            category_id: 10,
+            parent_id: idSelect.value || parentId.value,
             publish: formData.publish === false ? 0 : 1,
             id: idRow.value,
             slug: resSlug(formData.url),
@@ -519,6 +538,7 @@ export default defineComponent({
       const temp = JSON.parse(JSON.stringify(value));
       const a = temp[temp.length - 1];
       console.log("value: ", value);
+      console.log("a: ", a);
 
       idSelect.value = a.toString();
     };
@@ -556,11 +576,20 @@ export default defineComponent({
     };
 
     const resSlug = (val) => {
-      let a = 6;
-      let b = val.length - 5;
+      const pageMatch = val.match(/\/page\/([^/]+)\.html/);
 
-      if (a < b) {
-        return val.substring(a, b);
+      if (pageMatch) {
+        // If "/page" is found in the val
+        return pageMatch[1];
+      } else {
+        // If "/page" is not found, check if it ends with ".html"
+        const htmlMatch = val.match(/([^/]+)\.html$/);
+        if (htmlMatch) {
+          return htmlMatch[1];
+        } else {
+          // If neither "/page" nor ".html" is found, return the original val
+          return val;
+        }
       }
     };
 

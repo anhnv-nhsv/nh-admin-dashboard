@@ -297,7 +297,6 @@ export default defineComponent({
 
     const addCategory = async () => {
       pageAction.value = "add";
-      rowDetail.value = {};
       await store.getAllPages({
         params: {
           name: "",
@@ -309,6 +308,7 @@ export default defineComponent({
       const requestPageResponse = JSON.parse(
         JSON.stringify(store.allPagesResp)
       );
+      rowDetail.value = { allPages: { requestPageResponse } };
       rowDetail.value.allPages = requestPageResponse;
     };
 

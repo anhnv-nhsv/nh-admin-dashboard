@@ -164,9 +164,11 @@
             </template>
           </el-table-column>
         </template>
-        <!-- <template v-slot:category_name>
-          <div v-for="item of nameCate" :key="item.id">{{ item.name }}</div>
-        </template> -->
+        <template v-slot:category_name="{ row }">
+          <div>
+            {{ nameCate?.find((item) => item.id === row.category_id)?.name }}
+          </div>
+        </template>
         <template v-slot:time_post="{ row }">
           <div v-if="row.time_post">
             {{ formatDate(row.time_post) }}
