@@ -380,7 +380,7 @@ export default defineComponent({
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
-          pageForm.value.url = toSlug(rowValue.value.name);
+          pageForm.value.url = "/page/" + toSlug(rowValue.value.name) + ".html";
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
           publish.value = rowValue.value.publish;
           status.value = rowValue.value.status;
@@ -467,7 +467,7 @@ export default defineComponent({
               ...formData,
               status: "",
               type_post: "page",
-              category_id: 10,
+              category_id: categoryId.value || 10,
               parent_id: idSelect.value,
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
@@ -509,7 +509,7 @@ export default defineComponent({
               ...formData,
               status: status.value,
               type_post: typePost.value,
-              category_id: 10,
+              category_id: categoryId.value || 10,
               parent_id: idSelect.value || parentId.value,
               publish: formData.publish === false ? 0 : 1,
               id: idRow.value,

@@ -399,7 +399,8 @@ export default defineComponent({
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
-          pageForm.value.url = toSlug(rowValue.value.name);
+          pageForm.value.url =
+            "/tin-tuc/" + toSlug(rowValue.value.name) + ".html";
           idRow.value = rowValue.value.id;
           pageForm.value.parentCategory = [rowValue.value.category_id];
           pageForm.value.time_post = rowValue.value.time_post;
@@ -457,7 +458,7 @@ export default defineComponent({
               ...formData,
               status: formData.status === 2 ? "Noi_bat" : "",
               type_post: "page",
-              category_id: 10,
+              category_id: idSelect.value,
               parent_id: idSelect.value,
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
@@ -500,8 +501,8 @@ export default defineComponent({
               ...formData,
               status: formData.status === 2 ? "Noi_bat" : "",
               type_post: typePost.value,
-              category_id: categoryId.value,
-              parent_id: idSelect.value,
+              category_id: idSelect.value || categoryId.value,
+              parent_id: idSelect.value || parentId.value,
               publish: formData.publish === false ? 0 : 1,
               id: idRow.value,
               slug: resSlug(formData.url),
@@ -581,11 +582,17 @@ export default defineComponent({
     };
 
     const resSlug = (val) => {
-      let a = 9;
-      let b = val.length - 5;
+      const newsMatch = val.match(/\/tin-tuc\/([^/]+)\.html/);
 
-      if (a < b) {
-        return val.substring(a, b);
+      if (newsMatch) {
+        return newsMatch[1];
+      } else {
+        const htmlMatch = val.match(/([^/]+)\.html$/);
+        if (htmlMatch) {
+          return htmlMatch[1];
+        } else {
+          return val;
+        }
       }
     };
 
