@@ -99,17 +99,6 @@
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="Chuyên mục cha" prop="parentCategory">
-                  <el-cascader
-                    v-model="pageForm.parentCategory"
-                    :options="parents"
-                    :props="cascaderConfig"
-                    clearable
-                    filterable
-                    style="width: 100%"
-                    @change="handleChangeCategory"
-                  />
-                </el-form-item>
                 <el-form-item label="URL">
                   <el-input
                     v-model="pageForm.url"
@@ -259,9 +248,8 @@ export default defineComponent({
       name_english: "",
       name_korea: "",
       slug: "",
-      featuredImgUrl: "",
       url: "/chuyen-muc-tin/.html",
-      parentCategory: "",
+      parentCategory: [] as any,
       publish: false,
     });
 
@@ -288,8 +276,9 @@ export default defineComponent({
           pageForm.value.name_english = rowValue.value.name_english;
           pageForm.value.name_korea = rowValue.value.name_korea;
           pageForm.value.slug = rowValue.value.slug;
-          pageForm.value.url = toSlug(rowValue.value.name);
-          pageForm.value.parentCategory = rowValue.value.parentCategory;
+          pageForm.value.url =
+            "/chuyen-muc-tin/" + toSlug(rowValue.value.name) + ".html";
+          pageForm.value.parentCategory = [rowValue.value.id];
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
           publish.value = rowValue.value.publish;
           status.value = rowValue.value.status;
@@ -303,9 +292,8 @@ export default defineComponent({
             name_english: "",
             name_korea: "",
             slug: "",
-            featuredImgUrl: "",
             url: "/chuyen-muc-tin/.html",
-            parentCategory: "",
+            parentCategory: [],
             publish: false,
           };
         }
@@ -449,11 +437,17 @@ export default defineComponent({
     };
 
     const resSlug = (val) => {
-      let a = 16;
-      let b = val.length - 5;
+      const newsMatch = val.match(/\/chuyen-muc-tin\/([^/]+)\.html/);
 
-      if (a < b) {
-        return val.substring(a, b);
+      if (newsMatch) {
+        return newsMatch[1];
+      } else {
+        const htmlMatch = val.match(/([^/]+)\.html$/);
+        if (htmlMatch) {
+          return htmlMatch[1];
+        } else {
+          return val;
+        }
       }
     };
 

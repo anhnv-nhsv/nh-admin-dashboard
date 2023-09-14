@@ -117,10 +117,17 @@
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="Bài viết cha" prop="parentCategory">
+                <el-form-item label="Tin nổi bật?">
+                  <el-radio-group v-model="pageForm.status">
+                    <el-radio :label="1">Không</el-radio>
+                    <el-radio :label="2">Có</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="Chuyên mục tin" prop="parentCategory">
                   <el-cascader
                     v-model="pageForm.parentCategory"
                     :options="parents"
+                    :teleported="false"
                     :props="cascaderConfig"
                     clearable
                     filterable
@@ -129,16 +136,31 @@
                     @change="handleChangeCategory"
                   />
                 </el-form-item>
-                <el-form-item label="Hình ảnh">
-                  <el-button
-                    size="small"
-                    type="default"
-                    data-bs-toggle="modal"
-                    data-bs-target="#kt_file_manager_modal"
-                    @click="handleSave"
+                <el-form-item label="Hình ảnh" prop="imageUrl">
+                  <el-input
+                    v-model="pageForm.image"
+                    placeholder="Hình ảnh"
+                    clearable
+                    disabled
                   >
-                    image
-                  </el-button>
+                    <template #prepend>
+                      <el-button type="primary" @click.prevent="chooseImage"
+                        >Choose file
+                      </el-button>
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="Thời gian đăng bài" prop="time_post">
+                  <div class="demo-datetime-picker" style="width: 100%">
+                    <div class="block">
+                      <el-date-picker
+                        v-model="pageForm.time_post"
+                        type="datetime"
+                        :editable="false"
+                        placeholder="Select date and time"
+                      />
+                    </div>
+                  </div>
                 </el-form-item>
                 <el-form-item label="URL">
                   <el-input
@@ -218,6 +240,7 @@ import type { FormInstance, UploadInstance } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import { useNewsListStore } from "@/stores/news-list";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import qs from "qs";
 import { hideModal } from "@/core/helpers/dom";
 
 export default defineComponent({
@@ -252,6 +275,7 @@ export default defineComponent({
   components: { NhEditor, NhForm, FileManagerModal },
   setup: function (props, ctx) {
     const store = useNewsListStore();
+    const value1 = ref("");
     const detailData = ref(props.rowDetail);
     const getAllRes = ref(props.abc);
     const publish = ref();
@@ -304,6 +328,13 @@ export default defineComponent({
           trigger: "change",
         },
       ],
+      time_post: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
       content_english: [
         {
           required: true,
@@ -333,8 +364,10 @@ export default defineComponent({
       image_korea: "",
       featuredImgUrl: "",
       url: "/tin-tuc/.html",
-      parentCategory: "",
-      publish: false,
+      parentCategory: [] as any,
+      time_post: "",
+      status: 2,
+      publish: true,
     });
 
     function buildHierarchy(arr) {
@@ -367,15 +400,19 @@ export default defineComponent({
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
-          pageForm.value.url = toSlug(rowValue.value.name);
-          pageForm.value.parentCategory = rowValue.value.parentCategory;
+          pageForm.value.url =
+            "/tin-tuc/" + toSlug(rowValue.value.name) + ".html";
+          idRow.value = rowValue.value.id;
+          pageForm.value.parentCategory = [rowValue.value.category_id];
+          pageForm.value.time_post = rowValue.value.time_post;
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
+          pageForm.value.status = rowValue.value.status === "Noi_bat" ? 2 : 1;
+          status.value = rowValue.value.status;
           publish.value = rowValue.value.publish;
           status.value = rowValue.value.status;
           typePost.value = rowValue.value.type_post;
           categoryId.value = rowValue.value.category_id;
           parentId.value = rowValue.value.parent_id;
-          idRow.value = rowValue.value.id;
         } else {
           pageForm.value = {
             name: "",
@@ -390,8 +427,10 @@ export default defineComponent({
             image_korea: "",
             featuredImgUrl: "",
             url: "/tin-tuc/.html",
-            parentCategory: "",
-            publish: false,
+            parentCategory: [],
+            time_post: "",
+            status: 2,
+            publish: true,
           };
         }
       }
@@ -414,16 +453,19 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const result = await store.createNewsList({
-            ...formData,
-            status: "",
-            type_post: "page",
-            category_id: 10,
-            parent_id: idSelect.value,
-            slug: resSlug(formData.url),
-            publish: formData.publish === false ? 0 : 1,
-            image: urlIma.value || "",
-          });
+          const result = await store.createNewsList(
+            qs.stringify({
+              ...formData,
+              status: formData.status === 2 ? "Noi_bat" : "",
+              type_post: "page",
+              category_id: idSelect.value,
+              parent_id: idSelect.value,
+              slug: resSlug(formData.url),
+              publish: formData.publish === false ? 0 : 1,
+              time_post: formData.time_post,
+              image: formData.image || "",
+            })
+          );
           if (result.data.success === true) {
             Swal.fire({
               position: "center",
@@ -454,17 +496,20 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const result = await store.editNewsList({
-            ...formData,
-            status: status.value,
-            type_post: typePost.value,
-            category_id: categoryId.value,
-            parent_id: idSelect.value,
-            publish: formData.publish === false ? 0 : 1,
-            id: idRow.value,
-            slug: resSlug(formData.url),
-            image: urlIma.value || "",
-          });
+          const result = await store.editNewsList(
+            qs.stringify({
+              ...formData,
+              status: formData.status === 2 ? "Noi_bat" : "",
+              type_post: typePost.value,
+              category_id: idSelect.value || categoryId.value,
+              parent_id: idSelect.value || parentId.value,
+              publish: formData.publish === false ? 0 : 1,
+              id: idRow.value,
+              slug: resSlug(formData.url),
+              time_post: formatDate(formData.time_post),
+              image: formData.image || "",
+            })
+          );
           if (result.data.success === true) {
             Swal.fire({
               position: "center",
@@ -537,11 +582,17 @@ export default defineComponent({
     };
 
     const resSlug = (val) => {
-      let a = 9;
-      let b = val.length - 5;
+      const newsMatch = val.match(/\/tin-tuc\/([^/]+)\.html/);
 
-      if (a < b) {
-        return val.substring(a, b);
+      if (newsMatch) {
+        return newsMatch[1];
+      } else {
+        const htmlMatch = val.match(/([^/]+)\.html$/);
+        if (htmlMatch) {
+          return htmlMatch[1];
+        } else {
+          return val;
+        }
       }
     };
 
@@ -555,11 +606,56 @@ export default defineComponent({
       urlIma.value = val;
     };
 
+    const chooseImage = () => {
+      window.addEventListener("message", handleMessage);
+      Swal.fire({
+        width: "80%",
+        heightAuto: false,
+        html: `<iframe
+                    ref="fileManagerIframe"
+                    class="rounded h-600px w-100"
+                    src="http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1"
+                    :allowfullscreen="true"
+               ></iframe>`,
+        closeButtonAriaLabel: "Close file manager",
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+          htmlContainer: "rfm-height-100",
+        },
+      });
+    };
+
+    const handleMessage = (event) => {
+      if (event.data.sender === "responsivefilemanager") {
+        if (event.data.field_id) {
+          pageForm.value.image = event.data.url;
+          Swal.close();
+          // Delete handler of the message from ResponsiveFilemanager
+          window.removeEventListener("message", handleMessage);
+        }
+      }
+    };
+
     const handleSave = () => {};
+
+    const formatDate = (val) => {
+      if (val) {
+        const dateObject = new Date(val);
+        const year = dateObject.getFullYear();
+        const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Adding 1 to month because months are zero-indexed
+        const day = dateObject.getDate().toString().padStart(2, "0");
+
+        return year + "-" + month + "-" + day;
+      } else {
+        return "-";
+      }
+    };
 
     return {
       cascaderConfig,
       handleSave,
+      chooseImage,
       pageForm,
       Delete,
       Plus,
@@ -567,6 +663,7 @@ export default defineComponent({
       dialogImageUrl,
       parents,
       dialogVisible,
+      value1,
       uploadRef,
       fileList,
       rowValue,
