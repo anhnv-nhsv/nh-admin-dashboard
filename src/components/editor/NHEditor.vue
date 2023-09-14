@@ -81,9 +81,6 @@ export default defineComponent({
         },
         file_picker_types: "file image media",
         file_picker_callback: (callback, value, meta) => {
-          window.open(
-            "http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1"
-          );
           let width = window.innerWidth - 30;
           let height = window.innerHeight - 60;
           if (width > 1800) width = 1800;
@@ -92,23 +89,22 @@ export default defineComponent({
             const width_reduce = (width - 20) % 138;
             width = width - width_reduce + 10;
           }
-
           getTinymce().activeEditor.windowManager.openUrl({
             title: "Responsive Filemanager",
             url: "http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
             width: width,
             height: height,
           });
-
           window.addEventListener(
             "message",
             function receiveMessage(event) {
               window.removeEventListener("message", receiveMessage, false);
               if (event.data.sender === "responsivefilemanager") {
                 callback(event.data.url);
+                console.log(getTinymce().activeEditor);
               }
             },
-            false
+            true
           );
         },
       },
