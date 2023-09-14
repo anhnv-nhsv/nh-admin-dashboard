@@ -31,7 +31,7 @@ export const useNewsListStore = defineStore("news-list-score", () => {
   }
 
   function editNewsList(val) {
-    return ApiService.post("/news/update-posts", val);
+    return ApiService.post("/news/update-new", val);
   }
 
   function deleteNewsList(id) {
@@ -39,7 +39,7 @@ export const useNewsListStore = defineStore("news-list-score", () => {
   }
 
   function changeStatus(val) {
-    return ApiService.post("/pages/publish-page", val);
+    return ApiService.post("/news/publish-page", val);
   }
 
   return {

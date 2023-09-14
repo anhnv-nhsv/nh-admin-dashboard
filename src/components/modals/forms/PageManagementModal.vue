@@ -120,6 +120,7 @@
                 <el-form-item label="Bài viết cha" prop="parentCategory">
                   <el-cascader
                     v-model="pageForm.parentCategory"
+                    :teleported="false"
                     :options="parents"
                     :props="cascaderConfig"
                     clearable
@@ -128,16 +129,19 @@
                     @change="handleChangeCategory"
                   />
                 </el-form-item>
-                <el-form-item label="Hình ảnh">
-                  <el-button
-                    size="small"
-                    type="default"
-                    data-bs-toggle="modal"
-                    data-bs-target="#kt_file_manager_modal"
-                    @click="handleSave"
+                <el-form-item label="Hình ảnh" prop="imageUrl">
+                  <el-input
+                    v-model="pageForm.image"
+                    placeholder="Hình ảnh"
+                    clearable
+                    disabled
                   >
-                    image
-                  </el-button>
+                    <template #prepend>
+                      <el-button type="primary" @click.prevent="chooseImage"
+                        >Choose file
+                      </el-button>
+                    </template>
+                  </el-input>
                 </el-form-item>
                 <el-form-item label="URL">
                   <el-input
@@ -213,16 +217,11 @@ import { defineComponent, reactive, ref, watch } from "vue";
 import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
-import type {
-  FormInstance,
-  UploadFile,
-  UploadInstance,
-  UploadRawFile,
-  UploadUserFile,
-} from "element-plus";
+import type { FormInstance, UploadInstance } from "element-plus";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import { usePageStore } from "@/stores/page";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import qs from "qs";
 import { hideModal } from "@/core/helpers/dom";
 
 export default defineComponent({
@@ -263,6 +262,11 @@ export default defineComponent({
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
     const idSelect = ref();
+    const firstID = ref();
+    const dialogImageUrl = ref("");
+    const dialogVisible = ref(false);
+    const uploadRef = ref<UploadInstance>();
+    const fileList = ref<any>([]);
     const formSize = ref("default");
     const ruleFormRef = ref<FormInstance>();
     const pageModalRef = ref<null | HTMLElement>(null);
@@ -331,12 +335,11 @@ export default defineComponent({
       image_korea: "",
       featuredImgUrl: "",
       url: "/page/.html",
-      parentCategory: "",
+      parentCategory: [],
       publish: false,
     });
 
     function buildHierarchy(arr) {
-      console.log("arr: ", arr);
       const hierarchy = {};
       // Create a map of id to item and initialize children
       for (const item of arr) {
@@ -358,15 +361,13 @@ export default defineComponent({
         }
       }
 
-      console.log("tree: ", tree);
-
       return tree;
     }
 
     watch(
       () => props.rowDetail,
       (newVal) => {
-        if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
+        if (Object.keys(newVal).length > 1 && newVal.constructor === Object) {
           rowValue.value = newVal;
           pageForm.value.name = rowValue.value.name;
           pageForm.value.name_english = rowValue.value.name_english;
@@ -379,16 +380,37 @@ export default defineComponent({
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
-          pageForm.value.url = toSlug(rowValue.value.name);
-          pageForm.value.parentCategory = rowValue.value.parentCategory;
+          pageForm.value.url = "/page/" + toSlug(rowValue.value.name) + ".html";
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
           publish.value = rowValue.value.publish;
           status.value = rowValue.value.status;
           typePost.value = rowValue.value.type_post;
           categoryId.value = rowValue.value.category_id;
-          parentId.value = rowValue.value.parent_id;
           idRow.value = rowValue.value.id;
-        } else {
+          const test = JSON.parse(JSON.stringify(rowValue.value.allPages));
+          parents.value = buildHierarchy(test.data);
+          pageForm.value.parentCategory = parents.value;
+          for (let i = 0; i < parents.value.length; i++) {
+            const resultCatId: any = searchTree(
+              parents.value[i],
+              rowValue.value.id
+            );
+
+            console.log("row", rowValue.value.id);
+            parentId.value = rowValue.value.id.toString();
+            console.log("pa", parents.value[i]);
+            console.log("resultCatId: ", resultCatId);
+
+            if (resultCatId !== null) {
+              pageForm.value.parentCategory = resultCatId;
+              const result = resultCatId[resultCatId.length - 1];
+              console.log("result: ", result);
+              firstID.value = result;
+            }
+          }
+        } else if (Object.keys(newVal).length === 1) {
+          parents.value = buildHierarchy(newVal.allPages.data);
+
           pageForm.value = {
             name: "",
             name_english: "",
@@ -402,19 +424,32 @@ export default defineComponent({
             image_korea: "",
             featuredImgUrl: "",
             url: "/page/.html",
-            parentCategory: "",
+            parentCategory: parents.value,
             publish: false,
           };
         }
       }
     );
 
-    watch(
-      () => props.abc,
-      (newVal) => {
-        parents.value = buildHierarchy(newVal.data);
+    function searchTree(tree, targetId, currentPath: any = []) {
+      if (tree.id === targetId) {
+        return [...currentPath, tree.id];
       }
-    );
+
+      if (tree.children && tree.children.length > 0) {
+        for (const child of tree.children) {
+          const childPath = searchTree(child, targetId, [
+            ...currentPath,
+            tree.id,
+          ]);
+          if (childPath) {
+            return childPath;
+          }
+        }
+      }
+
+      return null;
+    }
 
     const cascaderConfig = {
       expandTrigger: "hover" as const,
@@ -427,16 +462,18 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const result = await store.createPage({
-            ...formData,
-            status: "",
-            type_post: "page",
-            category_id: 10,
-            parent_id: idSelect.value,
-            slug: resSlug(formData.url),
-            publish: formData.publish === false ? 0 : 1,
-            image: urlIma.value || "",
-          });
+          const result = await store.createPage(
+            qs.stringify({
+              ...formData,
+              status: "",
+              type_post: "page",
+              category_id: categoryId.value || 10,
+              parent_id: idSelect.value,
+              slug: resSlug(formData.url),
+              publish: formData.publish === false ? 0 : 1,
+              image: formData.image || "",
+            })
+          );
           if (result.data.success === true) {
             Swal.fire({
               position: "center",
@@ -467,17 +504,19 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const result = await store.editPage({
-            ...formData,
-            status: status.value,
-            type_post: typePost.value,
-            category_id: categoryId.value,
-            parent_id: idSelect.value,
-            publish: formData.publish === false ? 0 : 1,
-            id: idRow.value,
-            slug: resSlug(formData.url),
-            image: urlIma.value || "",
-          });
+          const result = await store.editPage(
+            qs.stringify({
+              ...formData,
+              status: status.value,
+              type_post: typePost.value,
+              category_id: categoryId.value || 10,
+              parent_id: idSelect.value || parentId.value,
+              publish: formData.publish === false ? 0 : 1,
+              id: idRow.value,
+              slug: resSlug(formData.url),
+              image: formData.image || "",
+            })
+          );
           if (result.data.success === true) {
             Swal.fire({
               position: "center",
@@ -503,16 +542,42 @@ export default defineComponent({
       });
     };
 
-    const dialogImageUrl = ref("");
-    const dialogVisible = ref(false);
-    const uploadRef = ref<UploadInstance>();
-    const fileList = ref<any>([]);
+    const chooseImage = () => {
+      window.addEventListener("message", handleMessage);
+      Swal.fire({
+        width: "80%",
+        heightAuto: false,
+        html: `<iframe
+                    ref="fileManagerIframe"
+                    class="rounded h-600px w-100"
+                    src="http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1"
+                    :allowfullscreen="true"
+               ></iframe>`,
+        closeButtonAriaLabel: "Close file manager",
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+          htmlContainer: "rfm-height-100",
+        },
+      });
+    };
+
+    const handleMessage = (event) => {
+      if (event.data.sender === "responsivefilemanager") {
+        if (event.data.field_id) {
+          pageForm.value.image = event.data.url;
+          Swal.close();
+          // Delete handler of the message from ResponsiveFilemanager
+          window.removeEventListener("message", handleMessage);
+        }
+      }
+    };
 
     const handleChangeCategory = (value) => {
       const temp = JSON.parse(JSON.stringify(value));
       const a = temp[temp.length - 1];
-      console.log("temp: ", temp);
       console.log("value: ", value);
+      console.log("a: ", a);
 
       idSelect.value = a.toString();
     };
@@ -550,11 +615,20 @@ export default defineComponent({
     };
 
     const resSlug = (val) => {
-      let a = 6;
-      let b = val.length - 5;
+      const pageMatch = val.match(/\/page\/([^/]+)\.html/);
 
-      if (a < b) {
-        return val.substring(a, b);
+      if (pageMatch) {
+        // If "/page" is found in the val
+        return pageMatch[1];
+      } else {
+        // If "/page" is not found, check if it ends with ".html"
+        const htmlMatch = val.match(/([^/]+)\.html$/);
+        if (htmlMatch) {
+          return htmlMatch[1];
+        } else {
+          // If neither "/page" nor ".html" is found, return the original val
+          return val;
+        }
       }
     };
 
@@ -592,6 +666,7 @@ export default defineComponent({
       handleAdd,
       generateSlug,
       handleRemove,
+      chooseImage,
       handleEdit,
       getFileUrl,
     };
