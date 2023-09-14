@@ -124,6 +124,7 @@
                     :props="cascaderConfig"
                     clearable
                     filterable
+                    :teleported="false"
                     style="width: 100%"
                     @change="handleChangeCategory"
                   />
@@ -399,15 +400,12 @@ export default defineComponent({
     watch(
       () => props.nameCate,
       (newVal) => {
-        console.log("newVal123: ", newVal);
-
         parents.value = buildHierarchy(newVal);
       }
     );
 
     const cascaderConfig = {
       expandTrigger: "hover" as const,
-      checkStrictly: true,
       value: "id",
     };
 
