@@ -20,7 +20,7 @@
           type="button"
           class="btn btn-primary"
           data-bs-toggle="modal"
-          data-bs-target="#kt_banner_category_modal"
+          data-bs-target="#kt_banner_modal"
           @click="addBanner"
         >
           <KTIcon icon-name="plus" icon-class="fs-2" />
@@ -85,7 +85,7 @@
                 size="small"
                 type="default"
                 data-bs-toggle="modal"
-                data-bs-target="#kt_banner_category_modal"
+                data-bs-target="#kt_banner_modal"
                 @click.prevent="editBanner(scope.row)"
               >
                 Edit
@@ -103,7 +103,7 @@
       </NHDatatable>
     </div>
   </div>
-  <BannerManagementModal :action="bannerAction" />
+  <BannerManagementModal :action="bannerAction" :data="bannerFormData" @on-close="handleCloseModal" />
 </template>
 
 <script lang="ts">
@@ -147,7 +147,8 @@ export default defineComponent({
     ]);
     const loading = ref<boolean>(false);
     const isRearrange = ref<boolean>(false);
-    let bannerAction = ref("");
+    const bannerAction = ref("");
+    const bannerFormData = ref({});
     const bannerList = ref([]);
     const newTableData = ref<any>([]);
 
@@ -173,12 +174,26 @@ export default defineComponent({
 
     const addBanner = () => {
       bannerAction.value = "add";
-      console.log("add banner");
+      bannerFormData.value = {
+        name: "",
+        attachUrl: "",
+        imageUrl: "",
+        content: "",
+        isPublish: false,
+      };
     };
 
     const editBanner = (val?: object | undefined) => {
       bannerAction.value = "edit";
-      console.log("edit banner: ", val);
+      const row = JSON.parse(JSON.stringify(val));
+      bannerFormData.value = {
+        id: row.id,
+        name: row.name,
+        attachUrl: row.link,
+        imageUrl: row.image,
+        content: row.content,
+        isPublish: row.publish,
+      };
     };
 
     const deleteBanner = (val) => {
@@ -201,7 +216,7 @@ export default defineComponent({
               icon: "success",
               title: "Success!",
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
             await getAllBanner(1);
           } else {
@@ -210,7 +225,7 @@ export default defineComponent({
               icon: "error",
               title: response.data.mess,
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
           }
         }
@@ -257,8 +272,9 @@ export default defineComponent({
               icon: "success",
               title: "Success!",
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
+            isRearrange.value = false;
             await getAllBanner(1);
           } else {
             Swal.fire({
@@ -266,11 +282,15 @@ export default defineComponent({
               icon: "error",
               title: response.data.mess,
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
           }
         }
       });
+    };
+
+    const handleCloseModal = () => {
+      getAllBanner(1);
     };
 
     return {
@@ -279,6 +299,7 @@ export default defineComponent({
       loading,
       bannerAction,
       isRearrange,
+      bannerFormData,
       Search,
       BannerManagementModal,
       addBanner,
@@ -288,6 +309,7 @@ export default defineComponent({
       handleApplyStatus,
       handleDragEnd,
       updateBannerOrderId,
+      handleCloseModal,
     };
   },
 });

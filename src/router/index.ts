@@ -24,26 +24,6 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Dashboards"],
         },
       },
-      {
-        path: "/apps/customers/customer-score-list",
-        name: "apps-customer-score-list",
-        component: () => import("@/views/apps/customers/CustomerScoreList.vue"),
-        meta: {
-          pageTitle: "Customers Score",
-          breadcrumbs: ["Apps", "Customers Score"],
-        },
-      },
-      {
-        path: "/apps/statistics/request-statistics",
-        name: "apps-request-statistics",
-        component: () =>
-          import("@/views/apps/statistics/RequestStatistics.vue"),
-        meta: {
-          pageTitle: "Request Statistics",
-          breadcrumbs: ["Apps", "Request Statistics"],
-        },
-      },
-
       // PAGE START
       {
         path: "/apps/page-management",
@@ -100,27 +80,19 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Apps", "Banner Management"],
         },
       },
-      {
-        path: "/apps/banner-management/create",
-        name: "create-banner",
-        component: () =>
-          import("@/views/apps/banner/components/CreateBanner.vue"),
-        meta: {
-          pageTitle: "Create Banner",
-          breadcrumbs: ["Apps", "Banner Management", "Create"],
-        },
-      },
-      {
-        path: "/apps/banner-management/:id/edit",
-        name: "editBanner",
-        component: () =>
-          import("@/views/apps/banner/components/EditBanner.vue"),
-        meta: {
-          pageTitle: "Edit Banner",
-          breadcrumbs: ["Apps", "Banner Management", "Edit"],
-        },
-      },
       // BANNER END
+
+      // USER START
+      {
+        path: "/apps/user-management",
+        name: "apps-user-management",
+        component: () => import("@/views/apps/user/UserMgmt.vue"),
+        meta: {
+          pageTitle: "User Management",
+          breadcrumbs: ["Apps", "User Management"],
+        },
+      },
+      // USER END
     ],
   },
   {

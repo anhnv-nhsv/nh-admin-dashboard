@@ -24,30 +24,6 @@ const MainMenuConfig: Array<MenuItem> = [
     route: "/apps",
     pages: [
       {
-        sectionTitle: "customers",
-        route: "/customers",
-        keenthemesIcon: "user",
-        bootstrapIcon: "bi-people",
-        sub: [
-          {
-            heading: "customerScoreListing",
-            route: "/apps/customers/customer-score-list",
-          },
-        ],
-      },
-      {
-        sectionTitle: "statistics",
-        route: "/statistics",
-        keenthemesIcon: "abstract-45",
-        bootstrapIcon: "bi-graph-up",
-        sub: [
-          {
-            heading: "requestStatistics",
-            route: "/apps/statistics/request-statistics",
-          },
-        ],
-      },
-      {
         sectionTitle: "banner",
         route: "/banner-management",
         keenthemesIcon: "abstract-43",
@@ -96,6 +72,18 @@ const MainMenuConfig: Array<MenuItem> = [
           {
             heading: "Contact Management",
             route: "/apps/contact/category",
+          },
+        ],
+      },
+      {
+        sectionTitle: "user",
+        route: "/user-management",
+        keenthemesIcon: "people",
+        bootstrapIcon: "bi-graph-up",
+        sub: [
+          {
+            heading: "userMgmt",
+            route: "/apps/user-management",
           },
         ],
       },

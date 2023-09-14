@@ -72,4 +72,8 @@ export default defineComponent({
 #app {
   display: contents;
 }
+
+.rfm-height-100 {
+  max-height: 100vh !important;
+}
 </style>
