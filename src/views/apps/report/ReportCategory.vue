@@ -9,7 +9,7 @@
             v-model="formSearchData.publish"
             @change="submitSearch"
           >
-            <el-option label="All" />
+            <el-option label="All" value />
             <el-option label="Enable" value="1" />
             <el-option label="Disable" value="0" />
           </el-select>
@@ -25,7 +25,7 @@
             type="button"
             class="btn btn-primary"
             data-bs-toggle="modal"
-            data-bs-target="#kt_news_category_modal"
+            data-bs-target="#kt_report_category_modal"
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
@@ -86,7 +86,8 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            type="selection"
+            label="STT"
+            type="index"
             width="55"
           />
         </template>
@@ -97,7 +98,8 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Operation"
+            label="Thao tác"
+            width="300"
           >
             <template #default="scope">
               <div class="change-status">
@@ -105,7 +107,7 @@
                   size="small"
                   type="default"
                   data-bs-toggle="modal"
-                  data-bs-target="#kt_news_category_modal"
+                  data-bs-target="#kt_report_category_modal"
                   @click.prevent="editCategory(scope.row)"
                 >
                   Edit
@@ -139,21 +141,17 @@
       </NHDatatable>
     </div>
   </div>
-  <NewsCategoryModal
-    :action="newsAction"
-    :rowDetail="rowDetail"
-    @submitSearch="submitSearch"
-    :abc="abc"
-  />
+  <ReportCategoryActionModal :action="reportCateAction" :data="rowDetail" />
 </template>
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
-import { useNewsStore } from "@/stores/news-category";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
-import NewsCategoryModal from "@/components/modals/forms/NewsCategoryModal.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { useReport } from "@/stores/report";
+import qs from "qs";
+import ReportCategoryActionModal from "@/components/modals/forms/ReportCategoryActionModal.vue";
 
 const value = ref("");
 const visible = ref(false);
@@ -161,15 +159,14 @@ let userRole = ref("all");
 let syncPayload = ref<any[]>([]);
 
 export default defineComponent({
-  name: "news-category",
+  name: "report-category",
   components: {
-    NewsCategoryModal,
+    ReportCategoryActionModal,
     NHDatatable,
   },
   setup() {
-    const store = useNewsStore();
+    const store = useReport();
     const formSearchData = ref({
-      name: "",
       publish: "",
     });
     const data = ref({
@@ -177,45 +174,47 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "Category Name",
+        label: "Tên danh mục",
         prop: "name",
         visible: true,
       },
       {
-        label: "Status",
+        label: "Đường dẫn",
+        prop: "slug",
+        visible: true,
+      },
+      {
+        label: "Trạng thái",
         prop: "publish",
         visible: true,
-        width: 220,
+        width: 100,
       },
     ]);
     let selectedIds = ref(0);
     const loading = ref<boolean>(false);
     let dataRequestNewsCategoryManager = ref();
-    let newsAction = ref("");
+    let reportCateAction = ref("");
     let pagination = ref();
     let rowDetail = ref();
-    let abc = ref();
     let syncKLPBtn = ref<HTMLElement | null>(null);
     const rowCheck = ref([]);
 
-    async function getRequestNewsCategoryManager(
+    const getAllReportCategory = async (
       pageNo?: number,
-      name?: string,
-      publish?: string,
+      publish?: number,
       pageSize = "10"
-    ) {
+    ) => {
       loading.value = true;
-      await store.getAllNewsCategory({
+      await store.getAllReportCategory({
         params: {
-          name: name ? name : "",
-          publish: publish ? publish : "",
           pageNo: pageNo,
+          publish: publish,
           pageSize: pageSize,
         },
       });
 
       const requestNewsCategoryResponse = JSON.parse(
-        JSON.stringify(store.allNewCategoryResp)
+        JSON.stringify(store.reportCategoryList)
       );
 
       dataRequestNewsCategoryManager.value = requestNewsCategoryResponse.data;
@@ -227,20 +226,19 @@ export default defineComponent({
         currentCount: requestNewsCategoryResponse.currentCount,
       };
       loading.value = false;
-    }
+    };
 
-    function submitSearch() {
+    const submitSearch = () => {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestNewsCategoryManager(
+      getAllReportCategory(
         1,
-        formData.name,
         formData.publish ? formData.publish : "",
         pagination.value.pageSize
       );
-    }
+    };
+
     const handleSingleSelection = (val) => {
       selectedIds.value += 1;
-      console.log(`handleSingleSelection: ${val}`);
     };
 
     const handleMultipleSelection = (val) => {
@@ -248,43 +246,24 @@ export default defineComponent({
       rowCheck.value = JSON.parse(JSON.stringify(val));
     };
 
-    const addCategory = async () => {
-      newsAction.value = "add";
+    const addCategory = () => {
+      reportCateAction.value = "add";
       rowDetail.value = {};
-      await store.getAllNewsCategory({
-        params: {
-          name: "",
-          publish: "",
-          pageNo: 1,
-          pageSize: 1000,
-        },
-      });
-      const requestNewsCategoryResponse = JSON.parse(
-        JSON.stringify(store.allNewCategoryResp)
-      );
-
-      abc.value = requestNewsCategoryResponse;
     };
 
-    const editCategory = async (val?: object | undefined) => {
-      newsAction.value = "edit";
-      rowDetail.value = JSON.parse(JSON.stringify(val));
-      await store.getAllNewsCategory({
-        params: {
-          name: "",
-          publish: "",
-          pageNo: 1,
-          pageSize: 1000,
-        },
-      });
-      const requestNewsCategoryResponse = JSON.parse(
-        JSON.stringify(store.allNewCategoryResp)
-      );
-
-      abc.value = requestNewsCategoryResponse;
+    const editCategory = (val?: object | undefined) => {
+      reportCateAction.value = "edit";
+      const rawVal = JSON.parse(JSON.stringify(val));
+      rowDetail.value = {
+        titleVn: rawVal.name,
+        titleEn: rawVal.name_english,
+        titleKr: rawVal.name_korea,
+        url: `/danh-muc-bao-cao/${rawVal.slug}.html`,
+        publish: rawVal.publish !== 0,
+      };
     };
 
-    const deleteCategory = (val?: any) => {
+    const deleteCategory = async (val?: any) => {
       Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -297,7 +276,7 @@ export default defineComponent({
         },
       }).then(async (result) => {
         if (result.isConfirmed) {
-          const response = await store.deleteNewsCategory({ id: val.id });
+          const response = await store.deleteReportCategory({ id: val.id });
           if (response.data.success === true) {
             Swal.fire({
               position: "center",
@@ -327,46 +306,34 @@ export default defineComponent({
         arr.push(item.id);
       }
 
-      Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        customClass: {
-          confirmButton: "btn btn-danger",
-          cancelButton: "btn btn-secondary",
-        },
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const response = await store.deleteNewsCategory({ id: arr });
-          if (response.data.success === true) {
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: "Success!",
-              showConfirmButton: false,
-              timer: 1000,
-            });
-            submitSearch();
-          } else {
-            Swal.fire({
-              position: "center",
-              icon: "error",
-              title: response.data.mess,
-              showConfirmButton: false,
-              timer: 1000,
-            });
-          }
-        }
-      });
+      const oke = await store.deleteReportCategory(qs.stringify({ id: arr }));
+      if (oke.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Success!",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        submitSearch();
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: oke.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
     };
 
     const handleChangeStatus = async (val?: any) => {
       console.log(JSON.parse(JSON.stringify(val)));
       const Tpublish = JSON.parse(JSON.stringify(val));
       const result = Tpublish.publish === 0 ? 1 : 0;
-      const oke = await store.changeStatus({ id: val.id, publish: result });
+      const oke = await store.changeReportCategoryStatus(
+        qs.stringify({ id: val.id, publish: result })
+      );
       if (oke.data.success === true) {
         Swal.fire({
           position: "center",
@@ -389,9 +356,8 @@ export default defineComponent({
 
     function changePage(page) {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestNewsCategoryManager(
+      getAllReportCategory(
         page,
-        formData.name,
         formData.publish ? formData.publish : "",
         pagination.value.pageSize
       );
@@ -401,17 +367,17 @@ export default defineComponent({
       console.log("changePageSize");
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       pagination.value.pageSize = pageSize;
-      getRequestNewsCategoryManager(
+      getAllReportCategory(
         1,
-        formData.name,
         formData.publish ? formData.publish : "",
         pageSize
       );
     };
 
     onBeforeMount(() => {
-      getRequestNewsCategoryManager(1);
+      getAllReportCategory(1);
     });
+
     return {
       dataRequestNewsCategoryManager,
       data,
@@ -425,10 +391,9 @@ export default defineComponent({
       formSearchData,
       syncPayload,
       value,
-      newsAction,
+      reportCateAction,
       rowDetail,
       Search,
-      abc,
       addCategory,
       editCategory,
       deleteCategory,

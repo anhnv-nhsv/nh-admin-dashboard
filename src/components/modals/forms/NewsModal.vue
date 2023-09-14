@@ -7,7 +7,7 @@
     aria-hidden="true"
   >
     <div
-      class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-1000px"
+      class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-75"
     >
       <div class="modal-content">
         <div class="modal-header">
@@ -444,7 +444,6 @@ export default defineComponent({
 
     const cascaderConfig = {
       expandTrigger: "hover" as const,
-      checkStrictly: true,
       value: "id",
     };
 

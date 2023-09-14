@@ -58,6 +58,27 @@ const routes: Array<RouteRecordRaw> = [
       },
       // NEWS END
 
+      // REPORT START
+      {
+        path: "/apps/report/category",
+        name: "report-category",
+        component: () => import("@/views/apps/report/ReportCategory.vue"),
+        meta: {
+          pageTitle: "Report Categories",
+          breadcrumbs: ["Report", "Report Categories"],
+        },
+      },
+      {
+        path: "/apps/report/list",
+        name: "report-list",
+        component: () => import("@/views/apps/report/ReportList.vue"),
+        meta: {
+          pageTitle: "Report List",
+          breadcrumbs: ["Report", "Report List"],
+        },
+      },
+      // REPORT END
+
       // CONTACT START
       {
         path: "/apps/contact/category",
