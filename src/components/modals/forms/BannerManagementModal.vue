@@ -28,7 +28,6 @@
                 ref="ruleFormRef"
                 :model="bannerForm"
                 label-width="160px"
-                :rules="rules"
               >
                 <el-form-item label="Tên">
                   <el-input
@@ -179,15 +178,6 @@ export default defineComponent({
       }
     );
 
-    const handleChangeCategory = (value) => {
-      console.log(value);
-    };
-
-    const getFileUrl = (val) => {
-      console.log("val: ", val);
-      bannerForm.value.imageUrl = val;
-    };
-
     const chooseImage = () => {
       window.addEventListener("message", handleMessage);
       Swal.fire({
@@ -291,8 +281,6 @@ export default defineComponent({
       rules,
       loading,
       bannerModalRef,
-      handleChangeCategory,
-      getFileUrl,
       chooseImage,
       handleRequest,
     };
