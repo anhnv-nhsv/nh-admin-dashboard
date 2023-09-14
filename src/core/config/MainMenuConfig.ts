@@ -76,6 +76,22 @@ const MainMenuConfig: Array<MenuItem> = [
         ],
       },
       {
+        sectionTitle: "report",
+        route: "/report",
+        keenthemesIcon: "cheque",
+        bootstrapIcon: "bi-graph-up",
+        sub: [
+          {
+            heading: "reportCategory",
+            route: "/apps/report/category",
+          },
+          {
+            heading: "reportList",
+            route: "/apps/report/list",
+          },
+        ],
+      },
+      {
         sectionTitle: "user",
         route: "/user-management",
         keenthemesIcon: "people",

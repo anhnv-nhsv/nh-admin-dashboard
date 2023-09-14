@@ -88,6 +88,9 @@ const messages = {
     addContact: "Add Contact",
     user: "User",
     userMgmt: "User Management",
+    report: "Report",
+    reportCategory: "Report Category",
+    reportList: "Report List",
   },
   es: {
     dashboard: "Tablero",
@@ -176,6 +179,9 @@ const messages = {
     addContact: "Add Contact",
     user: "User",
     userMgmt: "User Management",
+    report: "Report",
+    reportCategory: "Report Category",
+    reportList: "Report List",
   },
   de: {
     dashboard: "Instrumententafel",
@@ -262,6 +268,9 @@ const messages = {
     addContact: "Add Contact",
     user: "User",
     userMgmt: "User Management",
+    report: "Report",
+    reportCategory: "Report Category",
+    reportList: "Report List",
   },
   ja: {
     dashboard: "ダッシュボード",
@@ -348,6 +357,9 @@ const messages = {
     addContact: "Add Contact",
     user: "User",
     userMgmt: "User Management",
+    report: "Report",
+    reportCategory: "Report Category",
+    reportList: "Report List",
   },
   fr: {
     dashboard: "Générateur de mise",
@@ -434,6 +446,9 @@ const messages = {
     addContact: "Add Contact",
     user: "User",
     userMgmt: "User Management",
+    report: "Report",
+    reportCategory: "Report Category",
+    reportList: "Report List",
   },
 };
 
