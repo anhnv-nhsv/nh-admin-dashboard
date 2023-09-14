@@ -20,7 +20,7 @@
           type="button"
           class="btn btn-primary"
           data-bs-toggle="modal"
-          data-bs-target="#kt_banner_category_modal"
+          data-bs-target="#kt_banner_modal"
           @click="addBanner"
         >
           <KTIcon icon-name="plus" icon-class="fs-2" />
@@ -85,7 +85,7 @@
                 size="small"
                 type="default"
                 data-bs-toggle="modal"
-                data-bs-target="#kt_banner_category_modal"
+                data-bs-target="#kt_banner_modal"
                 @click.prevent="editBanner(scope.row)"
               >
                 Edit
@@ -216,7 +216,7 @@ export default defineComponent({
               icon: "success",
               title: "Success!",
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
             await getAllBanner(1);
           } else {
@@ -225,7 +225,7 @@ export default defineComponent({
               icon: "error",
               title: response.data.mess,
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
           }
         }
@@ -272,7 +272,7 @@ export default defineComponent({
               icon: "success",
               title: "Success!",
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
             isRearrange.value = false;
             await getAllBanner(1);
@@ -282,7 +282,7 @@ export default defineComponent({
               icon: "error",
               title: response.data.mess,
               showConfirmButton: false,
-              timer: 1500,
+              timer: 1000,
             });
           }
         }

@@ -1,7 +1,7 @@
 <template>
   <div
     class="modal fade"
-    id="kt_banner_category_modal"
+    id="kt_banner_modal"
     ref="bannerModalRef"
     tabindex="-1"
     aria-hidden="true"
@@ -241,7 +241,7 @@ export default defineComponent({
                 icon: "success",
                 title: "Tạo banner thành công!",
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 1000,
               }).then(() => {
                 ctx.emit("on-close");
                 hideModal(bannerModalRef.value);
@@ -252,7 +252,7 @@ export default defineComponent({
                 icon: "error",
                 title: result.data.mess,
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 1000,
               });
             }
           } else {
@@ -263,7 +263,7 @@ export default defineComponent({
                 icon: "success",
                 title: "Cập nhật banner thành công!",
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 1000,
               }).then(() => {
                 ctx.emit("on-close");
                 hideModal(bannerModalRef.value);
@@ -274,7 +274,7 @@ export default defineComponent({
                 icon: "error",
                 title: result.data.mess,
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 1000,
               });
             }
           }
