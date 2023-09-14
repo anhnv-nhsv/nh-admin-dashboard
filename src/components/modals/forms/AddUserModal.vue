@@ -161,6 +161,7 @@ export default defineComponent({
               timer: 1000,
             }).then(() => {
               ctx.emit("on-close");
+              formEl.resetFields();
               hideModal(userModalRef.value);
             });
           } else {
