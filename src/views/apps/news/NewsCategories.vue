@@ -2,38 +2,18 @@
   <div class="card">
     <div class="card-header border-0 pt-6">
       <div class="flex-column">
-        <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
-          <div
-            class="col-md-6 d-flex align-items-center position-relative my-1"
+        <div class="col-md-6 d-flex align-items-center position-relative my-1">
+          <el-select
+            placeholder="Status"
+            size="large"
+            v-model="formSearchData.publish"
+            @change="submitSearch"
           >
-            <el-select
-              placeholder="Status"
-              size="large"
-              v-model="formSearchData.publish"
-            >
-              <el-option label="All" />
-              <el-option label="Enable" value="1" />
-              <el-option label="Disable" value="0" />
-            </el-select>
-          </div>
-          <div
-            class="col-md-6 d-flex align-items-center position-relative my-1"
-          >
-            <button
-              :data-kt-indicator="false ? 'on' : null"
-              type="submit"
-              class="btn btn-primary"
-            >
-              <span v-if="true" class="indicator-label">Apply</span>
-              <span v-if="false" class="indicator-progress"
-                >Please wait...
-                <span
-                  class="spinner-border spinner-border-sm align-middle ms-2"
-                ></span
-              ></span>
-            </button>
-          </div>
-        </form>
+            <el-option label="All" />
+            <el-option label="Enable" value="1" />
+            <el-option label="Disable" value="0" />
+          </el-select>
+        </div>
       </div>
       <div class="card-toolbar">
         <div
@@ -442,10 +422,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.btn {
-  padding: 6px 20px !important;
-}
-
 .del-btn {
   padding: 14px 15px;
 }

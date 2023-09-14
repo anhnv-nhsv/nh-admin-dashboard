@@ -524,10 +524,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.btn {
-  padding: 6px 20px !important;
-}
-
 .del-btn {
   padding: 14px 15px;
 }
