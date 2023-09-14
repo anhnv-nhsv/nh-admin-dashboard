@@ -7,7 +7,7 @@
     aria-hidden="true"
   >
     <div
-      class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-1000px"
+      class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-75"
     >
       <div class="modal-content">
         <div class="modal-header">
@@ -131,7 +131,6 @@
                     :props="cascaderConfig"
                     clearable
                     filterable
-                    :teleported="false"
                     style="width: 100%"
                     @change="handleChangeCategory"
                   />
