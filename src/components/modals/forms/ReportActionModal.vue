@@ -1,18 +1,20 @@
 <template>
   <div
     class="modal fade"
-    id="kt_report_category_modal"
-    ref="reportCateModalRef"
+    id="kt_report_modal"
+    ref="reportModalRef"
     tabindex="-1"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-dialog-centered mw-800px">
+    <div
+      class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-75"
+    >
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder" v-if="action === 'add'">Add Report Category</h2>
-          <h2 class="fw-bolder" v-else>Edit Report Category</h2>
+          <h2 class="fw-bolder" v-if="action === 'add'">Add News List</h2>
+          <h2 class="fw-bolder" v-else>Edit News List</h2>
           <div
-            id="kt_report_category_close"
+            id="kt_customer_export_close"
             data-bs-dismiss="modal"
             class="btn btn-icon btn-sm btn-active-icon-primary"
           >
@@ -21,7 +23,7 @@
             </span>
           </div>
         </div>
-        <div class="modal-body scroll-y mx-5 mx-xl-5">
+        <div class="modal-body mx-5 mx-xl-5 my-7">
           <NhForm seoable>
             <template v-slot:customForm>
               <el-form
@@ -30,6 +32,7 @@
                 label-width="160px"
                 class="demo-ruleForm"
                 status-icon
+                :size="formSize"
                 :rules="rules"
               >
                 <el-form-item>
@@ -76,6 +79,12 @@
                         @input="generateSlug(formData.titleVn)"
                       />
                     </el-form-item>
+                    <el-form-item label="Nội dung" prop="contentVn">
+                      <NhEditor
+                        v-model="formData.contentVn"
+                        placeholder="Tiếng Việt"
+                      />
+                    </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
                     <el-form-item label="Tiêu đề">
@@ -83,6 +92,12 @@
                         v-model="formData.titleEn"
                         placeholder="Tiếng Anh"
                         clearable
+                      />
+                    </el-form-item>
+                    <el-form-item label="Nội dung">
+                      <NhEditor
+                        v-model="formData.contentEn"
+                        placeholder="Tiếng Anh"
                       />
                     </el-form-item>
                   </div>
@@ -94,8 +109,54 @@
                         clearable
                       />
                     </el-form-item>
+                    <el-form-item label="Nội dung">
+                      <NhEditor
+                        v-model="formData.contentKr"
+                        placeholder="Tiếng Hàn"
+                      />
+                    </el-form-item>
                   </div>
                 </div>
+                <el-form-item label="Chuyên mục tin" prop="parentCategory">
+                  <el-cascader
+                    v-model="formData.parentCategory"
+                    :options="parents"
+                    :teleported="false"
+                    :props="cascaderConfig"
+                    clearable
+                    filterable
+                    style="width: 100%"
+                    @change="handleChangeReport"
+                  />
+                </el-form-item>
+                <el-form-item label="Hình ảnh" prop="imageUrl">
+                  <el-input
+                    v-model="formData.image"
+                    placeholder="Hình ảnh"
+                    clearable
+                    disabled
+                  >
+                    <template #prepend>
+                      <el-button type="primary" @click.prevent="chooseImage"
+                        >Choose file
+                      </el-button>
+                    </template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="Thời gian đăng bài" prop="date_report">
+                  <div class="demo-datetime-picker" style="width: 100%">
+                    <div class="block">
+                      <el-date-picker
+                        v-model="formData.date_report"
+                        type="date"
+                        format="YYYY-MM-DD"
+                        value-format="YYYY-MM-DD"
+                        :editable="false"
+                        placeholder="Select date and time"
+                      />
+                    </div>
+                  </div>
+                </el-form-item>
                 <el-form-item label="URL">
                   <el-input
                     v-model="formData.url"
@@ -114,11 +175,11 @@
         <div class="modal-footer">
           <button
             type="reset"
-            id="kt_report_category_cancel"
+            id="kt_modal_test_editor_cancel"
             class="btn btn-light me-3"
-            @click.prevent="resetForm(ruleFormRef)"
+            data-bs-dismiss="modal"
           >
-            Reset
+            Discard
           </button>
           <button
             class="btn btn-lg btn-primary"
@@ -150,6 +211,7 @@ import NhForm from "@/components/nh-forms/NHForm.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import type { FormInstance } from "element-plus";
 import { useReport } from "@/stores/report";
+import NhEditor from "@/components/editor/NHEditor.vue";
 import qs from "qs";
 import { hideModal } from "@/core/helpers/dom";
 
@@ -167,21 +229,39 @@ export default defineComponent({
     submitSearch: {
       type: Function,
     },
+    reportCategories: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {};
+      },
+    },
   },
-  components: { NhForm },
+  components: { NhForm, NhEditor },
   setup(props, ctx) {
     const loading = ref(false);
     const store = useReport();
     const ruleFormRef = ref<FormInstance>();
-    const reportCategories = ref([]);
+    const cateID = ref();
     const idRef = ref();
-    const reportCateModalRef = ref<null | HTMLElement>(null);
+    const idSelect = ref();
+    const parents = ref();
+    const reportModalRef = ref<null | HTMLElement>(null);
+    const formSize = ref("default");
     const formData = ref({
       titleVn: "",
       titleEn: "",
       titleKr: "",
+      contentVn: "",
+      contentEn: "",
+      contentKr: "",
+      parentCategory: "",
+      image: "",
+      image_english: "",
+      image_korea: "",
+      date_report: "",
       url: "/danh-muc-bao-cao/.html",
-      publish: true,
+      publish: false,
     });
     const rules = reactive({
       titleVn: [
@@ -189,6 +269,41 @@ export default defineComponent({
           required: true,
           message: "Trường này cần phải nhập!",
           trigger: "blur",
+        },
+      ],
+      date_report: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+      parentCategory: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+      contentVn: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+      contentEn: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
+        },
+      ],
+      contentKr: [
+        {
+          required: true,
+          message: "Trường này cần phải nhập!",
+          trigger: "change",
         },
       ],
     });
@@ -201,6 +316,12 @@ export default defineComponent({
           formData.value.titleVn = newData.titleVn;
           formData.value.titleEn = newData.titleEn;
           formData.value.titleKr = newData.titleKr;
+          formData.value.contentVn = newData.contentVn;
+          formData.value.contentEn = newData.contentEn;
+          formData.value.contentKr = newData.contentKr;
+          formData.value.date_report = newData.date_report.slice(0, -8);
+          formData.value.parentCategory = newData.category_id;
+          cateID.value = newData.category_id;
           formData.value.url = newData.url;
           formData.value.publish = newData.publish === true ? true : false;
           idRef.value = newData.id;
@@ -209,6 +330,14 @@ export default defineComponent({
             titleVn: "",
             titleEn: "",
             titleKr: "",
+            contentVn: "",
+            contentEn: "",
+            contentKr: "",
+            parentCategory: "",
+            image: "",
+            image_english: "",
+            image_korea: "",
+            date_report: "",
             url: "/danh-muc-bao-cao/.html",
             publish: true,
           };
@@ -216,21 +345,32 @@ export default defineComponent({
       }
     );
 
-    onMounted(async () => {
-      await store.getAllReportCategory({
-        params: {
-          pageNo: 1,
-          pageSize: 1000,
-        },
-      });
-      const requestCategoryResponse = JSON.parse(
-        JSON.stringify(store.reportCategoryList)
-      );
-      reportCategories.value = requestCategoryResponse.data;
-    });
+    watch(
+      () => props.reportCategories,
+      (newVal) => {
+        parents.value = buildHierarchy(newVal);
+      }
+    );
+
+    function buildHierarchy(arr) {
+      const hierarchy: any = [];
+      // Create a map of id to item and initialize children
+      for (const item of arr) {
+        item.value = item.name;
+        item.label = item.name;
+        hierarchy.push(item);
+      }
+
+      return hierarchy;
+    }
 
     const generateSlug = (title) => {
-      formData.value.url = "/danh-muc-bao-cao/" + toSlug(title) + ".html";
+      formData.value.url = "/bao-cao/" + toSlug(title) + ".html";
+    };
+
+    const cascaderConfig = {
+      expandTrigger: "hover" as const,
+      value: "id",
     };
 
     const toSlug = (str) => {
@@ -271,25 +411,30 @@ export default defineComponent({
             name: rawForm.titleVn,
             name_english: rawForm.titleEn,
             name_korea: rawForm.titleKr,
-            parent_id: 0,
+            parent_id: idSelect.value || cateID.value,
+            category_id: idSelect.value || cateID.value,
+            image: rawForm.image,
+            content: rawForm.contentVn,
+            content_english: rawForm.contentEn,
+            content_korea: rawForm.contentKr,
+            status: "Noi-bat",
             publish: rawForm.publish === false ? 0 : 1,
             slug: resSlug(rawForm.url),
+            date_report: rawForm.date_report,
           };
           if (props.action === "add") {
-            const result = await store.createReportCategory(
-              qs.stringify(dataReq)
-            );
+            const result = await store.createReport(qs.stringify(dataReq));
             if (result.data.success === true) {
               Swal.fire({
                 position: "center",
                 icon: "success",
-                title: "Tạo report thành công!",
+                title: "Tạo Report thành công!",
                 showConfirmButton: false,
                 timer: 1000,
               }).then(() => {
                 ctx.emit("on-close");
                 ctx.emit("submitSearch");
-                hideModal(reportCateModalRef.value);
+                hideModal(reportModalRef.value);
               });
             } else {
               Swal.fire({
@@ -301,8 +446,11 @@ export default defineComponent({
               });
             }
           } else {
-            const result = await store.editReportCategory(
-              qs.stringify({ ...dataReq, id: idRef.value })
+            const result = await store.editReport(
+              qs.stringify({
+                ...dataReq,
+                id: idRef.value,
+              })
             );
             if (result.data.success === true) {
               Swal.fire({
@@ -314,7 +462,7 @@ export default defineComponent({
               }).then(() => {
                 ctx.emit("on-close");
                 ctx.emit("submitSearch");
-                hideModal(reportCateModalRef.value);
+                hideModal(reportModalRef.value);
               });
             } else {
               Swal.fire({
@@ -338,8 +486,48 @@ export default defineComponent({
       formEl.resetFields();
     };
 
+    const handleChangeReport = (value) => {
+      const res = JSON.parse(JSON.stringify(value));
+      if (res) {
+        idSelect.value = res.toString();
+      } else {
+        idSelect.value = "";
+      }
+    };
+
+    const chooseImage = () => {
+      window.addEventListener("message", handleMessage);
+      Swal.fire({
+        width: "80%",
+        heightAuto: false,
+        html: `<iframe
+                    ref="fileManagerIframe"
+                    class="rounded h-600px w-100"
+                    src="http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1"
+                    :allowfullscreen="true"
+               ></iframe>`,
+        closeButtonAriaLabel: "Close file manager",
+        showCloseButton: true,
+        showConfirmButton: false,
+        customClass: {
+          htmlContainer: "rfm-height-100",
+        },
+      });
+    };
+
+    const handleMessage = (event) => {
+      if (event.data.sender === "responsivefilemanager") {
+        if (event.data.field_id) {
+          formData.value.image = event.data.url;
+          Swal.close();
+          // Delete handler of the message from ResponsiveFilemanager
+          window.removeEventListener("message", handleMessage);
+        }
+      }
+    };
+
     const resSlug = (val) => {
-      const repoerCateMatch = val.match(/\/danh-muc-bao-cao\/([^/]+)\.html/);
+      const repoerCateMatch = val.match(/\/bao-cao\/([^/]+)\.html/);
 
       if (repoerCateMatch) {
         return repoerCateMatch[1];
@@ -355,11 +543,15 @@ export default defineComponent({
 
     return {
       formData,
+      parents,
       ruleFormRef,
       rules,
       loading,
-      reportCateModalRef,
-      reportCategories,
+      reportModalRef,
+      formSize,
+      cascaderConfig,
+      handleChangeReport,
+      chooseImage,
       handleRequest,
       resetForm,
       generateSlug,

@@ -19,6 +19,8 @@ export const useReport = defineStore("report", () => {
     reportList.value = data;
   }
 
+  // START REPORT CATEGORY
+
   function getAllReportCategory(params?: any) {
     return ApiService.query("/reports/get-all-cate-reports", params)
       .then(({ data }) => {
@@ -45,6 +47,9 @@ export const useReport = defineStore("report", () => {
     return ApiService.post("/pages/publish-cate-report", val);
   }
 
+  // END REPORT CATEGORY
+
+  // START REPORT
   function getAllReport(params?: any) {
     return ApiService.query("/reports/get-all-report", params)
       .then(({ data }) => {
@@ -70,6 +75,8 @@ export const useReport = defineStore("report", () => {
   function changeReportStatus(val) {
     return ApiService.post("/pages/publish-report", val);
   }
+
+  // END REPORT
 
   return {
     reportCategoryList,
