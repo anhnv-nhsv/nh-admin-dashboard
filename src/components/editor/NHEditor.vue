@@ -11,9 +11,9 @@ import "tinymce/themes/silver/theme";
 import "tinymce/models/dom/model";
 import "tinymce/skins/ui/oxide/skin.css";
 import contentUiCss from "tinymce/skins/ui/oxide/content.css";
+import contentCss from "tinymce/skins/content/default/content.css";
 
 // TinyMCE plugins
-// https://www.tiny.cloud/docs/tinymce/6/plugins/
 import "tinymce/plugins/lists/plugin";
 import "tinymce/plugins/fullscreen/plugin";
 import "tinymce/plugins/emoticons/plugin";
@@ -35,8 +35,7 @@ import "tinymce/plugins/pagebreak/plugin";
 import "tinymce/plugins/searchreplace/plugin";
 import "tinymce/plugins/autoresize/plugin";
 import "tinymce/plugins/directionality/plugin";
-// import "tinymce/plugins/code/plugin";
-// import "tinymce/plugins/help/plugin";
+import "tinymce/plugins/insertdatetime/plugin";
 import "tinymce/plugins/wordcount/plugin";
 
 import Editor from "@tinymce/tinymce-vue";
@@ -58,18 +57,34 @@ export default defineComponent({
     const placeholder = ref(props.placeholder);
     return {
       init: {
-        height: 300,
+        height: 500,
         placeholder: placeholder.value,
-        skin: false,
         plugins:
-          "lists fullscreen link wordcount image table anchor charmap autolink media importcss accordion insertdatetime advlist preview pagebreak searchreplace autoresize directionality",
+          "lists fullscreen link wordcount image table anchor charmap autolink media importcss accordion insertdatetime advlist preview pagebreak searchreplace autoresize directionality insertdatetime",
         toolbar1:
           "undo redo | bold italic underline strikethrough | fontfamily fontsizeinput blocks | alignleft aligncenter alignright alignjustify | numlist bullist | forecolor backcolor | indent outdent",
-        toolbar2: "table image media link anchor preview | fullscreen",
+        toolbar2:
+          "table image media link | anchor insertdatetime pagebreak | preview fullscreen",
+        skin: false,
         content_css: false,
-        content_style: contentUiCss.toString(),
+        content_style: contentUiCss.toString() + "\n" + contentCss.toString(),
         branding: false,
         menubar: false,
+        insertdatetime_dateformat: "%d-%m-%Y",
+        insertdatetime_formats: [
+          "%H:%M:%S",
+          "%I:%M:%S %p",
+          "%d-%m-%Y",
+          "%d/%m/%Y",
+        ],
+        init_instance_callback: (editor) => {
+          document.addEventListener("focusin", (e) => {
+            if ((e.target as HTMLElement).closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root") !== null) {
+              console.log(e);
+              e.stopImmediatePropagation();
+            }
+          });
+        },
         image_advtab: true,
         filemanager_crossdomain: true,
         external_filemanager_path:
@@ -89,7 +104,7 @@ export default defineComponent({
             const width_reduce = (width - 20) % 138;
             width = width - width_reduce + 10;
           }
-          getTinymce().activeEditor.windowManager.openUrl({
+          const dialog = getTinymce().activeEditor.windowManager.openUrl({
             title: "Responsive Filemanager",
             url: "http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
             width: width,
@@ -100,8 +115,9 @@ export default defineComponent({
             function receiveMessage(event) {
               window.removeEventListener("message", receiveMessage, false);
               if (event.data.sender === "responsivefilemanager") {
-                callback(event.data.url);
-                console.log(getTinymce().activeEditor);
+                const selectedUrl = event.data.url;
+                callback(selectedUrl, { text: selectedUrl });
+                dialog.close();
               }
             },
             true
