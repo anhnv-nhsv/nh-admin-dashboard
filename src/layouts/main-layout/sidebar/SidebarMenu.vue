@@ -240,13 +240,12 @@ import { defineComponent, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import MainMenuConfig from "@/core/config/MainMenuConfig";
 import { sidebarMenuIcons } from "@/core/helpers/config";
-import { useI18n } from "vue-i18n";
+import { translate } from "@/core/helpers/i18n-translate";
 
 export default defineComponent({
   name: "sidebar-menu",
   components: {},
   setup() {
-    const { t, te } = useI18n();
     const route = useRoute();
     const scrollElRef = ref<null | HTMLElement>(null);
 
@@ -255,14 +254,6 @@ export default defineComponent({
         scrollElRef.value.scrollTop = 0;
       }
     });
-
-    const translate = (text: string) => {
-      if (te(text)) {
-        return t(text);
-      } else {
-        return text;
-      }
-    };
 
     const hasActiveChildren = (match: string) => {
       return route.path.indexOf(match) !== -1;

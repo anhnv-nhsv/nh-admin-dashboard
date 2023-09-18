@@ -56,22 +56,13 @@ import {
   pageTitleDisplay,
 } from "@/core/helpers/config";
 import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
+import { translate } from "@/core/helpers/i18n-translate";
 
 export default defineComponent({
   name: "layout-page-title",
   components: {},
   setup() {
-    const { t, te } = useI18n();
     const route = useRoute();
-
-    const translate = (text) => {
-      if (te(text)) {
-        return t(text);
-      } else {
-        return text;
-      }
-    };
 
     const pageTitle = computed(() => {
       return translate(route.meta.pageTitle);

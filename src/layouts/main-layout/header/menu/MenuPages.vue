@@ -146,27 +146,18 @@
 import { getAssetPath } from "@/core/helpers/assets";
 import { defineComponent } from "vue";
 import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
 import MainMenuConfig from "@/core/config/MainMenuConfig";
 import { headerMenuIcons } from "@/core/helpers/config";
+import { translate } from "@/core/helpers/i18n-translate";
 
 export default defineComponent({
   name: "KTMenu",
   components: {},
   setup() {
-    const { t, te } = useI18n();
     const route = useRoute();
 
     const hasActiveChildren = (match: string) => {
       return route.path.indexOf(match) !== -1;
-    };
-
-    const translate = (text: string) => {
-      if (te(text)) {
-        return t(text);
-      } else {
-        return text;
-      }
     };
 
     return {
