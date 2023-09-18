@@ -155,6 +155,8 @@
                       <el-date-picker
                         v-model="pageForm.time_post"
                         type="datetime"
+                        format="YYYY/MM/DD HH:mm:ss"
+                        :teleported="false"
                         :editable="false"
                         placeholder="Select date and time"
                       />
@@ -461,7 +463,7 @@ export default defineComponent({
               parent_id: idSelect.value,
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
-              time_post: formData.time_post,
+              time_post: formatDate(formData.time_post),
               image: formData.image || "",
             })
           );
@@ -639,16 +641,18 @@ export default defineComponent({
     const handleSave = () => {};
 
     const formatDate = (val) => {
-      if (val) {
-        const dateObject = new Date(val);
-        const year = dateObject.getFullYear();
-        const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Adding 1 to month because months are zero-indexed
-        const day = dateObject.getDate().toString().padStart(2, "0");
+      const dateObject = new Date(val);
 
-        return year + "-" + month + "-" + day;
-      } else {
-        return "-";
-      }
+      const subtractedDate = new Date(
+        dateObject.getTime() - 17 * 60 * 60 * 1000
+      );
+
+      const formattedDate = subtractedDate
+        .toISOString()
+        .replace("T", " ")
+        .replace(/\.\d+Z$/, "");
+
+      return formattedDate;
     };
 
     return {
