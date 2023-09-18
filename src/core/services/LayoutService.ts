@@ -69,7 +69,7 @@ class LayoutService {
 
         this.configStore.setLayoutConfigProperty("toolbar.container", "fluid");
 
-        this.configStore.setLayoutConfigProperty("content.container", "xxl");
+        this.configStore.setLayoutConfigProperty("content.container", "fluid");
 
         this.configStore.setLayoutConfigProperty("footer.container", "fluid");
       }
