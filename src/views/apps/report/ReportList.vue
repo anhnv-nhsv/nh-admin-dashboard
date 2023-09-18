@@ -39,7 +39,7 @@
               size="large"
               v-model="formSearchData.publish"
             >
-              <el-option label="All" />
+              <el-option label="All" value />
               <el-option label="Enable" value="1" />
               <el-option label="Disable" value="0" />
             </el-select>
