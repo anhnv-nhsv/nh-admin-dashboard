@@ -31,7 +31,7 @@ initInlineSvg(app);
 initKtIcon(app);
 initVeeValidate();
 
-app.use(i18n);
+app.use(i18n as any);
 
 app.directive("tooltip", (el) => {
   new Tooltip(el);

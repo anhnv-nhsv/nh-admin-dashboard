@@ -5,6 +5,7 @@ import {
 } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { useConfigStore } from "@/stores/config";
+import { translate } from "@/core/helpers/i18n-translate";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
         name: "apps-file-manager",
         component: () => import("@/views/apps/file-manager/FileManager.vue"),
         meta: {
-          pageTitle: "File Manager",
+          pageTitle: "fileManager",
           // breadcrumbs: ["Apps", "File Manager"],
         },
       },
@@ -208,7 +209,9 @@ router.beforeEach((to, from, next) => {
   const configStore = useConfigStore();
 
   // current page view title
-  document.title = `${to.meta.pageTitle} - ${import.meta.env.VITE_APP_NAME}`;
+  document.title = `${translate(to.meta.pageTitle)} - ${
+    import.meta.env.VITE_APP_NAME
+  }`;
 
   // reset config to initial state
   configStore.resetLayoutConfig();
