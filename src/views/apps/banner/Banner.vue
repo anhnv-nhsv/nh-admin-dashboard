@@ -14,7 +14,7 @@
             icon-type="solid"
             icon-class="fs-2"
           />
-          Rearrange
+          {{ translate("rearrange") }}
         </button>
         <button
           type="button"
@@ -24,7 +24,7 @@
           @click="addBanner"
         >
           <KTIcon icon-name="plus" icon-class="fs-2" />
-          Add banner
+          {{ translate("addBtn") }}
         </button>
       </div>
     </div>
@@ -55,9 +55,9 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="STT"
+            :label="translate('index')"
             type="index"
-            width="55"
+            width="80"
           />
         </template>
         <template v-slot:image="{ row }">
@@ -78,7 +78,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Thao tác"
+            :label="translate('action')"
           >
             <template #default="scope">
               <el-button
@@ -88,14 +88,14 @@
                 data-bs-target="#kt_banner_modal"
                 @click.prevent="editBanner(scope.row)"
               >
-                Edit
+                {{ translate("editBtn") }}
               </el-button>
               <el-button
                 size="small"
                 type="danger"
                 @click.prevent="deleteBanner(scope.row)"
               >
-                Delete
+                {{ translate("deleteBtn") }}
               </el-button>
             </template>
           </el-table-column>
@@ -113,6 +113,7 @@ import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import BannerManagementModal from "@/components/modals/forms/BannerManagementModal.vue";
 import { useBanner } from "@/stores/banner";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import { translate } from "@/core/helpers/i18n-translate";
 
 export default defineComponent({
   name: "banner-management",
@@ -124,22 +125,22 @@ export default defineComponent({
     const store = useBanner();
     const tableHeader = ref([
       {
-        label: "Tên",
+        label: "name",
         prop: "name",
         visible: true,
       },
       {
-        label: "Hình ảnh",
+        label: "image",
         prop: "image",
         visible: true,
       },
       {
-        label: "URL",
+        label: "url",
         prop: "link",
         visible: true,
       },
       {
-        label: "Trạng thái",
+        label: "status",
         width: 140,
         prop: "publish",
         visible: true,
@@ -198,11 +199,11 @@ export default defineComponent({
 
     const deleteBanner = (val) => {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -214,7 +215,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -247,10 +248,10 @@ export default defineComponent({
 
     const updateBannerOrderId = async () => {
       Swal.fire({
-        title: "Are you sure?",
+        title: translate("confirmation"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Confirm",
+        confirmButtonText: translate("submitBtn"),
         customClass: {
           confirmButton: "btn btn-success",
           cancelButton: "btn btn-secondary",
@@ -270,7 +271,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -310,6 +311,7 @@ export default defineComponent({
       handleDragEnd,
       updateBannerOrderId,
       handleCloseModal,
+      translate,
     };
   },
 });
