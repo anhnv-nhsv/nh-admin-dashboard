@@ -112,12 +112,13 @@ const messages = {
     content: "Nội dung",
     time: "Thời gian",
     role: "Vai trò",
+    fileManager: "Quản lý file",
   },
   en: {
     home: "Home",
     dashboard: "Dashboard",
     banner: "Banner",
-    bannerManagement: "Banner Mangement",
+    bannerManagement: "Banner Management",
     layoutBuilder: "Layout builder",
     craft: "Crafted",
     pages: "Pages",
@@ -224,6 +225,7 @@ const messages = {
     content: "Content",
     time: "Time",
     role: "Role",
+    fileManager: "File Manager",
   },
   // es: {
   //   dashboard: "Tablero",
