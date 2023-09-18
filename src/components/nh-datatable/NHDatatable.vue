@@ -34,7 +34,7 @@
                 ? { width: item.width }
                 : { 'min-width': 125 }
             "
-            :label="item.label"
+            :label="translate(item.label)"
           >
             <template #default="scope" v-if="item.hasOwnProperty('prop')">
               <slot :name="item.prop" :row="scope.row">
@@ -114,6 +114,7 @@ import { computed, defineComponent, ref, watch, toRaw, onMounted } from "vue";
 import { useThemeStore } from "@/stores/theme";
 import { ThemeModeComponent } from "@/assets/ts/layout";
 import Sortable from "sortablejs";
+import { translate } from "@/core/helpers/i18n-translate";
 
 export default defineComponent({
   name: "nh-datatable",
@@ -250,6 +251,7 @@ export default defineComponent({
       setCurrent,
       setCurrentPageSize,
       handleSelectionChange,
+      translate,
     };
   },
 });
