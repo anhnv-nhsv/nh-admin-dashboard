@@ -141,7 +141,11 @@
       </NHDatatable>
     </div>
   </div>
-  <ReportCategoryActionModal :action="reportCateAction" :data="rowDetail" />
+  <ReportCategoryActionModal
+    :action="reportCateAction"
+    :data="rowDetail"
+    @submitSearch="submitSearch"
+  />
 </template>
 
 <script lang="ts">
@@ -260,6 +264,8 @@ export default defineComponent({
         titleKr: rawVal.name_korea,
         url: `/danh-muc-bao-cao/${rawVal.slug}.html`,
         publish: rawVal.publish !== 0,
+        parent_id: rawVal.parent_id,
+        id: rawVal.id,
       };
     };
 

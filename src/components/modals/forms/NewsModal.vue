@@ -155,6 +155,8 @@
                       <el-date-picker
                         v-model="pageForm.time_post"
                         type="datetime"
+                        format="YYYY/MM/DD HH:mm:ss"
+                        :teleported="false"
                         :editable="false"
                         placeholder="Select date and time"
                       />
@@ -227,7 +229,6 @@
       </div>
     </div>
   </div>
-  <FileManagerModal @file-selected="getFileUrl" @handle-save="handleSave" />
 </template>
 
 <script lang="ts">
@@ -271,10 +272,9 @@ export default defineComponent({
       type: Function,
     },
   },
-  components: { NhEditor, NhForm, FileManagerModal },
+  components: { NhEditor, NhForm },
   setup: function (props, ctx) {
     const store = useNewsListStore();
-    const value1 = ref("");
     const detailData = ref(props.rowDetail);
     const getAllRes = ref(props.abc);
     const publish = ref();
@@ -283,7 +283,6 @@ export default defineComponent({
     const categoryId = ref();
     const parentId = ref();
     const idRow = ref();
-    const urlIma = ref();
     const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
@@ -378,8 +377,6 @@ export default defineComponent({
         hierarchy.push(item);
       }
 
-      console.log("hierarchy: ", hierarchy);
-
       return hierarchy;
     }
 
@@ -408,7 +405,6 @@ export default defineComponent({
           pageForm.value.status = rowValue.value.status === "Noi_bat" ? 2 : 1;
           status.value = rowValue.value.status;
           publish.value = rowValue.value.publish;
-          status.value = rowValue.value.status;
           typePost.value = rowValue.value.type_post;
           categoryId.value = rowValue.value.category_id;
           parentId.value = rowValue.value.parent_id;
@@ -461,7 +457,7 @@ export default defineComponent({
               parent_id: idSelect.value,
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
-              time_post: formData.time_post,
+              time_post: formatDate(formData.time_post),
               image: formData.image || "",
             })
           );
@@ -595,16 +591,6 @@ export default defineComponent({
       }
     };
 
-    const handleRemove = (file: any) => {
-      uploadRef.value?.handleRemove(file);
-      fileList.value = [];
-    };
-
-    const getFileUrl = (val) => {
-      console.log("val: ", val);
-      urlIma.value = val;
-    };
-
     const chooseImage = () => {
       window.addEventListener("message", handleMessage);
       Swal.fire({
@@ -639,16 +625,18 @@ export default defineComponent({
     const handleSave = () => {};
 
     const formatDate = (val) => {
-      if (val) {
-        const dateObject = new Date(val);
-        const year = dateObject.getFullYear();
-        const month = (dateObject.getMonth() + 1).toString().padStart(2, "0"); // Adding 1 to month because months are zero-indexed
-        const day = dateObject.getDate().toString().padStart(2, "0");
+      const dateObject = new Date(val);
 
-        return year + "-" + month + "-" + day;
-      } else {
-        return "-";
-      }
+      const subtractedDate = new Date(
+        dateObject.getTime() - 17 * 60 * 60 * 1000
+      );
+
+      const formattedDate = subtractedDate
+        .toISOString()
+        .replace("T", " ")
+        .replace(/\.\d+Z$/, "");
+
+      return formattedDate;
     };
 
     return {
@@ -662,7 +650,6 @@ export default defineComponent({
       dialogImageUrl,
       parents,
       dialogVisible,
-      value1,
       uploadRef,
       fileList,
       rowValue,
@@ -674,9 +661,7 @@ export default defineComponent({
       handleChangeCategory,
       handleAdd,
       generateSlug,
-      handleRemove,
       handleEdit,
-      getFileUrl,
     };
   },
 });
