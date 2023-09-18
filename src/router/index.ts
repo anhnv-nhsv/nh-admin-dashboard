@@ -20,8 +20,8 @@ const routes: Array<RouteRecordRaw> = [
         name: "dashboard",
         component: () => import("@/views/Dashboard.vue"),
         meta: {
-          pageTitle: "Dashboard",
-          breadcrumbs: ["Dashboards"],
+          pageTitle: "dashboard",
+          breadcrumbs: ["dashboard"],
         },
       },
       // FILE MANAGER START
@@ -42,8 +42,8 @@ const routes: Array<RouteRecordRaw> = [
         component: () =>
           import("@/views/apps/page-management/PageManagement.vue"),
         meta: {
-          pageTitle: "Page Management",
-          breadcrumbs: ["Apps", "Page Management"],
+          pageTitle: "pageManagement",
+          breadcrumbs: ["apps", "pageManagement"],
         },
       },
       // PAGE END
@@ -54,8 +54,8 @@ const routes: Array<RouteRecordRaw> = [
         name: "news-category",
         component: () => import("@/views/apps/news/NewsCategories.vue"),
         meta: {
-          pageTitle: "News Categories",
-          breadcrumbs: ["News", "News Categories"],
+          pageTitle: "newsCategory",
+          breadcrumbs: ["apps", "news", "newsCategory"],
         },
       },
       {
@@ -63,8 +63,8 @@ const routes: Array<RouteRecordRaw> = [
         name: "news-listing",
         component: () => import("@/views/apps/news/NewsListing.vue"),
         meta: {
-          pageTitle: "News List",
-          breadcrumbs: ["News", "News List"],
+          pageTitle: "newsList",
+          breadcrumbs: ["apps", "news", "newsList"],
         },
       },
       // NEWS END
@@ -75,8 +75,8 @@ const routes: Array<RouteRecordRaw> = [
         name: "report-category",
         component: () => import("@/views/apps/report/ReportCategory.vue"),
         meta: {
-          pageTitle: "Report Categories",
-          breadcrumbs: ["Report", "Report Categories"],
+          pageTitle: "reportCategory",
+          breadcrumbs: ["apps", "report", "reportCategory"],
         },
       },
       {
@@ -84,20 +84,20 @@ const routes: Array<RouteRecordRaw> = [
         name: "report-list",
         component: () => import("@/views/apps/report/ReportList.vue"),
         meta: {
-          pageTitle: "Report List",
-          breadcrumbs: ["Report", "Report List"],
+          pageTitle: "reportList",
+          breadcrumbs: ["apps", "report", "reportList"],
         },
       },
       // REPORT END
 
       // CONTACT START
       {
-        path: "/apps/contact/category",
+        path: "/apps/contact",
         name: "contact-category",
         component: () => import("@/views/apps/contact/Contact.vue"),
         meta: {
-          pageTitle: "Contact Category",
-          breadcrumbs: ["Contact", "Contact Categories"],
+          pageTitle: "contact",
+          breadcrumbs: ["apps", "contact"],
         },
       },
       // CONTACT END
@@ -108,8 +108,8 @@ const routes: Array<RouteRecordRaw> = [
         name: "apps-banner-management",
         component: () => import("@/views/apps/banner/Banner.vue"),
         meta: {
-          pageTitle: "Banner Management",
-          breadcrumbs: ["Apps", "Banner Management"],
+          pageTitle: "bannerManagement",
+          breadcrumbs: ["apps", "bannerManagement"],
         },
       },
       // BANNER END
@@ -120,8 +120,8 @@ const routes: Array<RouteRecordRaw> = [
         name: "apps-user-management",
         component: () => import("@/views/apps/user/UserMgmt.vue"),
         meta: {
-          pageTitle: "User Management",
-          breadcrumbs: ["Apps", "User Management"],
+          pageTitle: "user",
+          breadcrumbs: ["apps", "user"],
         },
       },
       // USER END

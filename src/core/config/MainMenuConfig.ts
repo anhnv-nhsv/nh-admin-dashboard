@@ -30,28 +30,16 @@ const MainMenuConfig: Array<MenuItem> = [
         bootstrapIcon: "bi-graph-up",
       },
       {
-        sectionTitle: "banner",
-        route: "/banner-management",
+        heading: "bannerManagement",
+        route: "/apps/banner-management",
         keenthemesIcon: "abstract-43",
         bootstrapIcon: "bi-graph-up",
-        sub: [
-          {
-            heading: "bannerManager",
-            route: "/apps/banner-management",
-          },
-        ],
       },
       {
-        sectionTitle: "Pages",
-        route: "/page-management",
+        heading: "pageManagement",
+        route: "/apps/page-management",
         keenthemesIcon: "element-equal",
         bootstrapIcon: "bi-graph-up",
-        sub: [
-          {
-            heading: "pageManagement",
-            route: "/apps/page-management",
-          },
-        ],
       },
       {
         sectionTitle: "news",
@@ -70,16 +58,10 @@ const MainMenuConfig: Array<MenuItem> = [
         ],
       },
       {
-        sectionTitle: "contact",
-        route: "/contact",
+        heading: "contact",
+        route: "/apps/contact",
         keenthemesIcon: "abstract-19",
         bootstrapIcon: "bi-graph-up",
-        sub: [
-          {
-            heading: "Contact Management",
-            route: "/apps/contact/category",
-          },
-        ],
       },
       {
         sectionTitle: "report",
@@ -98,16 +80,10 @@ const MainMenuConfig: Array<MenuItem> = [
         ],
       },
       {
-        sectionTitle: "user",
-        route: "/user-management",
+        heading: "user",
+        route: "/apps/user-management",
         keenthemesIcon: "people",
         bootstrapIcon: "bi-graph-up",
-        sub: [
-          {
-            heading: "userMgmt",
-            route: "/apps/user-management",
-          },
-        ],
       },
     ],
   },
