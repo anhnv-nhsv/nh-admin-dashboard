@@ -24,6 +24,17 @@ const routes: Array<RouteRecordRaw> = [
           breadcrumbs: ["Dashboards"],
         },
       },
+      // FILE MANAGER START
+      {
+        path: "/apps/file-manager",
+        name: "apps-file-manager",
+        component: () => import("@/views/apps/file-manager/FileManager.vue"),
+        meta: {
+          pageTitle: "File Manager",
+          // breadcrumbs: ["Apps", "File Manager"],
+        },
+      },
+      // FILE MANAGER END
       // PAGE START
       {
         path: "/apps/page-management",
