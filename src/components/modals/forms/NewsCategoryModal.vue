@@ -71,7 +71,7 @@
                     id="nh_tab_pane_1"
                     role="tabpanel"
                   >
-                    <el-form-item label="Tiêu đề" prop="name">
+                    <el-form-item :label="translate('title')" prop="name">
                       <el-input
                         v-model="pageForm.name"
                         placeholder="Tiếng Việt"
@@ -81,7 +81,7 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_english"
                         placeholder="Tiếng Anh"
@@ -90,7 +90,7 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_korea"
                         placeholder="Tiếng Hàn"
@@ -99,7 +99,7 @@
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="URL">
+                <el-form-item :label="translate('url')">
                   <el-input
                     v-model="pageForm.url"
                     placeholder="URL"
@@ -107,7 +107,7 @@
                     disabled
                   />
                 </el-form-item>
-                <el-form-item label="Publish">
+                <el-form-item :label="translate('publish')">
                   <el-switch v-model="pageForm.publish" />
                 </el-form-item>
               </el-form>
@@ -170,6 +170,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
 import type { FormInstance, UploadInstance } from "element-plus";
 import { useNewsStore } from "@/stores/news-category";
@@ -447,6 +448,7 @@ export default defineComponent({
       handleAdd,
       generateSlug,
       handleEdit,
+      translate,
     };
   },
 });

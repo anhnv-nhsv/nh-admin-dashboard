@@ -71,7 +71,7 @@
                     id="nh_tab_pane_1"
                     role="tabpanel"
                   >
-                    <el-form-item label="Tiêu đề" prop="name">
+                    <el-form-item :label="translate('title')" prop="name">
                       <el-input
                         v-model="pageForm.name"
                         placeholder="Tiếng Việt"
@@ -79,7 +79,7 @@
                         @input="generateSlug(pageForm.name)"
                       />
                     </el-form-item>
-                    <el-form-item label="Nội dung" prop="content">
+                    <el-form-item :label="translate('content')" prop="content">
                       <NhEditor
                         v-model="pageForm.content"
                         placeholder="Tiếng Việt"
@@ -87,14 +87,14 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_english"
                         placeholder="Tiếng Anh"
                         clearable
                       />
                     </el-form-item>
-                    <el-form-item label="Nội dung">
+                    <el-form-item :label="translate('content')">
                       <NhEditor
                         v-model="pageForm.content_english"
                         placeholder="Tiếng Anh"
@@ -102,14 +102,14 @@
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_korea"
                         placeholder="Tiếng Hàn"
                         clearable
                       />
                     </el-form-item>
-                    <el-form-item label="Nội dung">
+                    <el-form-item :label="translate('content')">
                       <NhEditor
                         v-model="pageForm.content_korea"
                         placeholder="Tiếng Hàn"
@@ -117,13 +117,16 @@
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="Tin nổi bật?">
+                <el-form-item :label="translate('hotNews')">
                   <el-radio-group v-model="pageForm.status">
-                    <el-radio :label="1">Không</el-radio>
-                    <el-radio :label="2">Có</el-radio>
+                    <el-radio :label="1">{{ translate("no") }}</el-radio>
+                    <el-radio :label="2">{{ translate("yes") }}</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="Chuyên mục tin" prop="parentCategory">
+                <el-form-item
+                  :label="translate('newsSection')"
+                  prop="parentCategory"
+                >
                   <el-cascader
                     v-model="pageForm.parentCategory"
                     :options="parents"
@@ -135,10 +138,10 @@
                     @change="handleChangeCategory"
                   />
                 </el-form-item>
-                <el-form-item label="Hình ảnh" prop="imageUrl">
+                <el-form-item :label="translate('image')" prop="imageUrl">
                   <el-input
                     v-model="pageForm.image"
-                    placeholder="Hình ảnh"
+                    :placeholder="translate('image')"
                     clearable
                     disabled
                   >
@@ -149,7 +152,10 @@
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="Thời gian đăng bài" prop="time_post">
+                <el-form-item
+                  :label="translate('postingTime')"
+                  prop="time_post"
+                >
                   <div class="demo-datetime-picker" style="width: 100%">
                     <div class="block">
                       <el-date-picker
@@ -163,15 +169,15 @@
                     </div>
                   </div>
                 </el-form-item>
-                <el-form-item label="URL">
+                <el-form-item :label="translate('url')">
                   <el-input
                     v-model="pageForm.url"
-                    placeholder="URL"
+                    :placeholder="translate('url')"
                     clearable
                     disabled
                   />
                 </el-form-item>
-                <el-form-item label="Publish">
+                <el-form-item :label="translate('publish')">
                   <el-switch v-model="pageForm.publish" />
                 </el-form-item>
               </el-form>
@@ -233,7 +239,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
-import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
 import type { FormInstance, UploadInstance } from "element-plus";
@@ -538,8 +544,6 @@ export default defineComponent({
     const handleChangeCategory = (value) => {
       const temp = JSON.parse(JSON.stringify(value));
       const a = temp[temp.length - 1];
-      console.log("temp: ", temp);
-      console.log("value: ", value);
 
       idSelect.value = a.toString();
     };
@@ -662,6 +666,7 @@ export default defineComponent({
       handleAdd,
       generateSlug,
       handleEdit,
+      translate,
     };
   },
 });

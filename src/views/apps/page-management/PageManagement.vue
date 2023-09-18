@@ -129,7 +129,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Operation"
+            :label="translate('action')"
           >
             <template #default="scope">
               <div class="change-status">
@@ -179,8 +179,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import { usePageStore } from "@/stores/page";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import PageManagementModal from "@/components/modals/forms/PageManagementModal.vue";
@@ -220,12 +221,12 @@ export default defineComponent({
         width: 170,
       },
       {
-        label: "Name",
+        label: translate("name"),
         prop: "name",
         visible: true,
       },
       {
-        label: "Status",
+        label: translate("status"),
         prop: "publish",
         visible: true,
         width: 120,
@@ -480,6 +481,7 @@ export default defineComponent({
       changePage,
       changePageSize,
       submitSearch,
+      translate,
     };
   },
 });

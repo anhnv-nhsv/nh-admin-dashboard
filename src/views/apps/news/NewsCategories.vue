@@ -97,7 +97,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Operation"
+            :label="translate('action')"
           >
             <template #default="scope">
               <div class="change-status">
@@ -148,7 +148,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import { Search } from "@element-plus/icons-vue";
 import { useNewsStore } from "@/stores/news-category";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
@@ -177,12 +178,12 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "Category Name",
+        label: translate("categoryName"),
         prop: "name",
         visible: true,
       },
       {
-        label: "Status",
+        label: translate("status"),
         prop: "publish",
         visible: true,
         width: 220,
@@ -439,6 +440,7 @@ export default defineComponent({
       changePage,
       changePageSize,
       submitSearch,
+      translate,
     };
   },
 });

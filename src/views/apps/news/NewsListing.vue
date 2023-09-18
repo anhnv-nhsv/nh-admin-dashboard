@@ -129,7 +129,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Operation"
+            :label="translate('action')"
           >
             <template #default="scope">
               <div class="change-status">
@@ -193,6 +193,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import { Search } from "@element-plus/icons-vue";
 import { useNewsListStore } from "@/stores/news-list";
 import { useNewsStore } from "@/stores/news-category";
@@ -223,24 +224,24 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: " Post Name",
+        label: translate("postName"),
         prop: "name",
         visible: true,
       },
       {
-        label: "Category Name",
+        label: translate("categoryName"),
         prop: "category_name",
         visible: true,
         width: 240,
       },
       {
-        label: "Posting Time",
+        label: translate("postingTime"),
         prop: "time_post",
         visible: true,
         width: 150,
       },
       {
-        label: "Status",
+        label: translate("status"),
         prop: "publish",
         visible: true,
         width: 120,
@@ -542,6 +543,7 @@ export default defineComponent({
       changePage,
       changePageSize,
       submitSearch,
+      translate,
     };
   },
 });
