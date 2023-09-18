@@ -9,8 +9,10 @@
     <div class="modal-dialog modal-dialog-centered mw-800px">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder" v-if="action === 'add'">Add Banner</h2>
-          <h2 class="fw-bolder" v-else>Edit Banner</h2>
+          <h2 class="fw-bolder" v-if="action === 'add'">
+            {{ translate("addBanner") }}
+          </h2>
+          <h2 class="fw-bolder" v-else>{{ translate("editBanner") }}</h2>
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -29,45 +31,45 @@
                 :model="bannerForm"
                 label-width="160px"
               >
-                <el-form-item label="Tên">
+                <el-form-item :label="translate('name')">
                   <el-input
                     v-model="bannerForm.name"
-                    placeholder="Tên"
+                    :placeholder="translate('name')"
                     clearable
                   />
                 </el-form-item>
-                <el-form-item label="URL">
+                <el-form-item :label="translate('url')">
                   <el-input
                     v-model="bannerForm.attachUrl"
-                    placeholder="URL"
+                    :placeholder="translate('url')"
                     clearable
                   />
                 </el-form-item>
-                <el-form-item label="Hình ảnh" prop="imageUrl">
+                <el-form-item :label="translate('image')" prop="imageUrl">
                   <el-input
                     v-model="bannerForm.imageUrl"
-                    placeholder="Hình ảnh"
+                    :placeholder="translate('image')"
                     clearable
                     disabled
                   >
                     <template #prepend>
-                      <el-button type="primary" @click.prevent="chooseImage"
-                        >Choose file
+                      <el-button type="primary" @click.prevent="chooseImage">
+                        {{ translate("chooseFile") }}
                       </el-button>
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="Nội dung">
+                <el-form-item :label="translate('content')">
                   <el-input
                     v-model="bannerForm.content"
-                    placeholder="Nội dung"
+                    :placeholder="translate('content')"
                     clearable
                   />
                 </el-form-item>
                 <el-form-item>
                   <el-checkbox
                     v-model="bannerForm.isPublish"
-                    label="Publish"
+                    :label="translate('publish')"
                     size="large"
                   />
                 </el-form-item>
@@ -82,7 +84,7 @@
             class="btn btn-light me-3"
             data-bs-dismiss="modal"
           >
-            Discard
+            {{ translate("cancelBtn") }}
           </button>
           <button
             class="btn btn-lg btn-primary"
@@ -90,13 +92,13 @@
             @click.prevent="handleRequest(ruleFormRef)"
           >
             <span v-if="!loading" class="indicator-label">
-              Submit
+              {{ translate("submitBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
             </span>
             <span v-if="loading" class="indicator-progress">
-              Please wait...
+              {{ translate("pleaseWait") }}
               <span
                 class="spinner-border spinner-border-sm align-middle ms-2"
               ></span>
@@ -116,6 +118,7 @@ import type { FormInstance } from "element-plus";
 import { useBanner } from "@/stores/banner";
 import qs from "qs";
 import { hideModal } from "@/core/helpers/dom";
+import { translate } from "@/core/helpers/i18n-translate";
 
 export default defineComponent({
   name: "banner-category-modal",
@@ -147,7 +150,7 @@ export default defineComponent({
       imageUrl: [
         {
           required: true,
-          message: "Link ảnh không được để trống",
+          message: translate("requiredField"),
           trigger: "blur",
         },
       ],
@@ -229,7 +232,7 @@ export default defineComponent({
               Swal.fire({
                 position: "center",
                 icon: "success",
-                title: "Tạo banner thành công!",
+                title: translate("addBannerSuccessfully"),
                 showConfirmButton: false,
                 timer: 1000,
               }).then(() => {
@@ -251,7 +254,7 @@ export default defineComponent({
               Swal.fire({
                 position: "center",
                 icon: "success",
-                title: "Cập nhật banner thành công!",
+                title: translate("editBannerSuccessfully"),
                 showConfirmButton: false,
                 timer: 1000,
               }).then(() => {
@@ -283,6 +286,7 @@ export default defineComponent({
       bannerModalRef,
       chooseImage,
       handleRequest,
+      translate,
     };
   },
 });
