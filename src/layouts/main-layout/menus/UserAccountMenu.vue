@@ -177,102 +177,26 @@
       <!--begin::Menu sub-->
       <div class="menu-sub menu-sub-dropdown w-175px py-4">
         <!--begin::Menu item-->
-        <div class="menu-item px-3">
-          <a
-            @click="setLang('en')"
-            href="#"
+        <div
+          class="menu-item px-3"
+          v-for="(lang, index) in Object.keys(countries)"
+          :key="index"
+        >
+          <router-link
+            @click="setLang(lang)"
+            :to="path"
             class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'en' }"
+            :class="{ active: currentLanguage === lang }"
           >
             <span class="symbol symbol-20px me-4">
               <img
                 class="rounded-1"
-                :src="getAssetPath('media/flags/united-states.svg')"
+                :src="countries[lang].flag"
                 alt="metronic"
               />
             </span>
-            English
-          </a>
-        </div>
-        <!--end::Menu item-->
-
-        <!--begin::Menu item-->
-        <div class="menu-item px-3">
-          <a
-            @click="setLang('es')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'es' }"
-          >
-            <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/spain.svg')"
-                alt="metronic"
-              />
-            </span>
-            Spanish
-          </a>
-        </div>
-        <!--end::Menu item-->
-
-        <!--begin::Menu item-->
-        <div class="menu-item px-3">
-          <a
-            @click="setLang('de')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'de' }"
-          >
-            <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/germany.svg')"
-                alt="metronic"
-              />
-            </span>
-            German
-          </a>
-        </div>
-        <!--end::Menu item-->
-
-        <!--begin::Menu item-->
-        <div class="menu-item px-3">
-          <a
-            @click="setLang('ja')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'ja' }"
-          >
-            <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/japan.svg')"
-                alt="metronic"
-              />
-            </span>
-            Japanese
-          </a>
-        </div>
-        <!--end::Menu item-->
-
-        <!--begin::Menu item-->
-        <div class="menu-item px-3">
-          <a
-            @click="setLang('fr')"
-            href="#"
-            class="menu-link d-flex px-5"
-            :class="{ active: currentLanguage === 'fr' }"
-          >
-            <span class="symbol symbol-20px me-4">
-              <img
-                class="rounded-1"
-                :src="getAssetPath('media/flags/france.svg')"
-                alt="metronic"
-              />
-            </span>
-            French
-          </a>
+            {{ countries[lang].name }}
+          </router-link>
         </div>
         <!--end::Menu item-->
       </div>
@@ -302,40 +226,31 @@ import { getAssetPath } from "@/core/helpers/assets";
 import { computed, defineComponent } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   name: "kt-user-menu",
   components: {},
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const i18n = useI18n();
     const store = useAuthStore();
+
+    const path = computed(() => route.path);
 
     i18n.locale.value = localStorage.getItem("lang")
       ? (localStorage.getItem("lang") as string)
       : "en";
 
     const countries = {
+      vi: {
+        flag: getAssetPath("media/flags/vietnam.svg"),
+        name: "Tiếng Việt",
+      },
       en: {
         flag: getAssetPath("media/flags/united-states.svg"),
         name: "English",
-      },
-      es: {
-        flag: getAssetPath("media/flags/spain.svg"),
-        name: "Spanish",
-      },
-      de: {
-        flag: getAssetPath("media/flags/germany.svg"),
-        name: "German",
-      },
-      ja: {
-        flag: getAssetPath("media/flags/japan.svg"),
-        name: "Japanese",
-      },
-      fr: {
-        flag: getAssetPath("media/flags/france.svg"),
-        name: "French",
       },
     };
 
@@ -363,6 +278,7 @@ export default defineComponent({
       currentLanguage,
       currentLangugeLocale,
       countries,
+      path,
       getAssetPath,
     };
   },

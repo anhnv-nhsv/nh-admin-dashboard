@@ -25,9 +25,9 @@
       >
         <!--begin::Item-->
         <li class="breadcrumb-item text-muted">
-          <router-link to="/" class="text-muted text-hover-primary"
-            >Home</router-link
-          >
+          <router-link to="/" class="text-muted text-hover-primary">
+            {{ translate("home") }}
+          </router-link>
         </li>
         <!--end::Item-->
         <template v-for="(item, i) in breadcrumbs" :key="i">
@@ -37,7 +37,7 @@
           </li>
           <!--end::Item-->
           <!--begin::Item-->
-          <li class="breadcrumb-item text-muted">{{ item }}</li>
+          <li class="breadcrumb-item text-muted">{{ translate(item) }}</li>
           <!--end::Item-->
         </template>
       </ul>
@@ -56,15 +56,25 @@ import {
   pageTitleDisplay,
 } from "@/core/helpers/config";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
   name: "layout-page-title",
   components: {},
   setup() {
+    const { t, te } = useI18n();
     const route = useRoute();
 
+    const translate = (text) => {
+      if (te(text)) {
+        return t(text);
+      } else {
+        return text;
+      }
+    };
+
     const pageTitle = computed(() => {
-      return route.meta.pageTitle;
+      return translate(route.meta.pageTitle);
     });
 
     const breadcrumbs = computed(() => {
@@ -77,6 +87,7 @@ export default defineComponent({
       pageTitleDisplay,
       pageTitleBreadcrumbDisplay,
       pageTitleDirection,
+      translate,
     };
   },
 });
