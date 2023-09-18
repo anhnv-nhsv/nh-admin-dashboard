@@ -229,7 +229,6 @@
       </div>
     </div>
   </div>
-  <FileManagerModal @file-selected="getFileUrl" @handle-save="handleSave" />
 </template>
 
 <script lang="ts">
@@ -273,10 +272,9 @@ export default defineComponent({
       type: Function,
     },
   },
-  components: { NhEditor, NhForm, FileManagerModal },
+  components: { NhEditor, NhForm },
   setup: function (props, ctx) {
     const store = useNewsListStore();
-    const value1 = ref("");
     const detailData = ref(props.rowDetail);
     const getAllRes = ref(props.abc);
     const publish = ref();
@@ -285,7 +283,6 @@ export default defineComponent({
     const categoryId = ref();
     const parentId = ref();
     const idRow = ref();
-    const urlIma = ref();
     const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
@@ -380,8 +377,6 @@ export default defineComponent({
         hierarchy.push(item);
       }
 
-      console.log("hierarchy: ", hierarchy);
-
       return hierarchy;
     }
 
@@ -410,7 +405,6 @@ export default defineComponent({
           pageForm.value.status = rowValue.value.status === "Noi_bat" ? 2 : 1;
           status.value = rowValue.value.status;
           publish.value = rowValue.value.publish;
-          status.value = rowValue.value.status;
           typePost.value = rowValue.value.type_post;
           categoryId.value = rowValue.value.category_id;
           parentId.value = rowValue.value.parent_id;
@@ -597,16 +591,6 @@ export default defineComponent({
       }
     };
 
-    const handleRemove = (file: any) => {
-      uploadRef.value?.handleRemove(file);
-      fileList.value = [];
-    };
-
-    const getFileUrl = (val) => {
-      console.log("val: ", val);
-      urlIma.value = val;
-    };
-
     const chooseImage = () => {
       window.addEventListener("message", handleMessage);
       Swal.fire({
@@ -666,7 +650,6 @@ export default defineComponent({
       dialogImageUrl,
       parents,
       dialogVisible,
-      value1,
       uploadRef,
       fileList,
       rowValue,
@@ -678,9 +661,7 @@ export default defineComponent({
       handleChangeCategory,
       handleAdd,
       generateSlug,
-      handleRemove,
       handleEdit,
-      getFileUrl,
     };
   },
 });

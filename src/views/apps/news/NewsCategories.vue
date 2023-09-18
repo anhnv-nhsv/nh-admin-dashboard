@@ -9,7 +9,7 @@
             v-model="formSearchData.publish"
             @change="submitSearch"
           >
-            <el-option label="All" />
+            <el-option label="All" value />
             <el-option label="Enable" value="1" />
             <el-option label="Disable" value="0" />
           </el-select>
@@ -221,7 +221,7 @@ export default defineComponent({
       dataRequestNewsCategoryManager.value = requestNewsCategoryResponse.data;
       pagination.value = {
         totalPages: requestNewsCategoryResponse.totalPages,
-        pageNo: requestNewsCategoryResponse.pageNo,
+        pageNo: +requestNewsCategoryResponse.pageNo,
         pageSize: requestNewsCategoryResponse.pageSize,
         totalCount: requestNewsCategoryResponse.totalCount,
         currentCount: requestNewsCategoryResponse.currentCount,

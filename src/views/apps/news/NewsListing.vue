@@ -24,7 +24,7 @@
               size="large"
               v-model="formSearchData.publish"
             >
-              <el-option label="All" />
+              <el-option label="All" value />
               <el-option label="Enable" value="1" />
               <el-option label="Disable" value="0" />
             </el-select>
@@ -103,7 +103,6 @@
     </div>
     <div class="card-body pt-0">
       <NHDatatable
-        ref="myTable"
         :table-header="tableHeader"
         :table-data="dataRequestNewsListManager"
         :pagination="pagination"
@@ -281,7 +280,7 @@ export default defineComponent({
       dataRequestNewsListManager.value = requestNewsListResponse.data;
       pagination.value = {
         totalPages: requestNewsListResponse.totalPages,
-        pageNo: requestNewsListResponse.pageNo,
+        pageNo: +requestNewsListResponse.pageNo,
         pageSize: requestNewsListResponse.pageSize,
         totalCount: requestNewsListResponse.totalCount,
         currentCount: requestNewsListResponse.currentCount,
