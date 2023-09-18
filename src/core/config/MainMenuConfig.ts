@@ -24,6 +24,12 @@ const MainMenuConfig: Array<MenuItem> = [
     route: "/apps",
     pages: [
       {
+        heading: "fileManager",
+        route: "/apps/file-manager",
+        keenthemesIcon: "folder",
+        bootstrapIcon: "bi-graph-up",
+      },
+      {
         sectionTitle: "banner",
         route: "/banner-management",
         keenthemesIcon: "abstract-43",

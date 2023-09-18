@@ -91,6 +91,7 @@ const messages = {
     report: "Report",
     reportCategory: "Report Category",
     reportList: "Report List",
+    fileManager: "File Manager",
   },
   es: {
     dashboard: "Tablero",
@@ -182,6 +183,7 @@ const messages = {
     report: "Report",
     reportCategory: "Report Category",
     reportList: "Report List",
+    fileManager: "File Manager",
   },
   de: {
     dashboard: "Instrumententafel",
@@ -271,6 +273,7 @@ const messages = {
     report: "Report",
     reportCategory: "Report Category",
     reportList: "Report List",
+    fileManager: "File Manager",
   },
   ja: {
     dashboard: "ダッシュボード",
@@ -360,6 +363,7 @@ const messages = {
     report: "Report",
     reportCategory: "Report Category",
     reportList: "Report List",
+    fileManager: "File Manager",
   },
   fr: {
     dashboard: "Générateur de mise",
@@ -449,6 +453,7 @@ const messages = {
     report: "Report",
     reportCategory: "Report Category",
     reportList: "Report List",
+    fileManager: "File Manager",
   },
 };
 
