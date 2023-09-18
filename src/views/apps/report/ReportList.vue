@@ -118,7 +118,6 @@
     </div>
     <div class="card-body pt-0">
       <NHDatatable
-        ref="myTable"
         :table-header="tableHeader"
         :table-data="dataRequestNewsCategoryManager"
         :pagination="pagination"

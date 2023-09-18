@@ -209,12 +209,10 @@
       </div>
     </div>
   </div>
-  <FileManagerModal @file-selected="getFileUrl" @handle-save="handleSave" />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
-import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
 import type { FormInstance, UploadInstance } from "element-plus";
@@ -246,27 +244,22 @@ export default defineComponent({
       type: Function,
     },
   },
-  components: { NhEditor, NhForm, FileManagerModal },
+  components: { NhEditor, NhForm },
   setup: function (props, ctx) {
     const store = usePageStore();
     const detailData = ref(props.rowDetail);
     const getAllRes = ref(props.abc);
-    const publish = ref();
     const status = ref();
     const typePost = ref();
     const categoryId = ref();
     const parentId = ref();
     const idRow = ref();
-    const urlIma = ref();
     const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
     const idSelect = ref();
-    const firstID = ref();
-    const dialogImageUrl = ref("");
     const dialogVisible = ref(false);
     const uploadRef = ref<UploadInstance>();
-    const fileList = ref<any>([]);
     const formSize = ref("default");
     const ruleFormRef = ref<FormInstance>();
     const pageModalRef = ref<null | HTMLElement>(null);
@@ -382,7 +375,6 @@ export default defineComponent({
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
           pageForm.value.url = "/page/" + toSlug(rowValue.value.name) + ".html";
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
-          publish.value = rowValue.value.publish;
           status.value = rowValue.value.status;
           typePost.value = rowValue.value.type_post;
           categoryId.value = rowValue.value.category_id;
@@ -396,16 +388,10 @@ export default defineComponent({
               rowValue.value.id
             );
 
-            console.log("row", rowValue.value.id);
-            parentId.value = rowValue.value.id.toString();
-            console.log("pa", parents.value[i]);
-            console.log("resultCatId: ", resultCatId);
-
             if (resultCatId !== null) {
+              parentId.value = resultCatId[resultCatId.length - 2];
+
               pageForm.value.parentCategory = resultCatId;
-              const result = resultCatId[resultCatId.length - 1];
-              console.log("result: ", result);
-              firstID.value = result;
             }
           }
         } else if (Object.keys(newVal).length === 1) {
@@ -425,7 +411,7 @@ export default defineComponent({
             featuredImgUrl: "",
             url: "/page/.html",
             parentCategory: parents.value,
-            publish: false,
+            publish: true,
           };
         }
       }
@@ -576,8 +562,6 @@ export default defineComponent({
     const handleChangeCategory = (value) => {
       const temp = JSON.parse(JSON.stringify(value));
       const a = temp[temp.length - 1];
-      console.log("value: ", value);
-      console.log("a: ", a);
 
       idSelect.value = a.toString();
     };
@@ -632,30 +616,15 @@ export default defineComponent({
       }
     };
 
-    const handleRemove = (file: any) => {
-      uploadRef.value?.handleRemove(file);
-      fileList.value = [];
-    };
-
-    const getFileUrl = (val) => {
-      console.log("val: ", val);
-      urlIma.value = val;
-    };
-
-    const handleSave = () => {};
-
     return {
       cascaderConfig,
-      handleSave,
       pageForm,
       Delete,
       Plus,
       ZoomIn,
-      dialogImageUrl,
       parents,
       dialogVisible,
       uploadRef,
-      fileList,
       rowValue,
       qwe,
       rules,
@@ -665,10 +634,8 @@ export default defineComponent({
       handleChangeCategory,
       handleAdd,
       generateSlug,
-      handleRemove,
       chooseImage,
       handleEdit,
-      getFileUrl,
     };
   },
 });
