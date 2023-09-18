@@ -165,22 +165,13 @@
       </div>
     </div>
   </div>
-  <FileManagerModal @file-selected="getFileUrl" @handle-save="handleSave" />
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
-import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
-import type {
-  FormInstance,
-  UploadFile,
-  UploadInstance,
-  UploadRawFile,
-  UploadUserFile,
-} from "element-plus";
-import NhEditor from "@/components/editor/NHEditor.vue";
+import type { FormInstance, UploadInstance } from "element-plus";
 import { useNewsStore } from "@/stores/news-category";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { hideModal } from "@/core/helpers/dom";
@@ -207,18 +198,16 @@ export default defineComponent({
       type: Function,
     },
   },
-  components: { NhForm, FileManagerModal },
+  components: { NhForm },
   setup: function (props, ctx) {
     const store = useNewsStore();
     const detailData = ref(props.rowDetail);
     const getAllRes = ref(props.abc);
     const publish = ref();
-    const status = ref();
     const typePost = ref();
     const categoryId = ref();
     const parentId = ref();
     const idRow = ref();
-    const urlIma = ref();
     const rowValue = ref(JSON.parse(JSON.stringify(detailData.value)));
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
@@ -234,13 +223,6 @@ export default defineComponent({
           trigger: "blur",
         },
       ],
-      parentCategory: [
-        {
-          required: true,
-          message: "Trường này cần phải nhập!",
-          trigger: "change",
-        },
-      ],
     });
 
     let pageForm = ref({
@@ -249,8 +231,7 @@ export default defineComponent({
       name_korea: "",
       slug: "",
       url: "/chuyen-muc-tin/.html",
-      parentCategory: [] as any,
-      publish: false,
+      publish: true,
     });
 
     function buildHierarchy(arr) {
@@ -261,8 +242,6 @@ export default defineComponent({
         item.label = item.name;
         hierarchy.push(item);
       }
-
-      console.log("hierarchy: ", hierarchy);
 
       return hierarchy;
     }
@@ -278,10 +257,8 @@ export default defineComponent({
           pageForm.value.slug = rowValue.value.slug;
           pageForm.value.url =
             "/chuyen-muc-tin/" + toSlug(rowValue.value.name) + ".html";
-          pageForm.value.parentCategory = [rowValue.value.id];
           pageForm.value.publish = rowValue.value.publish === 0 ? false : true;
           publish.value = rowValue.value.publish;
-          status.value = rowValue.value.status;
           typePost.value = rowValue.value.type_post;
           categoryId.value = rowValue.value.category_id;
           parentId.value = rowValue.value.parent_id;
@@ -293,8 +270,7 @@ export default defineComponent({
             name_korea: "",
             slug: "",
             url: "/chuyen-muc-tin/.html",
-            parentCategory: [],
-            publish: false,
+            publish: true,
           };
         }
       }
@@ -320,10 +296,8 @@ export default defineComponent({
           const formData = JSON.parse(JSON.stringify(pageForm.value));
           const result = await store.createNewsCategory({
             ...formData,
-            status: "",
             type_post: "page",
-            category_id: 10,
-            parent_id: idSelect.value,
+            parent_id: 0,
             slug: resSlug(formData.url),
             publish: formData.publish === false ? 0 : 1,
           });
@@ -359,10 +333,8 @@ export default defineComponent({
           const formData = JSON.parse(JSON.stringify(pageForm.value));
           const result = await store.editNewsCategory({
             ...formData,
-            status: status.value,
             type_post: typePost.value,
-            category_id: categoryId.value,
-            parent_id: idSelect.value,
+            parent_id: 0,
             publish: formData.publish === false ? 0 : 1,
             id: idRow.value,
             slug: resSlug(formData.url),
@@ -451,16 +423,6 @@ export default defineComponent({
       }
     };
 
-    const handleRemove = (file: any) => {
-      uploadRef.value?.handleRemove(file);
-      fileList.value = [];
-    };
-
-    const getFileUrl = (val) => {
-      console.log("val: ", val);
-      urlIma.value = val;
-    };
-
     const handleSave = () => {};
 
     return {
@@ -484,9 +446,7 @@ export default defineComponent({
       handleChangeCategory,
       handleAdd,
       generateSlug,
-      handleRemove,
       handleEdit,
-      getFileUrl,
     };
   },
 });

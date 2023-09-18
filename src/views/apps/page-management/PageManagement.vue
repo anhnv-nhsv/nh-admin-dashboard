@@ -24,7 +24,7 @@
               size="large"
               v-model="formSearchData.publish"
             >
-              <el-option label="All" />
+              <el-option label="All" value />
               <el-option label="Enable" value="1" />
               <el-option label="Disable" value="0" />
             </el-select>
@@ -103,7 +103,6 @@
     </div>
     <div class="card-body pt-0">
       <NHDatatable
-        ref="myTable"
         :table-header="tableHeader"
         :table-data="dataRequestPageManager"
         :pagination="pagination"
@@ -265,7 +264,7 @@ export default defineComponent({
       dataRequestPageManager.value = requestPageResponse.data;
       pagination.value = {
         totalPages: requestPageResponse.totalPages,
-        pageNo: requestPageResponse.pageNo,
+        pageNo: +requestPageResponse.pageNo,
         pageSize: requestPageResponse.pageSize,
         totalCount: requestPageResponse.totalCount,
         currentCount: requestPageResponse.currentCount,
