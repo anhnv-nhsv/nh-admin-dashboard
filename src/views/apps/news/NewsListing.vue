@@ -10,7 +10,7 @@
               autofocus
               v-model="formSearchData.name"
               size="large"
-              placeholder="Press enter to search"
+              :placeholder="translate('searchInput')"
               clearable
               :prefix-icon="Search"
               @submit.prevent="submitSearch"
@@ -37,7 +37,9 @@
               type="submit"
               class="btn btn-primary"
             >
-              <span v-if="true" class="indicator-label">Search</span>
+              <span v-if="true" class="indicator-label">{{
+                translate("search")
+              }}</span>
               <span v-if="false" class="indicator-progress"
                 >Please wait...
                 <span
@@ -62,7 +64,7 @@
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add News
+            {{ translate("addNews") }}
           </button>
         </div>
         <div
@@ -129,7 +131,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Operation"
+            :label="translate('action')"
           >
             <template #default="scope">
               <div class="change-status">
@@ -140,21 +142,21 @@
                   data-bs-target="#kt_news_modal"
                   @click.prevent="editCategory(scope.row)"
                 >
-                  Edit
+                  {{ translate("editBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="danger"
                   @click.prevent="deleteCategory(scope.row)"
                 >
-                  Delete
+                  {{ translate("deleteBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="default"
                   @click.prevent="handleChangeStatus(scope.row)"
                 >
-                  Change status
+                  {{ translate("changeStatus") }}
                 </el-button>
               </div>
             </template>
@@ -193,6 +195,7 @@
 
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import { Search } from "@element-plus/icons-vue";
 import { useNewsListStore } from "@/stores/news-list";
 import { useNewsStore } from "@/stores/news-category";
@@ -223,24 +226,24 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: " Post Name",
+        label: "postName",
         prop: "name",
         visible: true,
       },
       {
-        label: "Category Name",
+        label: "categoryName",
         prop: "category_name",
         visible: true,
         width: 240,
       },
       {
-        label: "Posting Time",
+        label: "postingTime",
         prop: "time_post",
         visible: true,
         width: 150,
       },
       {
-        label: "Status",
+        label: "status",
         prop: "publish",
         visible: true,
         width: 120,
@@ -542,6 +545,7 @@ export default defineComponent({
       changePage,
       changePageSize,
       submitSearch,
+      translate,
     };
   },
 });

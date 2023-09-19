@@ -11,8 +11,10 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder" v-if="action === 'add'">Add News List</h2>
-          <h2 class="fw-bolder" v-else>Edit News List</h2>
+          <h2 class="fw-bolder" v-if="action === 'add'">
+            {{ translate("addNewsList") }}
+          </h2>
+          <h2 class="fw-bolder" v-else>{{ translate("editNewsList") }}</h2>
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -44,7 +46,7 @@
                         class="nav-link active"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_1"
-                        >Tiếng Việt</a
+                        >{{ translate("vietnamese") }}</a
                       >
                     </li>
                     <li class="nav-item">
@@ -52,7 +54,7 @@
                         class="nav-link"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_2"
-                        >Tiếng Anh</a
+                        >{{ translate("english") }}</a
                       >
                     </li>
                     <li class="nav-item">
@@ -60,7 +62,7 @@
                         class="nav-link"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_3"
-                        >Tiếng Hàn</a
+                        >{{ translate("korea") }}</a
                       >
                     </li>
                   </ul>
@@ -71,59 +73,62 @@
                     id="nh_tab_pane_1"
                     role="tabpanel"
                   >
-                    <el-form-item label="Tiêu đề" prop="name">
+                    <el-form-item :label="translate('title')" prop="name">
                       <el-input
                         v-model="pageForm.name"
-                        placeholder="Tiếng Việt"
+                        :placeholder="translate('vietnamese')"
                         clearable
                         @input="generateSlug(pageForm.name)"
                       />
                     </el-form-item>
-                    <el-form-item label="Nội dung" prop="content">
+                    <el-form-item :label="translate('content')" prop="content">
                       <NhEditor
                         v-model="pageForm.content"
-                        placeholder="Tiếng Việt"
+                        :placeholder="translate('vietnamese')"
                       />
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_2" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_english"
-                        placeholder="Tiếng Anh"
+                        :placeholder="translate('english')"
                         clearable
                       />
                     </el-form-item>
-                    <el-form-item label="Nội dung">
+                    <el-form-item :label="translate('content')">
                       <NhEditor
                         v-model="pageForm.content_english"
-                        placeholder="Tiếng Anh"
+                        :placeholder="translate('english')"
                       />
                     </el-form-item>
                   </div>
                   <div class="tab-pane fade" id="nh_tab_pane_3" role="tabpanel">
-                    <el-form-item label="Tiêu đề">
+                    <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_korea"
-                        placeholder="Tiếng Hàn"
+                        :placeholder="translate('korea')"
                         clearable
                       />
                     </el-form-item>
-                    <el-form-item label="Nội dung">
+                    <el-form-item :label="translate('content')">
                       <NhEditor
                         v-model="pageForm.content_korea"
-                        placeholder="Tiếng Hàn"
+                        :placeholder="translate('korea')"
                       />
                     </el-form-item>
                   </div>
                 </div>
-                <el-form-item label="Tin nổi bật?">
+                <el-form-item :label="translate('hotNews')">
                   <el-radio-group v-model="pageForm.status">
-                    <el-radio :label="1">Không</el-radio>
-                    <el-radio :label="2">Có</el-radio>
+                    <el-radio :label="1">{{ translate("no") }}</el-radio>
+                    <el-radio :label="2">{{ translate("yes") }}</el-radio>
                   </el-radio-group>
                 </el-form-item>
-                <el-form-item label="Chuyên mục tin" prop="parentCategory">
+                <el-form-item
+                  :label="translate('newsSection')"
+                  prop="parentCategory"
+                >
                   <el-cascader
                     v-model="pageForm.parentCategory"
                     :options="parents"
@@ -135,21 +140,24 @@
                     @change="handleChangeCategory"
                   />
                 </el-form-item>
-                <el-form-item label="Hình ảnh" prop="imageUrl">
+                <el-form-item :label="translate('image')" prop="imageUrl">
                   <el-input
                     v-model="pageForm.image"
-                    placeholder="Hình ảnh"
+                    :placeholder="translate('image')"
                     clearable
                     disabled
                   >
                     <template #prepend>
                       <el-button type="primary" @click.prevent="chooseImage"
-                        >Choose file
+                        >{{ translate("chooseFile") }}
                       </el-button>
                     </template>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="Thời gian đăng bài" prop="time_post">
+                <el-form-item
+                  :label="translate('postingTime')"
+                  prop="time_post"
+                >
                   <div class="demo-datetime-picker" style="width: 100%">
                     <div class="block">
                       <el-date-picker
@@ -158,20 +166,20 @@
                         format="YYYY/MM/DD HH:mm:ss"
                         :teleported="false"
                         :editable="false"
-                        placeholder="Select date and time"
+                        :placeholder="translate('newsDateTime')"
                       />
                     </div>
                   </div>
                 </el-form-item>
-                <el-form-item label="URL">
+                <el-form-item :label="translate('url')">
                   <el-input
                     v-model="pageForm.url"
-                    placeholder="URL"
+                    :placeholder="translate('url')"
                     clearable
                     disabled
                   />
                 </el-form-item>
-                <el-form-item label="Publish">
+                <el-form-item :label="translate('publish')">
                   <el-switch v-model="pageForm.publish" />
                 </el-form-item>
               </el-form>
@@ -194,7 +202,7 @@
             @click="handleAdd(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Add
+              {{ translate("addBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -213,7 +221,7 @@
             @click="handleEdit(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Edit
+              {{ translate("editBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -233,7 +241,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
-import FileManagerModal from "@/components/modals/file-manager/FileManagerModal.vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import { Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
 import type { FormInstance, UploadInstance } from "element-plus";
@@ -294,56 +302,56 @@ export default defineComponent({
       name: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("titleValidate"),
           trigger: "blur",
         },
       ],
       name_korea: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("titleValidate"),
           trigger: "blur",
         },
       ],
       name_english: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("titleValidate"),
           trigger: "blur",
         },
       ],
       parentCategory: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("parentCategoryValidate"),
           trigger: "change",
         },
       ],
       content: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("contentValidate"),
           trigger: "change",
         },
       ],
       time_post: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("timePost"),
           trigger: "change",
         },
       ],
       content_english: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("contentValidate"),
           trigger: "change",
         },
       ],
       content_korea: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("contentValidate"),
           trigger: "change",
         },
       ],
@@ -465,7 +473,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Tạo thành công!",
+              title: translate("addNewsSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });
@@ -509,7 +517,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Cập nhật thành công!",
+              title: translate("editNewsSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });
@@ -538,8 +546,6 @@ export default defineComponent({
     const handleChangeCategory = (value) => {
       const temp = JSON.parse(JSON.stringify(value));
       const a = temp[temp.length - 1];
-      console.log("temp: ", temp);
-      console.log("value: ", value);
 
       idSelect.value = a.toString();
     };
@@ -662,6 +668,7 @@ export default defineComponent({
       handleAdd,
       generateSlug,
       handleEdit,
+      translate,
     };
   },
 });

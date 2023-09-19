@@ -103,7 +103,11 @@
       </NHDatatable>
     </div>
   </div>
-  <BannerManagementModal :action="bannerAction" :data="bannerFormData" @on-close="handleCloseModal" />
+  <BannerManagementModal
+    :action="bannerAction"
+    :data="bannerFormData"
+    @on-close="handleCloseModal"
+  />
 </template>
 
 <script lang="ts">

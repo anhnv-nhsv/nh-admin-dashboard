@@ -29,7 +29,7 @@
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Category
+            {{ translate("addCategory") }}
           </button>
         </div>
         <div
@@ -97,7 +97,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Operation"
+            :label="translate('action')"
           >
             <template #default="scope">
               <div class="change-status">
@@ -108,21 +108,21 @@
                   data-bs-target="#kt_news_category_modal"
                   @click.prevent="editCategory(scope.row)"
                 >
-                  Edit
+                  {{ translate("editBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="danger"
                   @click.prevent="deleteCategory(scope.row)"
                 >
-                  Delete
+                  {{ translate("deleteBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="default"
                   @click.prevent="handleChangeStatus(scope.row)"
                 >
-                  Change status
+                  {{ translate("changeStatus") }}
                 </el-button>
               </div>
             </template>
@@ -148,7 +148,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
+import { defineComponent, onBeforeMount, ref } from "vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import { Search } from "@element-plus/icons-vue";
 import { useNewsStore } from "@/stores/news-category";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
@@ -177,12 +178,12 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "Category Name",
+        label: "categoryName",
         prop: "name",
         visible: true,
       },
       {
-        label: "Status",
+        label: "status",
         prop: "publish",
         visible: true,
         width: 220,
@@ -286,11 +287,11 @@ export default defineComponent({
 
     const deleteCategory = (val?: any) => {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -302,7 +303,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -328,11 +329,11 @@ export default defineComponent({
       }
 
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -344,7 +345,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -371,7 +372,7 @@ export default defineComponent({
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Success!",
+          title: translate("successfully"),
           showConfirmButton: false,
           timer: 1500,
         });
@@ -439,6 +440,7 @@ export default defineComponent({
       changePage,
       changePageSize,
       submitSearch,
+      translate,
     };
   },
 });
