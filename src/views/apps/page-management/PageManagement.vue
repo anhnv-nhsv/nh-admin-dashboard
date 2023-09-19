@@ -10,7 +10,7 @@
               autofocus
               v-model="formSearchData.name"
               size="large"
-              placeholder="Press enter to search"
+              :placeholder="translate('searchInput')"
               clearable
               :prefix-icon="Search"
               @submit.prevent="submitSearch"
@@ -37,7 +37,9 @@
               type="submit"
               class="btn btn-primary"
             >
-              <span v-if="true" class="indicator-label">Search</span>
+              <span v-if="true" class="indicator-label">{{
+                translate("search")
+              }}</span>
               <span v-if="false" class="indicator-progress"
                 >Please wait...
                 <span
@@ -62,7 +64,7 @@
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Page
+            {{ translate("addPage") }}
           </button>
         </div>
         <div
@@ -140,21 +142,21 @@
                   data-bs-target="#kt_page_modal"
                   @click.prevent="editCategory(scope.row)"
                 >
-                  Edit
+                  {{ translate("editBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="danger"
                   @click.prevent="deleteCategory(scope.row)"
                 >
-                  Delete
+                  {{ translate("deleteBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="default"
                   @click.prevent="handleChangeStatus(scope.row)"
                 >
-                  Change status
+                  {{ translate("changeStatus") }}
                 </el-button>
               </div>
             </template>
@@ -209,24 +211,24 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "ID",
+        label: "id",
         prop: "id",
         visible: true,
         width: 70,
       },
       {
-        label: "Parent",
+        label: "parent",
         prop: "parent_id",
-        visible: true,
+        visible: false,
         width: 170,
       },
       {
-        label: translate("name"),
+        label: "name",
         prop: "name",
         visible: true,
       },
       {
-        label: translate("status"),
+        label: "status",
         prop: "publish",
         visible: true,
         width: 120,
@@ -328,11 +330,11 @@ export default defineComponent({
 
     const deleteCategory = (val?: any) => {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -344,7 +346,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -370,11 +372,11 @@ export default defineComponent({
       }
 
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -386,7 +388,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -413,7 +415,7 @@ export default defineComponent({
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Success!",
+          title: translate("successfully"),
           showConfirmButton: false,
           timer: 1500,
         });

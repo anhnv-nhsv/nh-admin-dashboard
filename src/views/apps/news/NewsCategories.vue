@@ -29,7 +29,7 @@
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Category
+            {{ translate("addCategory") }}
           </button>
         </div>
         <div
@@ -108,21 +108,21 @@
                   data-bs-target="#kt_news_category_modal"
                   @click.prevent="editCategory(scope.row)"
                 >
-                  Edit
+                  {{ translate("editBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="danger"
                   @click.prevent="deleteCategory(scope.row)"
                 >
-                  Delete
+                  {{ translate("deleteBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="default"
                   @click.prevent="handleChangeStatus(scope.row)"
                 >
-                  Change status
+                  {{ translate("changeStatus") }}
                 </el-button>
               </div>
             </template>
@@ -178,12 +178,12 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: translate("categoryName"),
+        label: "categoryName",
         prop: "name",
         visible: true,
       },
       {
-        label: translate("status"),
+        label: "status",
         prop: "publish",
         visible: true,
         width: 220,
@@ -287,11 +287,11 @@ export default defineComponent({
 
     const deleteCategory = (val?: any) => {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -303,7 +303,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -329,11 +329,11 @@ export default defineComponent({
       }
 
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -345,7 +345,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -372,7 +372,7 @@ export default defineComponent({
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Success!",
+          title: translate("successfully"),
           showConfirmButton: false,
           timer: 1500,
         });

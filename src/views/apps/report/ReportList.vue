@@ -10,7 +10,7 @@
               autofocus
               v-model="formSearchData.name"
               size="large"
-              placeholder="Press enter to search"
+              :placeholder="translate('searchInput')"
               clearable
               :prefix-icon="Search"
               @submit.prevent="submitSearch"
@@ -20,7 +20,7 @@
             class="col-md-3 d-flex align-items-center position-relative my-1"
           >
             <el-cascader
-              placeholder="Danh mục"
+              :placeholder="translate('category')"
               v-model="formSearchData.parentCategory"
               :options="parents"
               :teleported="false"
@@ -52,7 +52,9 @@
               type="submit"
               class="btn btn-primary"
             >
-              <span v-if="true" class="indicator-label">Search</span>
+              <span v-if="true" class="indicator-label">{{
+                translate("search")
+              }}</span>
               <span v-if="false" class="indicator-progress"
                 >Please wait...
                 <span
@@ -77,7 +79,7 @@
             @click="addCategory"
           >
             <KTIcon icon-name="plus" icon-class="fs-2" />
-            Add Report
+            {{ translate("addReport") }}
           </button>
         </div>
         <div
@@ -158,7 +160,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Thao tác"
+            :label="translate('action')"
             width="300"
           >
             <template #default="scope">
@@ -170,21 +172,21 @@
                   data-bs-target="#kt_report_modal"
                   @click.prevent="editCategory(scope.row)"
                 >
-                  Edit
+                  {{ translate("editBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="danger"
                   @click.prevent="deleteCategory(scope.row)"
                 >
-                  Delete
+                  {{ translate("deleteBtn") }}
                 </el-button>
                 <el-button
                   size="small"
                   type="default"
                   @click.prevent="handleChangeStatus(scope.row)"
                 >
-                  Change status
+                  {{ translate("changeStatus") }}
                 </el-button>
               </div>
             </template>
@@ -212,6 +214,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, onMounted, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { useReport } from "@/stores/report";
@@ -243,22 +246,22 @@ export default defineComponent({
     });
     const tableHeader = ref([
       {
-        label: "Name",
+        label: "name",
         prop: "name",
         visible: true,
       },
       {
-        label: "Category",
+        label: "category",
         prop: "category",
         visible: true,
       },
       {
-        label: "Day report",
+        label: "dateReport",
         prop: "date_report",
         visible: true,
       },
       {
-        label: "Trạng thái",
+        label: "status",
         prop: "publish",
         visible: true,
         width: 100,
@@ -362,11 +365,11 @@ export default defineComponent({
 
     const deleteCategory = async (val?: any) => {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -378,7 +381,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -408,7 +411,7 @@ export default defineComponent({
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Success!",
+          title: translate("successfully"),
           showConfirmButton: false,
           timer: 1500,
         });
@@ -435,7 +438,7 @@ export default defineComponent({
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Success!",
+          title: translate("successfully"),
           showConfirmButton: false,
           timer: 1500,
         });
@@ -557,6 +560,7 @@ export default defineComponent({
       changePage,
       changePageSize,
       submitSearch,
+      translate,
     };
   },
 });

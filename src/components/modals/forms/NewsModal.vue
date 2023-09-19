@@ -11,8 +11,10 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder" v-if="action === 'add'">Add News List</h2>
-          <h2 class="fw-bolder" v-else>Edit News List</h2>
+          <h2 class="fw-bolder" v-if="action === 'add'">
+            {{ translate("addNewsList") }}
+          </h2>
+          <h2 class="fw-bolder" v-else>{{ translate("editNewsList") }}</h2>
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -44,7 +46,7 @@
                         class="nav-link active"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_1"
-                        >Tiếng Việt</a
+                        >{{ translate("vietnamese") }}</a
                       >
                     </li>
                     <li class="nav-item">
@@ -52,7 +54,7 @@
                         class="nav-link"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_2"
-                        >Tiếng Anh</a
+                        >{{ translate("english") }}</a
                       >
                     </li>
                     <li class="nav-item">
@@ -60,7 +62,7 @@
                         class="nav-link"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_3"
-                        >Tiếng Hàn</a
+                        >{{ translate("korea") }}</a
                       >
                     </li>
                   </ul>
@@ -74,7 +76,7 @@
                     <el-form-item :label="translate('title')" prop="name">
                       <el-input
                         v-model="pageForm.name"
-                        placeholder="Tiếng Việt"
+                        :placeholder="translate('vietnamese')"
                         clearable
                         @input="generateSlug(pageForm.name)"
                       />
@@ -82,7 +84,7 @@
                     <el-form-item :label="translate('content')" prop="content">
                       <NhEditor
                         v-model="pageForm.content"
-                        placeholder="Tiếng Việt"
+                        :placeholder="translate('vietnamese')"
                       />
                     </el-form-item>
                   </div>
@@ -90,14 +92,14 @@
                     <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_english"
-                        placeholder="Tiếng Anh"
+                        :placeholder="translate('english')"
                         clearable
                       />
                     </el-form-item>
                     <el-form-item :label="translate('content')">
                       <NhEditor
                         v-model="pageForm.content_english"
-                        placeholder="Tiếng Anh"
+                        :placeholder="translate('english')"
                       />
                     </el-form-item>
                   </div>
@@ -105,14 +107,14 @@
                     <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_korea"
-                        placeholder="Tiếng Hàn"
+                        :placeholder="translate('korea')"
                         clearable
                       />
                     </el-form-item>
                     <el-form-item :label="translate('content')">
                       <NhEditor
                         v-model="pageForm.content_korea"
-                        placeholder="Tiếng Hàn"
+                        :placeholder="translate('korea')"
                       />
                     </el-form-item>
                   </div>
@@ -147,7 +149,7 @@
                   >
                     <template #prepend>
                       <el-button type="primary" @click.prevent="chooseImage"
-                        >Choose file
+                        >{{ translate("chooseFile") }}
                       </el-button>
                     </template>
                   </el-input>
@@ -164,7 +166,7 @@
                         format="YYYY/MM/DD HH:mm:ss"
                         :teleported="false"
                         :editable="false"
-                        placeholder="Select date and time"
+                        :placeholder="translate('newsDateTime')"
                       />
                     </div>
                   </div>
@@ -200,7 +202,7 @@
             @click="handleAdd(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Add
+              {{ translate("addBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -219,7 +221,7 @@
             @click="handleEdit(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Edit
+              {{ translate("editBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -300,56 +302,56 @@ export default defineComponent({
       name: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("titleValidate"),
           trigger: "blur",
         },
       ],
       name_korea: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("titleValidate"),
           trigger: "blur",
         },
       ],
       name_english: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("titleValidate"),
           trigger: "blur",
         },
       ],
       parentCategory: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("parentCategoryValidate"),
           trigger: "change",
         },
       ],
       content: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("contentValidate"),
           trigger: "change",
         },
       ],
       time_post: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("timePost"),
           trigger: "change",
         },
       ],
       content_english: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("contentValidate"),
           trigger: "change",
         },
       ],
       content_korea: [
         {
           required: true,
-          message: "Trường này cần phải nhập!",
+          message: translate("contentValidate"),
           trigger: "change",
         },
       ],
@@ -471,7 +473,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Tạo thành công!",
+              title: translate("addNewsSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });
@@ -515,7 +517,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Cập nhật thành công!",
+              title: translate("editNewsSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });

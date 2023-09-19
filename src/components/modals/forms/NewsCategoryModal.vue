@@ -11,8 +11,10 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder" v-if="action === 'add'">Add News Category</h2>
-          <h2 class="fw-bolder" v-else>Edit News Category</h2>
+          <h2 class="fw-bolder" v-if="action === 'add'">
+            {{ translate("addNewsCate") }}
+          </h2>
+          <h2 class="fw-bolder" v-else>{{ translate("editNewsCate") }}</h2>
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -44,7 +46,7 @@
                         class="nav-link active"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_1"
-                        >Tiếng Việt</a
+                        >{{ translate("vietnamese") }}</a
                       >
                     </li>
                     <li class="nav-item">
@@ -52,7 +54,7 @@
                         class="nav-link"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_2"
-                        >Tiếng Anh</a
+                        >{{ translate("english") }}</a
                       >
                     </li>
                     <li class="nav-item">
@@ -60,7 +62,7 @@
                         class="nav-link"
                         data-bs-toggle="tab"
                         href="#nh_tab_pane_3"
-                        >Tiếng Hàn</a
+                        >{{ translate("korea") }}</a
                       >
                     </li>
                   </ul>
@@ -74,7 +76,7 @@
                     <el-form-item :label="translate('title')" prop="name">
                       <el-input
                         v-model="pageForm.name"
-                        placeholder="Tiếng Việt"
+                        :placeholder="translate('vietnamese')"
                         clearable
                         @input="generateSlug(pageForm.name)"
                       />
@@ -84,7 +86,7 @@
                     <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_english"
-                        placeholder="Tiếng Anh"
+                        :placeholder="translate('english')"
                         clearable
                       />
                     </el-form-item>
@@ -93,7 +95,7 @@
                     <el-form-item :label="translate('title')">
                       <el-input
                         v-model="pageForm.name_korea"
-                        placeholder="Tiếng Hàn"
+                        :placeholder="translate('korea')"
                         clearable
                       />
                     </el-form-item>
@@ -102,7 +104,7 @@
                 <el-form-item :label="translate('url')">
                   <el-input
                     v-model="pageForm.url"
-                    placeholder="URL"
+                    :placeholder="translate('url')"
                     clearable
                     disabled
                   />
@@ -130,7 +132,7 @@
             @click="handleAdd(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Add
+              {{ translate("addBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -149,7 +151,7 @@
             @click="handleEdit(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Edit
+              {{ translate("editBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -306,7 +308,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Tạo thành công!",
+              title: translate("addNewsSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });
@@ -344,7 +346,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Cập nhật thành công!",
+              title: translate("editNewsSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });

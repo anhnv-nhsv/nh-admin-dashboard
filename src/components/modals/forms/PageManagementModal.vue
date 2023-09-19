@@ -11,8 +11,10 @@
     >
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder" v-if="action === 'add'">Add Page</h2>
-          <h2 class="fw-bolder" v-else>Edit Page</h2>
+          <h2 class="fw-bolder" v-if="action === 'add'">
+            {{ translate("addPage") }}
+          </h2>
+          <h2 class="fw-bolder" v-else>{{ translate("editPage") }}</h2>
           <div
             id="kt_customer_export_close"
             data-bs-dismiss="modal"
@@ -141,7 +143,7 @@
                   >
                     <template #prepend>
                       <el-button type="primary" @click.prevent="chooseImage"
-                        >Choose file
+                        >{{ translate("chooseFile") }}
                       </el-button>
                     </template>
                   </el-input>
@@ -467,7 +469,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Tạo thành công!",
+              title: translate("addPageSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });
@@ -510,7 +512,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Cập nhật thành công!",
+              title: translate("editPageSuccessfully"),
               showConfirmButton: false,
               timer: 1500,
             });
