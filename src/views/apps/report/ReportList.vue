@@ -480,8 +480,11 @@ export default defineComponent({
     };
 
     const handleChangeReport = (value) => {
+      console.log("value: ", value);
       const res = JSON.parse(JSON.stringify(value));
       if (res) {
+        console.log("res: ", res);
+
         idSelect.value = res.toString();
       } else {
         idSelect.value = "";

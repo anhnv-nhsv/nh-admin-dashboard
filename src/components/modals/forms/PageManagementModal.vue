@@ -381,7 +381,6 @@ export default defineComponent({
           idRow.value = rowValue.value.id;
           const test = JSON.parse(JSON.stringify(rowValue.value.allPages));
           parents.value = buildHierarchy(test.data);
-          pageForm.value.parentCategory = parents.value;
           for (let i = 0; i < parents.value.length; i++) {
             const resultCatId: any = searchTree(
               parents.value[i],
@@ -410,7 +409,7 @@ export default defineComponent({
             image_korea: "",
             featuredImgUrl: "",
             url: "/page/.html",
-            parentCategory: parents.value,
+            parentCategory: [],
             publish: true,
           };
         }
