@@ -27,7 +27,7 @@
           <iframe
             ref="fileManagerIframe"
             class="rounded h-500px w-100"
-            src="http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1"
+            src="http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1"
             :allowfullscreen="true"
           ></iframe>
         </div>

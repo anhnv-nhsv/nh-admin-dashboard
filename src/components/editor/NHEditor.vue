@@ -88,11 +88,11 @@ export default defineComponent({
         image_advtab: true,
         filemanager_crossdomain: true,
         external_filemanager_path:
-          "http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
+          "http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
           responsivefilemanager:
-            "http://127.0.0.1/filemanager/plugins/filemanager/plugin.min.js",
+            "http://172.33.30.19:8010/filemanager/plugin.min.js",
         },
         file_picker_types: "file image media",
         file_picker_callback: (callback, value, meta) => {
@@ -106,7 +106,7 @@ export default defineComponent({
           }
           const dialog = getTinymce().activeEditor.windowManager.openUrl({
             title: "Responsive Filemanager",
-            url: "http://127.0.0.1/filemanager/plugins/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
+            url: "http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
             width: width,
             height: height,
           });
