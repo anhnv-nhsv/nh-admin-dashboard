@@ -1,7 +1,20 @@
 <template>
   <div class="card">
     <div class="card-header border-0 pt-6">
-      <div class="flex-column"></div>
+      <div class="flex-column">
+        <div class="col-md-6 d-flex align-items-center position-relative my-1">
+          <el-select
+            placeholder="Status"
+            size="large"
+            v-model="formSearchData.publish"
+            @change="submitSearch"
+          >
+            <el-option label="All" value />
+            <el-option label="Enable" value="1" />
+            <el-option label="Disable" value="0" />
+          </el-select>
+        </div>
+      </div>
       <div class="card-toolbar">
         <button
           v-if="isRearrange"
@@ -156,16 +169,24 @@ export default defineComponent({
     const bannerFormData = ref({});
     const bannerList = ref([]);
     const newTableData = ref<any>([]);
+    const formSearchData = ref({
+      publish: "",
+    });
 
     const handleApplyStatus = () => {};
     const handleChangeStatus = () => {};
 
-    const getAllBanner = async (pageNo?: number, pageSize = 1000) => {
+    const getAllBanner = async (
+      pageNo?: number,
+      publish?: string,
+      pageSize = 1000
+    ) => {
       loading.value = true;
       await store.getBannerList({
         params: {
           pageNo: pageNo,
           pageSize: pageSize,
+          publish: publish,
         },
       });
       const response = JSON.parse(JSON.stringify(store.bannerList));
@@ -176,6 +197,11 @@ export default defineComponent({
     onBeforeMount(() => {
       getAllBanner(1);
     });
+
+    const submitSearch = () => {
+      const formData = JSON.parse(JSON.stringify(formSearchData.value));
+      getAllBanner(1, formData.publish ? formData.publish : "");
+    };
 
     const addBanner = () => {
       bannerAction.value = "add";
@@ -202,6 +228,7 @@ export default defineComponent({
     };
 
     const deleteBanner = (val) => {
+      const formData = JSON.parse(JSON.stringify(formSearchData.value));
       Swal.fire({
         title: translate("confirmation"),
         text: translate("deleteWarning"),
@@ -223,7 +250,7 @@ export default defineComponent({
               showConfirmButton: false,
               timer: 1000,
             });
-            await getAllBanner(1);
+            await getAllBanner(1, formData.publish ? formData.publish : "");
           } else {
             Swal.fire({
               position: "center",
@@ -251,6 +278,7 @@ export default defineComponent({
     };
 
     const updateBannerOrderId = async () => {
+      const formData = JSON.parse(JSON.stringify(formSearchData.value));
       Swal.fire({
         title: translate("confirmation"),
         icon: "warning",
@@ -280,7 +308,7 @@ export default defineComponent({
               timer: 1000,
             });
             isRearrange.value = false;
-            await getAllBanner(1);
+            await getAllBanner(1, formData.publish ? formData.publish : "");
           } else {
             Swal.fire({
               position: "center",
@@ -295,7 +323,8 @@ export default defineComponent({
     };
 
     const handleCloseModal = () => {
-      getAllBanner(1);
+      const formData = JSON.parse(JSON.stringify(formSearchData.value));
+      getAllBanner(1, formData.publish ? formData.publish : "");
     };
 
     return {
@@ -305,9 +334,11 @@ export default defineComponent({
       bannerAction,
       isRearrange,
       bannerFormData,
+      formSearchData,
       Search,
       BannerManagementModal,
       addBanner,
+      submitSearch,
       handleChangeStatus,
       deleteBanner,
       editBanner,
