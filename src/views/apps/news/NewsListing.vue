@@ -24,9 +24,9 @@
               size="large"
               v-model="formSearchData.publish"
             >
-              <el-option label="All" value />
-              <el-option label="Enable" value="1" />
-              <el-option label="Disable" value="0" />
+              <el-option :label="translate('all')" value />
+              <el-option :label="translate('enable')" value="1" />
+              <el-option :label="translate('disable')" value="0" />
             </el-select>
           </div>
           <div
@@ -348,8 +348,8 @@ export default defineComponent({
 
     const deleteCategory = (val?: any) => {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
@@ -364,7 +364,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -390,11 +390,11 @@ export default defineComponent({
       }
 
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
+        confirmButtonText: translate("deleteBtn"),
         customClass: {
           confirmButton: "btn btn-danger",
           cancelButton: "btn btn-secondary",
@@ -406,7 +406,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -433,7 +433,7 @@ export default defineComponent({
         Swal.fire({
           position: "center",
           icon: "success",
-          title: "Success!",
+          title: translate("successfully"),
           showConfirmButton: false,
           timer: 1500,
         });

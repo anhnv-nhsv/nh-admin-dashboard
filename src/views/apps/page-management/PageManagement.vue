@@ -24,9 +24,9 @@
               size="large"
               v-model="formSearchData.publish"
             >
-              <el-option label="All" value />
-              <el-option label="Enable" value="1" />
-              <el-option label="Disable" value="0" />
+              <el-option :label="translate('all')" value />
+              <el-option :label="translate('enable')" value="1" />
+              <el-option :label="translate('disable')" value="0" />
             </el-select>
           </div>
           <div

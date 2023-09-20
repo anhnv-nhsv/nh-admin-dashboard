@@ -10,7 +10,7 @@
           data-bs-target="#kt_user_action_modal"
         >
           <KTIcon icon-name="plus" icon-class="fs-2" />
-          Add user
+          {{ translate("addUser") }}
         </button>
       </div>
     </div>
@@ -45,7 +45,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="Thao tác"
+            :label="translate('action')"
             width="100"
           >
             <template #default="scope">
@@ -54,7 +54,7 @@
                 type="danger"
                 @click.prevent="deleteUser(scope.row)"
               >
-                Delete
+                {{ translate("deleteBtn") }}
               </el-button>
             </template>
           </el-table-column>
@@ -68,6 +68,7 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
 import AddUserModal from "@/components/modals/forms/AddUserModal.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
@@ -83,17 +84,17 @@ export default defineComponent({
     const store = useUserMgmt();
     const tableHeader = ref([
       {
-        label: "Tên",
+        label: "name",
         prop: "name",
         visible: true,
       },
       {
-        label: "Email",
+        label: "email",
         prop: "email",
         visible: true,
       },
       {
-        label: "Vai trò",
+        label: "role",
         prop: "role_id",
         visible: true,
       },
@@ -121,8 +122,8 @@ export default defineComponent({
 
     const deleteUser = (val) => {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",
@@ -137,7 +138,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Success!",
+              title: translate("successfully"),
               showConfirmButton: false,
               timer: 1000,
             });
@@ -165,6 +166,7 @@ export default defineComponent({
       loading,
       Search,
       deleteUser,
+      translate,
       handleCloseModal,
     };
   },
