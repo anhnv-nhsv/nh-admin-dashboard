@@ -88,7 +88,7 @@ export default defineComponent({
         image_advtab: true,
         filemanager_crossdomain: true,
         external_filemanager_path:
-          "http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
+          "http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&akey=YQv5t_7gG2.gu7b7\-xcoW",
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
           responsivefilemanager:
@@ -106,7 +106,7 @@ export default defineComponent({
           }
           const dialog = getTinymce().activeEditor.windowManager.openUrl({
             title: "Responsive Filemanager",
-            url: "http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1",
+            url: "http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&akey=YQv5t_7gG2.gu7b7\-xcoW",
             width: width,
             height: height,
           });
