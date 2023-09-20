@@ -39,7 +39,7 @@ export const useNewsStore = defineStore("news-category-score", () => {
   }
 
   function changeStatus(val) {
-    return ApiService.post("/news/publish-page", val);
+    return ApiService.post("/news/publish-cate-post", val);
   }
 
   return {
