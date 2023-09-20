@@ -44,7 +44,7 @@ export const useReport = defineStore("report", () => {
   }
 
   function changeReportCategoryStatus(val) {
-    return ApiService.post("/pages/publish-cate-report", val);
+    return ApiService.post("/reports/publish-cate-reports", val);
   }
 
   // END REPORT CATEGORY
@@ -73,7 +73,7 @@ export const useReport = defineStore("report", () => {
   }
 
   function changeReportStatus(val) {
-    return ApiService.post("/pages/publish-report", val);
+    return ApiService.post("/reports/publish-report", val);
   }
 
   // END REPORT
