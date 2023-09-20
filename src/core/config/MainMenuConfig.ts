@@ -57,12 +57,12 @@ const MainMenuConfig: Array<MenuItem> = [
           },
         ],
       },
-      {
-        heading: "contact",
-        route: "/apps/contact",
-        keenthemesIcon: "abstract-19",
-        bootstrapIcon: "bi-graph-up",
-      },
+      // {
+      //   heading: "contact",
+      //   route: "/apps/contact",
+      //   keenthemesIcon: "abstract-19",
+      //   bootstrapIcon: "bi-graph-up",
+      // },
       {
         sectionTitle: "report",
         route: "/report",

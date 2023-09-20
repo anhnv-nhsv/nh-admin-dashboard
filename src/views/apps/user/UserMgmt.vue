@@ -25,7 +25,7 @@
           <el-table-column
             header-align="center"
             class-name="text-center"
-            label="STT"
+            :label="translate('index')"
             type="index"
             width="55"
           />

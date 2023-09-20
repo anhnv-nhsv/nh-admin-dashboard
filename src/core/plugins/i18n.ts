@@ -287,7 +287,7 @@ const messages = {
     url: "URL",
     status: "Status",
     action: "Action",
-    index: "Index",
+    index: "NO.",
     categoryName: "Category Name",
     postTime: "Post Time",
     reportTime: "Report Time",
