@@ -288,7 +288,7 @@ export default defineComponent({
       await store.getAllReport({
         params: {
           name: name ? name : "",
-          id: id ? id : "",
+          category_id: id ? id : "",
           pageNo: pageNo,
           publish: publish,
           pageSize: pageSize,
@@ -406,25 +406,39 @@ export default defineComponent({
         arr.push(item.id);
       }
 
-      const res = await store.deleteReport(qs.stringify({ id: arr }));
-      if (res.data.success === true) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: translate("successfully"),
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        submitSearch();
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: res.data.mess,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-      }
+      Swal.fire({
+        title: translate("confirmation"),
+        text: translate("deleteWarning"),
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: translate("deleteBtn"),
+        customClass: {
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-secondary",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await store.deleteReport({ id: arr });
+          if (response.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: translate("successfully"),
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            submitSearch();
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: response.data.mess,
+              showConfirmButton: false,
+              timer: 1000,
+            });
+          }
+        }
+      });
     };
 
     const handleChangeStatus = async (val?: any) => {
@@ -521,11 +535,16 @@ export default defineComponent({
     });
 
     const formatDate = (val) => {
-      const dateObject = new Date(val);
+      const date = new Date(val);
+      const dateObject = new Date(date);
 
-      const formattedDate = dateObject.toISOString().split("T")[0];
+      const year = dateObject.getFullYear();
+      const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObject.getDate()).padStart(2, "0");
 
-      return formattedDate;
+      const desiredDateString = `${year}-${month}-${day}`;
+
+      return desiredDateString;
     };
 
     onBeforeMount(() => {

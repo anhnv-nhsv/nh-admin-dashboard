@@ -331,7 +331,7 @@ export default defineComponent({
           formData.value.contentVn = newData.contentVn;
           formData.value.contentEn = newData.contentEn;
           formData.value.contentKr = newData.contentKr;
-          formData.value.date_report = newData.date_report.slice(0, -8);
+          formData.value.date_report = formatDate(newData.date_report);
           formData.value.parentCategory = newData.category_id;
           cateID.value = newData.category_id;
           formData.value.url = newData.url;
@@ -553,6 +553,19 @@ export default defineComponent({
       }
     };
 
+    const formatDate = (val) => {
+      const date = new Date(val);
+      const dateObject = new Date(date);
+
+      const year = dateObject.getFullYear();
+      const month = String(dateObject.getMonth() + 1).padStart(2, "0");
+      const day = String(dateObject.getDate()).padStart(2, "0");
+
+      const desiredDateString = `${year}-${month}-${day}`;
+
+      return desiredDateString;
+    };
+
     return {
       formData,
       parents,
@@ -567,6 +580,7 @@ export default defineComponent({
       handleRequest,
       resetForm,
       generateSlug,
+      formatDate,
       translate,
     };
   },
