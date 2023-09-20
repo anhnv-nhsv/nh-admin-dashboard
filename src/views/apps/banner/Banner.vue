@@ -110,6 +110,13 @@
               >
                 {{ translate("deleteBtn") }}
               </el-button>
+              <el-button
+                size="small"
+                type="default"
+                @click.prevent="handleChangeStatus(scope.row)"
+              >
+                {{ translate("changeStatus") }}
+              </el-button>
             </template>
           </el-table-column>
         </template>
@@ -143,11 +150,13 @@ export default defineComponent({
     const tableHeader = ref([
       {
         label: "name",
+        width: 200,
         prop: "name",
         visible: true,
       },
       {
         label: "image",
+        width: 200,
         prop: "image",
         visible: true,
       },
@@ -158,7 +167,7 @@ export default defineComponent({
       },
       {
         label: "status",
-        width: 140,
+        width: 120,
         prop: "publish",
         visible: true,
       },
@@ -174,7 +183,29 @@ export default defineComponent({
     });
 
     const handleApplyStatus = () => {};
-    const handleChangeStatus = () => {};
+    const handleChangeStatus = async (val?: any) => {
+      const Tpublish = JSON.parse(JSON.stringify(val));
+      const result = Tpublish.publish === 0 ? 1 : 0;
+      const oke = await store.changeStatus({ id: val.id, publish: result });
+      if (oke.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: translate("successfully"),
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        submitSearch();
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: oke.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    };
 
     const getAllBanner = async (
       pageNo?: number,

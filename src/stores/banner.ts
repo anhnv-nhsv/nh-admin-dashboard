@@ -40,6 +40,10 @@ export const useBanner = defineStore("banner", () => {
     return ApiService.post("/banners/update-order-id", val);
   }
 
+  function changeStatus(val) {
+    return ApiService.post("/banners/publish-banner", val);
+  }
+
   return {
     bannerList,
     errors,
@@ -48,5 +52,6 @@ export const useBanner = defineStore("banner", () => {
     editBanner,
     deleteBanner,
     updateBannerOrderId,
+    changeStatus,
   };
 });
