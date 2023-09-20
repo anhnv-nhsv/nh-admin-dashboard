@@ -6,6 +6,7 @@ import JwtService from "@/core/services/JwtService";
 export interface User {
   success: boolean;
   token: string;
+  username: string;
 }
 
 export const useAuthStore = defineStore("auth", () => {
@@ -32,7 +33,7 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   function login(credentials: User) {
-    return ApiService.post("/auth", credentials)
+    return ApiService.post("/auth/auth", credentials)
       .then(({ data }) => {
         setAuth(data);
       })
