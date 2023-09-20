@@ -9,7 +9,7 @@
     <div class="modal-dialog modal-dialog-centered mw-800px">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="fw-bolder">Add User</h2>
+          <h2 class="fw-bolder">{{ translate("addUserList") }}</h2>
           <div
             id="kt_user_action_close"
             data-bs-dismiss="modal"
@@ -29,25 +29,28 @@
                 label-width="160px"
                 :rules="rules"
               >
-                <el-form-item label="Tên đăng nhập" prop="username">
+                <el-form-item :label="translate('userName')" prop="username">
                   <el-input
                     v-model="userForm.username"
-                    placeholder="Tên đăng nhập"
+                    :placeholder="translate('userName')"
                     clearable
                   />
                 </el-form-item>
-                <el-form-item label="Mật khẩu" prop="password">
+                <el-form-item
+                  :label="translate('userPassword')"
+                  prop="password"
+                >
                   <el-input
                     v-model="userForm.password"
-                    placeholder="Mật khẩu"
+                    :placeholder="translate('userPassword')"
                     clearable
                   />
                 </el-form-item>
-                <el-form-item label="Email" prop="email">
+                <el-form-item :label="translate('email')" prop="email">
                   <el-input
                     v-model="userForm.email"
                     type="email"
-                    placeholder="Email"
+                    :placeholder="translate('email')"
                     clearable
                   />
                 </el-form-item>
@@ -62,7 +65,7 @@
             class="btn btn-light me-3"
             @click.prevent="resetForm(ruleFormRef)"
           >
-            Reset
+            {{ translate("reset") }}
           </button>
           <button
             class="btn btn-lg btn-primary"
@@ -70,7 +73,7 @@
             @click.prevent="handleRequest(ruleFormRef)"
           >
             <span v-if="!loading" class="indicator-label">
-              Submit
+              {{ translate("addBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -90,6 +93,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, watch } from "vue";
+import { translate } from "@/core/helpers/i18n-translate";
 import NhForm from "@/components/nh-forms/NHForm.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import type { FormInstance } from "element-plus";
@@ -114,26 +118,26 @@ export default defineComponent({
       username: [
         {
           required: true,
-          message: "Tên đăng nhập không được để trống",
+          message: translate("useNameValidate"),
           trigger: "blur",
         },
       ],
       password: [
         {
           required: true,
-          message: "Mật khẩu không được để trống",
+          message: translate("passwordValidate"),
           trigger: "blur",
         },
       ],
       email: [
         {
           required: true,
-          message: "Email không được để trống",
+          message: translate("emailValidate"),
           trigger: "blur",
         },
         {
           type: "email",
-          message: "Email không đúng định dạng",
+          message: translate("emailValidateRule"),
           trigger: ["blur", "change"],
         },
       ],
@@ -156,7 +160,7 @@ export default defineComponent({
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Tạo user thành công!",
+              title: translate("addNewsSuccessfully"),
               showConfirmButton: false,
               timer: 1000,
             }).then(() => {
@@ -188,6 +192,7 @@ export default defineComponent({
       userModalRef,
       handleRequest,
       resetForm,
+      translate,
     };
   },
 });

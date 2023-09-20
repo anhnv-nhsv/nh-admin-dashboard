@@ -163,7 +163,8 @@
                       <el-date-picker
                         v-model="pageForm.time_post"
                         type="datetime"
-                        format="YYYY/MM/DD HH:mm:ss"
+                        format="YYYY-MM-DD HH:mm:ss"
+                        value-format="YYYY-MM-DD HH:mm:ss"
                         :teleported="false"
                         :editable="false"
                         :placeholder="translate('newsDateTime')"
@@ -193,7 +194,7 @@
             class="btn btn-light me-3"
             data-bs-dismiss="modal"
           >
-            Discard
+            {{ translate("discard") }}
           </button>
           <button
             class="btn btn-lg btn-primary"
@@ -465,7 +466,7 @@ export default defineComponent({
               parent_id: idSelect.value,
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
-              time_post: formatDate(formData.time_post),
+              time_post: formData.time_post,
               image: formData.image || "",
             })
           );
@@ -509,7 +510,7 @@ export default defineComponent({
               publish: formData.publish === false ? 0 : 1,
               id: idRow.value,
               slug: resSlug(formData.url),
-              time_post: formatDate(formData.time_post),
+              time_post: formData.time_post,
               image: formData.image || "",
             })
           );
@@ -628,26 +629,8 @@ export default defineComponent({
       }
     };
 
-    const handleSave = () => {};
-
-    const formatDate = (val) => {
-      const dateObject = new Date(val);
-
-      const subtractedDate = new Date(
-        dateObject.getTime() - 17 * 60 * 60 * 1000
-      );
-
-      const formattedDate = subtractedDate
-        .toISOString()
-        .replace("T", " ")
-        .replace(/\.\d+Z$/, "");
-
-      return formattedDate;
-    };
-
     return {
       cascaderConfig,
-      handleSave,
       chooseImage,
       pageForm,
       Delete,

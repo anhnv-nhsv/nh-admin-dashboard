@@ -170,7 +170,7 @@
             class="btn btn-light me-3"
             data-bs-dismiss="modal"
           >
-            Discard
+            {{ translate("discard") }}
           </button>
           <button
             class="btn btn-lg btn-primary"
@@ -179,7 +179,7 @@
             @click="handleAdd(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Add
+              {{ translate("addBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>
@@ -198,7 +198,7 @@
             @click="handleEdit(ruleFormRef)"
           >
             <span v-if="true" class="indicator-label">
-              Edit
+              {{ translate("editBtn") }}
               <span class="svg-icon svg-icon-3 ms-2 me-0">
                 <inline-svg src="media/icons/duotune/arrows/arr064.svg" />
               </span>

@@ -123,7 +123,7 @@
             class="btn btn-light me-3"
             data-bs-dismiss="modal"
           >
-            Discard
+            {{ translate("discard") }}
           </button>
           <button
             class="btn btn-lg btn-primary"
