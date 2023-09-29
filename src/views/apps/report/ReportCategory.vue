@@ -174,9 +174,6 @@ export default defineComponent({
     const formSearchData = ref({
       publish: "",
     });
-    const data = ref({
-      publish: "",
-    });
     const tableHeader = ref([
       {
         label: "categoryName",
@@ -387,7 +384,6 @@ export default defineComponent({
 
     return {
       dataRequestNewsCategoryManager,
-      data,
       selectedIds,
       userRole,
       syncKLPBtn,

@@ -603,6 +603,7 @@ export default defineComponent({
       Swal.fire({
         width: "80%",
         heightAuto: false,
+        /* eslint-disable no-useless-escape */
         html: `<iframe
                     ref="fileManagerIframe"
                     class="rounded h-600px w-100"
