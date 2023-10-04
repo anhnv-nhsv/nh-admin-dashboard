@@ -127,6 +127,15 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       // USER END
+      {
+        path: "/apps/setting/menu-management",
+        name: "apps-menu-management",
+        component: () => import("@/views/apps/setting/HomeMenu.vue"),
+        meta: {
+          pageTitle: "homeMenu",
+          breadcrumbs: ["apps", "homeMenu"],
+        },
+      },
     ],
   },
   {

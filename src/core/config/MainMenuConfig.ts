@@ -85,6 +85,18 @@ const MainMenuConfig: Array<MenuItem> = [
         keenthemesIcon: "people",
         bootstrapIcon: "bi-graph-up",
       },
+      {
+        sectionTitle: "settings",
+        route: "/apps/settings",
+        keenthemesIcon: "setting-4",
+        bootstrapIcon: "bi-graph-up",
+        sub: [
+          {
+            heading: "homeMenu",
+            route: "/apps/setting/menu-management",
+          },
+        ],
+      },
     ],
   },
 ];
