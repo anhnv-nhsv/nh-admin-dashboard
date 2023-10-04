@@ -28,6 +28,7 @@
               clearable
               filterable
               style="width: 100%"
+              size="large"
               @change="handleChangeReport"
             />
           </div>

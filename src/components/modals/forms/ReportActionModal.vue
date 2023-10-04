@@ -162,6 +162,7 @@
                         type="date"
                         format="YYYY-MM-DD"
                         value-format="YYYY-MM-DD"
+                        :teleported="false"
                         :editable="false"
                         :placeholder="translate('reportDate')"
                       />
@@ -512,6 +513,7 @@ export default defineComponent({
       Swal.fire({
         width: "80%",
         heightAuto: false,
+        /* eslint-disable no-useless-escape */
         html: `<iframe
                     ref="fileManagerIframe"
                     class="rounded h-600px w-100"

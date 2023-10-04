@@ -4,7 +4,7 @@
       <div class="flex-column">
         <form class="form row" autoComplete="on" @submit.prevent="submitSearch">
           <div
-            class="col-md-6 d-flex align-items-center position-relative my-1"
+            class="col-md-4 d-flex align-items-center position-relative my-1"
           >
             <el-input
               autofocus
@@ -17,7 +17,37 @@
             />
           </div>
           <div
-            class="col-md-3 d-flex align-items-center position-relative my-1"
+            class="col-md-2 d-flex align-items-center position-relative my-1"
+          >
+            <el-cascader
+              :placeholder="translate('category')"
+              v-model="formSearchData.parentCategory"
+              :options="parents"
+              :teleported="false"
+              :props="cascaderConfig"
+              clearable
+              filterable
+              style="width: 100%"
+              size="large"
+              @change="handleChangeReport"
+            />
+          </div>
+          <div
+            class="col-md-2 d-flex align-items-center position-relative my-1"
+          >
+            <el-date-picker
+              v-model="formSearchData.date_news"
+              type="date"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
+              :teleported="false"
+              :editable="false"
+              :placeholder="translate('reportDate')"
+              size="large"
+            />
+          </div>
+          <div
+            class="col-md-2 d-flex align-items-center position-relative my-1"
           >
             <el-select
               placeholder="Status"
@@ -30,7 +60,7 @@
             </el-select>
           </div>
           <div
-            class="col-md-3 d-flex align-items-center position-relative my-1"
+            class="col-md-2 d-flex align-items-center position-relative my-1"
           >
             <button
               :data-kt-indicator="false ? 'on' : null"
@@ -206,6 +236,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 const value = ref("");
 const visible = ref(false);
 let userRole = ref("all");
+const parents = ref();
 let syncPayload = ref<any[]>([]);
 
 export default defineComponent({
@@ -220,6 +251,8 @@ export default defineComponent({
     const formSearchData = ref({
       name: "",
       publish: "",
+      parentCategory: "",
+      date_news: "",
     });
     const data = ref({
       publish: "",
@@ -253,6 +286,7 @@ export default defineComponent({
     const loading = ref<boolean>(false);
     let dataRequestNewsListManager = ref();
     let newsAction = ref("");
+    const idSelect = ref();
     let pagination = ref();
     let rowDetail = ref();
     let abc = ref();
@@ -260,8 +294,10 @@ export default defineComponent({
     let syncKLPBtn = ref<HTMLElement | null>(null);
     const rowCheck = ref([]);
 
-    async function getRequestPageManager(
+    async function getAllNewsManager(
       pageNo?: number,
+      id?: string,
+      date?: string,
       name?: string,
       publish?: string,
       pageSize = "10"
@@ -270,6 +306,8 @@ export default defineComponent({
       await store.getAllNewsList({
         params: {
           name: name ? name : "",
+          category_id: id ? id : "",
+          date_news: date ? date : "",
           publish: publish ? publish : "",
           pageNo: pageNo,
           pageSize: pageSize,
@@ -293,8 +331,10 @@ export default defineComponent({
 
     function submitSearch() {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestPageManager(
+      getAllNewsManager(
         1,
+        idSelect.value,
+        formData.date_news,
         formData.name,
         formData.publish ? formData.publish : "",
         pagination.value.pageSize
@@ -451,8 +491,10 @@ export default defineComponent({
 
     function changePage(page) {
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getRequestPageManager(
+      getAllNewsManager(
         page,
+        idSelect.value,
+        formData.date_news,
         formData.name,
         formData.publish ? formData.publish : "",
         pagination.value.pageSize
@@ -463,13 +505,41 @@ export default defineComponent({
       console.log("changePageSize");
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       pagination.value.pageSize = pageSize;
-      getRequestPageManager(
+      getAllNewsManager(
         1,
+        idSelect.value,
+        formData.date_news,
         formData.name,
         formData.publish ? formData.publish : "",
         pageSize
       );
     };
+
+    const cascaderConfig = {
+      expandTrigger: "hover" as const,
+      value: "id",
+    };
+
+    const handleChangeReport = (value) => {
+      const res = JSON.parse(JSON.stringify(value));
+      if (res) {
+        idSelect.value = res.toString();
+      } else {
+        idSelect.value = "";
+      }
+    };
+
+    function buildHierarchy(arr) {
+      const hierarchy: any = [];
+      // Create a map of id to item and initialize children
+      for (const item of arr) {
+        item.value = item.name;
+        item.label = item.name;
+        hierarchy.push(item);
+      }
+
+      return hierarchy;
+    }
 
     onMounted(() => {
       async function getRequestNewsCategoryManager(
@@ -493,6 +563,7 @@ export default defineComponent({
         );
 
         nameCate.value = requestNewsCategoryResponse.data;
+        parents.value = buildHierarchy(requestNewsCategoryResponse.data);
 
         loading.value = false;
       }
@@ -514,10 +585,12 @@ export default defineComponent({
     };
 
     onBeforeMount(() => {
-      getRequestPageManager(1);
+      getAllNewsManager(1);
     });
     return {
       dataRequestNewsListManager,
+      parents,
+      cascaderConfig,
       nameCate,
       data,
       selectedIds,
@@ -534,6 +607,7 @@ export default defineComponent({
       rowDetail,
       Search,
       abc,
+      handleChangeReport,
       addCategory,
       formatDate,
       editCategory,
