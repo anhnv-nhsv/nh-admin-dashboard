@@ -167,14 +167,22 @@ const MainMenuConfig: Array<MenuItem> = [
         bootstrapIcon: "bi-graph-up",
       },
       {
-        sectionTitle: "settings",
-        route: "/apps/settings",
-        keenthemesIcon: "setting-4",
+        sectionTitle: "setting",
+        route: "/setting",
+        keenthemesIcon: "setting-2",
         bootstrapIcon: "bi-graph-up",
         sub: [
           {
-            heading: "homeMenu",
-            route: "/apps/setting/menu-management",
+            heading: "Menu",
+            route: "/apps/setting/menu",
+          },
+          {
+            heading: "Display",
+            route: "/apps/setting/display",
+          },
+          {
+            heading: "Setting",
+            route: "/apps/setting/custom",
           },
         ],
       },

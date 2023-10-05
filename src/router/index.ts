@@ -127,15 +127,37 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
       // USER END
+
+      // SETTING START
       {
-        path: "/apps/setting/menu-management",
-        name: "apps-menu-management",
-        component: () => import("@/views/apps/setting/HomeMenu.vue"),
+        path: "/apps/setting/menu",
+        name: "menu-management",
+        component: () => import("@/views/apps/settings/Menu.vue"),
         meta: {
-          pageTitle: "homeMenu",
-          breadcrumbs: ["apps", "homeMenu"],
+          pageTitle: "Menu",
+          breadcrumbs: ["apps", "setting", "Menu"],
         },
       },
+
+      {
+        path: "/apps/setting/display",
+        name: "display-management",
+        component: () => import("@/views/apps/settings/Display.vue"),
+        meta: {
+          pageTitle: "Display",
+          breadcrumbs: ["apps", "setting", "Display"],
+        },
+      },
+      {
+        path: "/apps/setting/custom",
+        name: "setting-management",
+        component: () => import("@/views/apps/settings/Setting.vue"),
+        meta: {
+          pageTitle: "Setting",
+          breadcrumbs: ["apps", "setting", "Custom"],
+        },
+      },
+      // SETTING END
     ],
   },
   {
