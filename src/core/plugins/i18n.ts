@@ -209,6 +209,10 @@ const messages = {
     nameMenu: "Tên Menu",
     nameMenuValidate: "Vui lòng nhập tên menu",
     addMenuList: "Tạo mới menu",
+    menuStructure: "Cấu trúc menu",
+    collocation:
+      "Sắp xếp item theo thứ tự bạn thích. Nhấp vào mũi tên bên phải mục để hiển thị thêm các tùy chọn cấu hình",
+    customLink: "Tùy chỉnh liên kết",
   },
   en: {
     home: "Home",
@@ -418,6 +422,10 @@ const messages = {
     black: "Black",
     nameMenu: "Name Menu",
     addMenuList: "Create menu",
+    menuStructure: "Menu structure",
+    collocation:
+      "Arrange items in the order you prefer. Click the right arrow next to the item to display additional configuration options",
+    customLink: "Customize the link",
   },
   // es: {
   //   dashboard: "Tablero",

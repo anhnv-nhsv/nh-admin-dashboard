@@ -164,31 +164,29 @@
             :label="translate('action')"
           >
             <template #default="scope">
-              <div class="change-status">
-                <el-button
-                  size="small"
-                  type="default"
-                  data-bs-toggle="modal"
-                  data-bs-target="#kt_news_modal"
-                  @click.prevent="editCategory(scope.row)"
-                >
-                  {{ translate("editBtn") }}
-                </el-button>
-                <el-button
-                  size="small"
-                  type="danger"
-                  @click.prevent="deleteCategory(scope.row)"
-                >
-                  {{ translate("deleteBtn") }}
-                </el-button>
-                <el-button
-                  size="small"
-                  type="default"
-                  @click.prevent="handleChangeStatus(scope.row)"
-                >
-                  {{ translate("changeStatus") }}
-                </el-button>
-              </div>
+              <el-button
+                size="small"
+                type="default"
+                data-bs-toggle="modal"
+                data-bs-target="#kt_news_modal"
+                @click.prevent="editCategory(scope.row)"
+              >
+                {{ translate("editBtn") }}
+              </el-button>
+              <el-button
+                size="small"
+                type="danger"
+                @click.prevent="deleteCategory(scope.row)"
+              >
+                {{ translate("deleteBtn") }}
+              </el-button>
+              <el-button
+                size="small"
+                type="default"
+                @click.prevent="handleChangeStatus(scope.row)"
+              >
+                {{ translate("changeStatus") }}
+              </el-button>
             </template>
           </el-table-column>
         </template>

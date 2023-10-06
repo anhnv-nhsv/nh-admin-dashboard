@@ -4,6 +4,7 @@
     :threshold="20"
     @input="onChangeList($event)"
     @change="changeItem"
+    :maxDepth="20"
   >
     <template v-slot="slot">
       <vue-nestable-handle>
@@ -61,71 +62,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, ref, watch } from "vue";
 import { translate } from "@/core/helpers/i18n-translate";
 import { VueNestable, VueNestableHandle } from "vue3-nestable";
 
 export default defineComponent({
   name: "nh-menu",
+  props: {
+    menuArray: { type: Array, required: true, default: () => [] },
+  },
   components: {
     VueNestable,
     VueNestableHandle,
   },
   setup(props, ctx) {
-    const nestableItems = ref([
-      {
-        id: 0,
-        text: "Andy",
-        title: "Andy",
-        url: "#",
-      },
-      {
-        id: 1,
-        text: "Harry",
-        title: "Harry",
-        url: "#",
-        children: [
-          {
-            id: 2,
-            text: "David 1",
-            title: "David 1",
-            url: "#",
-            children: [
-              {
-                id: 3,
-                text: "David 2",
-                title: "David 2",
-                url: "#",
-              },
-              {
-                id: 4,
-                text: "Lisa",
-                title: "Lisa",
-                url: "#",
-              },
-            ],
-          },
-          {
-            id: 5,
-            text: "Lisa 2",
-            title: "Lisa 2",
-            url: "#",
-          },
-          {
-            id: 6,
-            text: "Lisa 3",
-            title: "Lisa 3",
-            url: "#",
-          },
-        ],
-      },
-      {
-        id: 7,
-        text: "Lisa 4",
-        title: "Lisa 4",
-        url: "#",
-      },
-    ]);
+    const data = ref(props.menuArray);
+    let nestableItems = ref(JSON.parse(JSON.stringify(data.value)));
+
+    watch(
+      () => props.menuArray,
+      (newVal) => {
+        if (newVal.length > 0) {
+          nestableItems.value = newVal;
+        }
+      }
+    );
 
     const onChangeList = (e) => {
       nestableItems.value = e;

@@ -349,7 +349,7 @@ export default defineComponent({
         titleVn: rawVal.name,
         titleEn: rawVal.name_english,
         titleKr: rawVal.name_korea,
-        url: `/danh-muc/${rawVal.slug}.html`,
+        url: `/bao-cao/${rawVal.slug}.html`,
         publish: rawVal.publish !== 0,
         parent_id: rawVal.parent_id,
         image: rawVal.file,

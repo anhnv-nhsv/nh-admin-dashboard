@@ -42,6 +42,10 @@ export const useNewsStore = defineStore("news-category-score", () => {
     return ApiService.post("/news/publish-cate-post", val);
   }
 
+  function updateNewsOrderId(val) {
+    return ApiService.post("/news/update-cate-order-id", val);
+  }
+
   return {
     allNewCategoryResp,
     errors,
@@ -49,6 +53,7 @@ export const useNewsStore = defineStore("news-category-score", () => {
     deleteNewsCategory,
     createNewsCategory,
     editNewsCategory,
+    updateNewsOrderId,
     changeStatus,
   };
 });
