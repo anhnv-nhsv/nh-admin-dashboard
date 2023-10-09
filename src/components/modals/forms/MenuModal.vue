@@ -117,6 +117,7 @@ export default defineComponent({
           const result = await store.createUser(
             qs.stringify(JSON.parse(JSON.stringify(userForm.value)))
           );
+
           if (result.data.success === true) {
             Swal.fire({
               position: "center",

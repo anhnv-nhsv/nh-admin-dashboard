@@ -305,7 +305,7 @@ export default defineComponent({
         params: {
           name: name ? name : "",
           category_id: id ? id : "",
-          date_news: date ? date : "",
+          time_post: date ? date + "%" : "",
           publish: publish ? publish : "",
           pageNo: pageNo,
           pageSize: pageSize,
@@ -319,7 +319,7 @@ export default defineComponent({
       dataRequestNewsListManager.value = requestNewsListResponse.data;
       pagination.value = {
         totalPages: requestNewsListResponse.totalPages,
-        pageNo: +requestNewsListResponse.pageNo,
+        pageNo: requestNewsListResponse.pageNo,
         pageSize: requestNewsListResponse.pageSize,
         totalCount: requestNewsListResponse.totalCount,
         currentCount: requestNewsListResponse.currentCount,

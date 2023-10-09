@@ -44,14 +44,14 @@
               <el-form ref="ruleFormRef" :model="formSearchData" class="py-4">
                 <el-form-item :label="translate('url')">
                   <el-input
-                    v-model="formSearchData.url"
+                    v-model="customizeLink.url"
                     :placeholder="translate('url')"
                     clearable
                   />
                 </el-form-item>
                 <el-form-item :label="translate('title')">
                   <el-input
-                    v-model="formSearchData.title"
+                    v-model="customizeLink.title"
                     :placeholder="translate('title')"
                     clearable
                   />
@@ -112,7 +112,11 @@
                     {{ translate("deleteBtn") }}
                   </span>
                 </button>
-                <button class="btn btn-sm btn-primary" type="submit">
+                <button
+                  class="btn btn-sm btn-primary"
+                  type="submit"
+                  @click="handleUpdateMenu"
+                >
                   <span class="indicator-label">
                     {{ translate("btnUpdate") }}
                   </span>
@@ -331,7 +335,9 @@ export default defineComponent({
     ];
     let formSearchData = ref({
       publish: "",
-      activeNames: "1",
+    });
+
+    const customizeLink = ref({
       url: "http://",
       title: "",
     });
@@ -341,8 +347,8 @@ export default defineComponent({
     });
 
     const onListChange = (list) => {
-      // nestableItems.value = list;
-      console.log(list);
+      nestableItems.value = list;
+      // console.log(list);
     };
 
     watch(formSearchData.value, (_) => {
@@ -483,11 +489,18 @@ export default defineComponent({
     };
 
     const handleAddLink = () => {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
+      const formData = JSON.parse(JSON.stringify(customizeLink.value));
       console.log("--->: ", {
         title: formData.title,
         url: formData.url,
       });
+    };
+
+    const handleUpdateMenu = () => {
+      console.log(
+        "Update strcture here: ",
+        JSON.parse(JSON.stringify(nestableItems.value))
+      );
     };
 
     return {
@@ -497,6 +510,7 @@ export default defineComponent({
       isRearrange,
       bannerFormData,
       formSearchData,
+      customizeLink,
       options,
       nestableItems,
       editMenu,
@@ -513,6 +527,7 @@ export default defineComponent({
       translate,
       onListChange,
       handleAddLink,
+      handleUpdateMenu,
     };
   },
 });

@@ -1,64 +1,66 @@
 <template>
-  <vue-nestable
-    :value="nestableItems"
-    :threshold="20"
-    @input="onChangeList($event)"
-    @change="changeItem"
-    :maxDepth="20"
-  >
-    <template v-slot="slot">
-      <vue-nestable-handle>
-        <div
-          class="custom-border bg-body align-items-center border border-solid border-gray-300 rounded w-375px min-w-200px px-7 py-3 mb-5"
-        >
-          <div class="d-flex justify-content-between">
-            <span class="fs-5 text-dark text-hover-primary fw-bold">
-              {{ slot.item.text }}
-            </span>
-            <div
-              class="fw-bold fs-3 rotate collapsible"
-              data-bs-toggle="collapse"
-              :href="`#kt_edit_menu_collapse_${slot.item.id}`"
-              role="button"
-              aria-expanded="false"
-              aria-controls="kt_edit_menu_collapse"
-            >
-              <span class="ms-2 rotate-180">
-                <KTIcon icon-name="down" icon-class="fs-3" />
-              </span>
-            </div>
-          </div>
+  <div v-if="nestableItems.length">
+    <vue-nestable
+      :value="nestableItems"
+      :threshold="20"
+      @input="onChangeList($event)"
+      @change="changeItem"
+      :maxDepth="20"
+    >
+      <template v-slot="slot">
+        <vue-nestable-handle>
           <div
-            :id="`kt_edit_menu_collapse_${slot.item.id}`"
-            class="mt-5 px-5 collapse"
+            class="custom-border bg-body align-items-center border border-solid border-gray-300 rounded w-375px min-w-200px px-7 py-3 mb-5"
           >
-            <div class="d-flex flex-column mb-7 fv-row">
-              <label class="required fs-6 fw-semobold mb-2">
-                {{ translate("title") }}
-              </label>
-              <el-form-item>
-                <el-input
-                  :placeholder="translate('title')"
-                  v-model="slot.item.title"
-                />
-              </el-form-item>
+            <div class="d-flex justify-content-between">
+              <span class="fs-5 text-dark text-hover-primary fw-bold">
+                {{ slot.item.text }}
+              </span>
+              <div
+                class="fw-bold fs-3 rotate collapsible"
+                data-bs-toggle="collapse"
+                :href="`#kt_edit_menu_collapse_${slot.item.id}`"
+                role="button"
+                aria-expanded="false"
+                aria-controls="kt_edit_menu_collapse"
+              >
+                <span class="ms-2 rotate-180">
+                  <KTIcon icon-name="down" icon-class="fs-3" />
+                </span>
+              </div>
             </div>
-            <div class="d-flex flex-column mb-7 fv-row">
-              <label class="required fs-6 fw-semobold mb-2">
-                {{ translate("url") }}
-              </label>
-              <el-form-item>
-                <el-input
-                  :placeholder="translate('url')"
-                  v-model="slot.item.url"
-                />
-              </el-form-item>
+            <div
+              :id="`kt_edit_menu_collapse_${slot.item.id}`"
+              class="mt-5 px-5 collapse"
+            >
+              <div class="d-flex flex-column mb-7 fv-row">
+                <label class="required fs-6 fw-semobold mb-2">
+                  {{ translate("title") }}
+                </label>
+                <el-form-item>
+                  <el-input
+                    :placeholder="translate('title')"
+                    v-model="slot.item.title"
+                  />
+                </el-form-item>
+              </div>
+              <div class="d-flex flex-column mb-7 fv-row">
+                <label class="required fs-6 fw-semobold mb-2">
+                  {{ translate("url") }}
+                </label>
+                <el-form-item>
+                  <el-input
+                    :placeholder="translate('url')"
+                    v-model="slot.item.url"
+                  />
+                </el-form-item>
+              </div>
             </div>
           </div>
-        </div>
-      </vue-nestable-handle>
-    </template>
-  </vue-nestable>
+        </vue-nestable-handle>
+      </template>
+    </vue-nestable>
+  </div>
 </template>
 
 <script lang="ts">
@@ -76,15 +78,12 @@ export default defineComponent({
     VueNestableHandle,
   },
   setup(props, ctx) {
-    const data = ref(props.menuArray);
-    let nestableItems = ref(JSON.parse(JSON.stringify(data.value)));
+    const nestableItems = ref(props?.menuArray);
 
     watch(
       () => props.menuArray,
       (newVal) => {
-        if (newVal.length > 0) {
-          nestableItems.value = newVal;
-        }
+        nestableItems.value = newVal;
       }
     );
 
