@@ -88,11 +88,43 @@ export default defineComponent({
     );
 
     const onChangeList = (e) => {
-      nestableItems.value = e;
+      if (e.length) {
+        nestableItems.value = e;
+      }
     };
 
     const changeItem = (value, options) => {
-      ctx.emit("on-change", JSON.parse(JSON.stringify(options.items)));
+      if (options?.items) {
+        const result: any = [];
+        let itemChanged = Object.assign({}, value);
+        if (options.pathTo.length > 1) {
+          const objTest = findCurrParent(options.pathTo);
+          itemChanged.parent = objTest.id;
+          result.push(itemChanged);
+          // console.log("result: ", result);
+        } else {
+          itemChanged.parent = 0;
+        }
+        ctx.emit("on-position-change", JSON.parse(JSON.stringify(result)));
+      } else {
+        ctx.emit(
+          "on-list-change",
+          JSON.parse(JSON.stringify(nestableItems.value))
+        );
+      }
+    };
+
+    const findCurrParent = (path) => {
+      let obj: any = nestableItems.value[path[0]];
+      let end = path.length - 2,
+        i = 1;
+      while (end >= 0 && i <= end) {
+        obj = obj.children[path[i]];
+        i++;
+      }
+      // console.log("obj: ", obj);
+
+      return obj;
     };
 
     return {

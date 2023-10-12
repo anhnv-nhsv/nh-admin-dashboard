@@ -127,6 +127,7 @@
                     v-model="pageForm.parentCategory"
                     :options="parents"
                     :props="cascaderConfig"
+                    :teleported="false"
                     clearable
                     filterable
                     style="width: 100%"
@@ -336,13 +337,17 @@ export default defineComponent({
       publish: false,
     });
 
+    function truncate(string, n) {
+      return string?.length > n ? string.substr(0, n - 1) + "..." : string;
+    }
+
     function buildHierarchy(arr) {
       const hierarchy = {};
       // Create a map of id to item and initialize children
       for (const item of arr) {
         item.children = [];
         item.value = item.name;
-        item.label = item.name;
+        item.label = truncate(item.name, 45);
         hierarchy[item.id] = item;
       }
 

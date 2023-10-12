@@ -81,14 +81,14 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 import type { FormInstance } from "element-plus";
 import qs from "qs";
 import { hideModal } from "@/core/helpers/dom";
-import { useUserMgmt } from "@/stores/user-mgmt";
+import { useMenu } from "@/stores/menu";
 
 export default defineComponent({
   name: "menu-modal",
   components: { NhForm },
   setup(props, ctx) {
     const loading = ref(false);
-    const store = useUserMgmt();
+    const store = useMenu();
     const ruleFormRef = ref<FormInstance>();
     const userModalRef = ref<null | HTMLElement>(null);
     const userForm = ref({
@@ -109,20 +109,41 @@ export default defineComponent({
       formEl.resetFields();
     };
 
+    function getCurrentDateTime() {
+      const now = new Date();
+
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
+
+      const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+      return formattedDateTime;
+    }
+
     const handleRequest = (formEl: FormInstance | undefined) => {
       loading.value = true;
       if (!formEl) return;
       formEl.validate(async (valid, fields) => {
         if (valid) {
-          const result = await store.createUser(
-            qs.stringify(JSON.parse(JSON.stringify(userForm.value)))
-          );
+          const currentDateTime = getCurrentDateTime();
+          const rawForm = JSON.parse(JSON.stringify(userForm.value));
+          const dataReq = {
+            name: rawForm.nameMenu,
+            created_at: currentDateTime,
+            updated_at: currentDateTime,
+          };
+          const result = await store.createMenu(qs.stringify(dataReq));
 
           if (result.data.success === true) {
             Swal.fire({
               position: "center",
               icon: "success",
-              title: translate("addNewsSuccessfully"),
+              title: "Successfully",
               showConfirmButton: false,
               timer: 1000,
             }).then(() => {

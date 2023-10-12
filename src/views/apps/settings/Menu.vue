@@ -14,10 +14,10 @@
               clearable
             >
               <el-option
-                v-for="item in options"
-                :key="item.label"
+                v-for="item in selectMenu"
+                :key="item.id"
                 :label="item.label"
-                :value="item.value"
+                :value="item.id"
               />
             </el-select>
           </div>
@@ -46,12 +46,14 @@
                   <el-input
                     v-model="customizeLink.url"
                     :placeholder="translate('url')"
+                    :disabled="!formSearchData.publish"
                     clearable
                   />
                 </el-form-item>
                 <el-form-item :label="translate('title')">
                   <el-input
                     v-model="customizeLink.title"
+                    :disabled="!formSearchData.publish"
                     :placeholder="translate('title')"
                     clearable
                   />
@@ -93,7 +95,7 @@
                 />
               </div>
               <el-button type="primary">
-                {{ translate("btnUpdate") }}
+                {{ translate("btnUpdateNameMenu") }}
               </el-button>
             </div>
             <div class="p-1 px-4 my-3 rounded">
@@ -103,7 +105,11 @@
               </div>
               <div>
                 <div class="pt-0 container-content">
-                  <NhMenu @on-change="onListChange" :menuArray="menuVal" />
+                  <NhMenu
+                    @on-list-change="onListChange"
+                    :menuArray="menuVal"
+                    @on-position-change="onPosionChange"
+                  />
                 </div>
               </div>
               <div class="d-flex justify-content-end py-6">
@@ -132,16 +138,18 @@
     :action="bannerAction"
     :data="bannerFormData"
     @on-close="handleCloseModal"
+    @submitSearch="submitSearch"
   />
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, ref, watch } from "vue";
+import { defineComponent, onBeforeMount, onMounted, ref, watch } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import MenuModal from "@/components/modals/forms/MenuModal.vue";
 import NhMenu from "@/components/menu/NHMenu.vue";
-import { useBanner } from "@/stores/banner";
+import { useMenu } from "@/stores/menu";
 import Swal from "sweetalert2/dist/sweetalert2.js";
+import qs from "qs";
 import { translate } from "@/core/helpers/i18n-translate";
 
 export default defineComponent({
@@ -151,188 +159,15 @@ export default defineComponent({
     NhMenu,
   },
   setup() {
-    const store = useBanner();
+    const store = useMenu();
     const nestableItems = ref([]);
     const loading = ref<boolean>(false);
     const isRearrange = ref<boolean>(false);
     const bannerAction = ref("");
     const bannerFormData = ref({});
-    const bannerList = ref([]);
     const menuVal = ref();
-
-    // const options = [
-    //   {
-    //     value: "",
-    //     label: translate("select"),
-    //   },
-    //   {
-    //     value: "1",
-    //     label: translate("menuTopVi"),
-    //   },
-    //   {
-    //     value: "2",
-    //     label: translate("menuTopEn"),
-    //   },
-    //   {
-    //     value: "3",
-    //     label: translate("menuTopKr"),
-    //   },
-    //   {
-    //     value: "4",
-    //     label: translate("menuBannerVi"),
-    //   },
-    //   {
-    //     value: "5",
-    //     label: translate("menuBannerEn"),
-    //   },
-    //   {
-    //     value: "6",
-    //     label: translate("menuBannerKr"),
-    //   },
-    //   {
-    //     value: "7",
-    //     label: translate("openAcc"),
-    //   },
-    //   {
-    //     value: "8",
-    //     label: translate("menuVertical"),
-    //   },
-    // ];
-    const options = [
-      {
-        label: translate("select"),
-        value: "",
-        data: [],
-      },
-      {
-        label: translate("menuTopVi"),
-        value: "1",
-        data: [
-          {
-            id: 0,
-            text: "Andy",
-            title: "Andy",
-            url: "#",
-          },
-          {
-            id: 1,
-            text: "Harry",
-            title: "Harry",
-            url: "#",
-            children: [
-              {
-                id: 2,
-                text: "David 1",
-                title: "David 1",
-                url: "#",
-                children: [
-                  {
-                    id: 3,
-                    text: "David 2",
-                    title: "David 2",
-                    url: "#",
-                  },
-                  {
-                    id: 4,
-                    text: "Lisa",
-                    title: "Lisa",
-                    url: "#",
-                  },
-                ],
-              },
-              {
-                id: 5,
-                text: "Lisa 2",
-                title: "Lisa 2",
-                url: "#",
-              },
-              {
-                id: 6,
-                text: "Lisa 3",
-                title: "Lisa 3",
-                url: "#",
-              },
-            ],
-          },
-          {
-            id: 7,
-            text: "Lisa 4",
-            title: "Lisa 4",
-            url: "#",
-          },
-          {
-            id: 8,
-            text: "Lisa 8",
-            title: "Lisa 8",
-            url: "#",
-          },
-          {
-            id: 9,
-            text: "Lisa 9",
-            title: "Lisa 9",
-            url: "#",
-          },
-          {
-            id: 10,
-            text: "Lisa 10",
-            title: "Lisa 10",
-            url: "#",
-          },
-        ],
-      },
-      {
-        label: translate("menuTopEn"),
-        value: "2",
-        data: [
-          {
-            id: 0,
-            text: "Harry",
-            title: "Harry",
-            url: "#",
-          },
-          {
-            id: 1,
-            text: "Harry",
-            title: "Harry",
-            url: "#",
-            children: [
-              {
-                id: 2,
-                text: "David 1",
-                title: "David 1",
-                url: "#",
-                children: [
-                  {
-                    id: 3,
-                    text: "David 2",
-                    title: "David 2",
-                    url: "#",
-                  },
-                  {
-                    id: 4,
-                    text: "Lisa",
-                    title: "Lisa",
-                    url: "#",
-                  },
-                ],
-              },
-              {
-                id: 5,
-                text: "Lisa 2",
-                title: "Lisa 2",
-                url: "#",
-              },
-              {
-                id: 6,
-                text: "Lisa 3",
-                title: "Lisa 3",
-                url: "#",
-              },
-            ],
-          },
-        ],
-      },
-    ];
+    const selectMenu = ref();
+    const resChangeItemsMenu = ref();
     let formSearchData = ref({
       publish: "",
     });
@@ -346,183 +181,213 @@ export default defineComponent({
       menuName: "",
     });
 
-    const onListChange = (list) => {
-      nestableItems.value = list;
-      // console.log(list);
-    };
-
     watch(formSearchData.value, (_) => {
       if (formSearchData.value.publish !== "") {
-        editMenu.value.menuName = options[formSearchData.value.publish].label;
+        const inputName = JSON.parse(JSON.stringify(selectMenu.value));
+
+        editMenu.value.menuName =
+          inputName[+formSearchData.value.publish - 1].label;
       } else {
         editMenu.value.menuName = "";
       }
     });
 
-    watch(formSearchData.value, (_) => {
-      if (formSearchData.value.publish !== "") {
-        const result = options.find(
-          (item) => item.value === formSearchData.value.publish
-        );
-        menuVal.value = JSON.parse(JSON.stringify(result?.data));
-      } else {
-        menuVal.value = [];
-      }
-    });
-
-    const handleApplyStatus = () => {};
-    const handleChangeStatus = async (val?: any) => {
-      const Tpublish = JSON.parse(JSON.stringify(val));
-      const result = Tpublish.publish === 0 ? 1 : 0;
-      const oke = await store.changeStatus({ id: val.id, publish: result });
-      if (oke.data.success === true) {
-        Swal.fire({
-          position: "center",
-          icon: "success",
-          title: translate("successfully"),
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        submitSearch();
-      } else {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: oke.data.mess,
-          showConfirmButton: false,
-          timer: 1500,
+    const formatItem = (items) => {
+      if (items.length > 0) {
+        return items.map((item) => {
+          delete item?.children;
+          return {
+            id: item?.id,
+            label: item?.title,
+            link: item?.url,
+            parent: item?.parent,
+            sort: item?.sort,
+            menu: item?.menu,
+            depth: item?.depth,
+          };
         });
       }
     };
 
-    const getAllBanner = async (
-      pageNo?: number,
-      publish?: string,
-      pageSize = 1000
-    ) => {
+    const getChangedFields = (startFields, endFields) => {
+      let result: any = [];
+      for (let i = 0; i < startFields.length; i++) {
+        if (
+          startFields[i]?.title !== endFields[i]?.title ||
+          startFields[i]?.url !== endFields[i]?.url
+        ) {
+          result.push(endFields[i]);
+        }
+        if (endFields[i]?.children) {
+          const childrenFields = getChangedFields(
+            startFields[i]?.children,
+            endFields[i]?.children
+          );
+          if (childrenFields.length) {
+            result = [...result, ...childrenFields];
+          }
+        }
+      }
+      return result;
+    };
+
+    const onListChange = (list) => {
+      nestableItems.value = list;
+      const initVal = JSON.parse(JSON.stringify(menuVal.value));
+      const changedFields = getChangedFields(initVal, list);
+
+      resChangeItemsMenu.value = formatItem(changedFields);
+    };
+
+    const onPosionChange = (list) => {
+      const posChanged = list;
+      // console.log("list: ", posChanged);
+
+      delete posChanged?.children;
+      resChangeItemsMenu.value = formatItem(posChanged);
+    };
+
+    const transformData = (data) => {
+      return data.map((item) => {
+        const { id, label, link, parent, depth, children, menu, sort } = item;
+        const transformedItem = {
+          id,
+          text: label,
+          title: label,
+          url: link,
+          parent,
+          children,
+          depth,
+          menu,
+          sort,
+        };
+
+        if (children.length > 0) {
+          transformedItem.children = transformData(children);
+        }
+        return transformedItem;
+      });
+    };
+
+    const getAllSelectMenu = async () => {
       loading.value = true;
-      // await store.getBannerList({
-      //   params: {
-      //     pageNo: pageNo,
-      //     pageSize: pageSize,
-      //     menu: publish,
-      //   },
-      // });
-      // const response = JSON.parse(JSON.stringify(store.bannerList));
-      // bannerList.value = response.data;
+      await store.getAllMenu();
+      const requestCategoryResponse = JSON.parse(
+        JSON.stringify(store.menuList)
+      );
+      const selectRes = requestCategoryResponse.data.map((e) => {
+        return {
+          id: e.id,
+          label: e.name,
+        };
+      });
+      selectMenu.value = selectRes;
       loading.value = false;
     };
 
     onBeforeMount(() => {
-      getAllBanner(1);
+      getAllSelectMenu();
     });
 
-    const submitSearch = () => {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getAllBanner(1, formData.publish ? formData.publish : "");
-    };
+    const submitSearch = async () => {
+      if (formSearchData.value.publish != "") {
+        loading.value = true;
+        await store.getDetailMenu({
+          params: {
+            id: formSearchData.value.publish,
+          },
+        });
+        const detailMenuResponse = JSON.parse(
+          JSON.stringify(store.menuDetailList)
+        );
+        menuVal.value = transformData(detailMenuResponse.data);
 
-    const addBanner = () => {
-      bannerAction.value = "add";
-      bannerFormData.value = {
-        name: "",
-        attachUrl: "",
-        imageUrl: "",
-        content: "",
-        isPublish: false,
-      };
-    };
-
-    const editBanner = (val?: object | undefined) => {
-      bannerAction.value = "edit";
-      const row = JSON.parse(JSON.stringify(val));
-      bannerFormData.value = {
-        id: row.id,
-        name: row.name,
-        attachUrl: row.link,
-        imageUrl: row.image,
-        content: row.content,
-        isPublish: row.publish,
-      };
-    };
-
-    const deleteBanner = (val) => {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      Swal.fire({
-        title: translate("confirmation"),
-        text: translate("deleteWarning"),
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: translate("deleteBtn"),
-        customClass: {
-          confirmButton: "btn btn-danger",
-          cancelButton: "btn btn-secondary",
-        },
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const response = await store.deleteBanner({ id: val.id });
-          if (response.data.success === true) {
-            Swal.fire({
-              position: "center",
-              icon: "success",
-              title: translate("successfully"),
-              showConfirmButton: false,
-              timer: 1000,
-            });
-            await getAllBanner(1, formData.publish ? formData.publish : "");
-          } else {
-            Swal.fire({
-              position: "center",
-              icon: "error",
-              title: response.data.mess,
-              showConfirmButton: false,
-              timer: 1000,
-            });
-          }
-        }
-      });
+        loading.value = false;
+      } else {
+        menuVal.value = [];
+      }
     };
 
     const handleCloseModal = () => {
-      const formData = JSON.parse(JSON.stringify(formSearchData.value));
-      getAllBanner(1, formData.publish ? formData.publish : "");
+      getAllSelectMenu();
     };
 
-    const handleAddLink = () => {
+    const handleAddLink = async () => {
       const formData = JSON.parse(JSON.stringify(customizeLink.value));
-      console.log("--->: ", {
-        title: formData.title,
-        url: formData.url,
-      });
+      const result = await store.createMenuItem(
+        qs.stringify({
+          name: formData.title,
+          link: formData.url,
+          menu_id: formSearchData.value.publish,
+        })
+      );
+
+      if (result.data.success === true) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          formData.title = "";
+          formData.url = "";
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: result.data.mess,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+      submitSearch();
     };
 
-    const handleUpdateMenu = () => {
-      console.log(
-        "Update strcture here: ",
-        JSON.parse(JSON.stringify(nestableItems.value))
-      );
+    const handleUpdateMenu = async () => {
+      if (resChangeItemsMenu.value) {
+        const temp = JSON.parse(JSON.stringify(resChangeItemsMenu.value));
+        console.log("resChangeItemsMenu.val: ", temp);
+        const result = await store.updateItemMenu(
+          qs.stringify({ data: JSON.stringify(temp) })
+        );
+        if (result.data.success === true) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "Successfully",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: result.data.mess,
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+        submitSearch();
+      }
     };
 
     return {
-      bannerList,
+      selectMenu,
       loading,
       bannerAction,
       isRearrange,
       bannerFormData,
       formSearchData,
       customizeLink,
-      options,
       nestableItems,
       editMenu,
       menuVal,
       Search,
       MenuModal,
-      addBanner,
       submitSearch,
-      handleChangeStatus,
-      deleteBanner,
-      editBanner,
-      handleApplyStatus,
+      onPosionChange,
       handleCloseModal,
       translate,
       onListChange,
