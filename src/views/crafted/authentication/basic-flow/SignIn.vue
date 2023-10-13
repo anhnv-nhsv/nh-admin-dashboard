@@ -203,7 +203,7 @@ export default defineComponent({
 
       // Send login request
       await store.login(values);
-      const error = Object.values(store.errors);
+      // const error = Object.values(store.errors);
       const userResp = store.user;
       if (userResp.success) {
         Swal.fire({

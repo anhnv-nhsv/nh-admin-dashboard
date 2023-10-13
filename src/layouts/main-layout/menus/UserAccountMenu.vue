@@ -16,14 +16,14 @@
         <!--begin::Username-->
         <div class="d-flex flex-column">
           <div class="fw-bold d-flex align-items-center fs-5">
-            Max Smith
-            <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2"
-              >Pro</span
-            >
+            {{ normalizeString(currUsername) }}
+            <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">
+              {{ normalizeString(userRole) }}
+            </span>
           </div>
-          <a href="#" class="fw-semobold text-muted text-hover-primary fs-7"
-            >max@kt.com</a
-          >
+          <!--          <a href="#" class="fw-semobold text-muted text-hover-primary fs-7"-->
+          <!--            >max@kt.com</a-->
+          <!--          >-->
         </div>
         <!--end::Username-->
       </div>
@@ -227,6 +227,7 @@ import { computed, defineComponent } from "vue";
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "@/stores/auth";
 import { useRoute, useRouter } from "vue-router";
+import MainMenuConfig from "@/core/config/MainMenuConfig";
 
 export default defineComponent({
   name: "kt-user-menu",
@@ -272,6 +273,28 @@ export default defineComponent({
       return countries[i18n.locale.value as keyof typeof countries];
     });
 
+    const currUsername = computed(() => {
+      return localStorage.getItem("username");
+    });
+
+    const userRole = computed(() => {
+      return localStorage.getItem("role");
+    });
+
+    const normalizeString = (str) => {
+      let arr = str.trim().toLowerCase().split(" ");
+      let result = "",
+        tmp;
+      for (let i = 0; i < arr.length; i++) {
+        tmp = arr[i].trim();
+        if (tmp != "") {
+          tmp = tmp.substr(0, 1).toUpperCase() + tmp.substr(1);
+          result += tmp + " ";
+        }
+      }
+      return result.trim();
+    };
+
     return {
       signOut,
       setLang,
@@ -279,7 +302,10 @@ export default defineComponent({
       currentLangugeLocale,
       countries,
       path,
+      currUsername,
+      userRole,
       getAssetPath,
+      normalizeString,
     };
   },
 });
