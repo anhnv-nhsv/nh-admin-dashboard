@@ -3,7 +3,7 @@
     <vue-nestable
       :value="nestableItems"
       :threshold="20"
-      @input="onChangeList($event)"
+      @input="onChangeList"
       @change="changeItem"
       :maxDepth="20"
     >
@@ -14,7 +14,7 @@
           >
             <div class="d-flex justify-content-between">
               <span class="fs-5 text-dark text-hover-primary fw-bold">
-                {{ slot.item.text }}
+                {{ slot.item.title }}
               </span>
               <div
                 class="fw-bold fs-3 rotate collapsible"
@@ -37,23 +37,27 @@
                 <label class="required fs-6 fw-semobold mb-2">
                   {{ translate("title") }}
                 </label>
-                <el-form-item>
-                  <el-input
-                    :placeholder="translate('title')"
-                    v-model="slot.item.title"
-                  />
-                </el-form-item>
+                <input
+                  v-model="slot.item.title"
+                  type="text"
+                  class="form-control form-control-solid"
+                  :placeholder="translate('title')"
+                  @change.stop="onChangeList(slot.item)"
+                  @input.stop
+                />
               </div>
               <div class="d-flex flex-column mb-7 fv-row">
                 <label class="required fs-6 fw-semobold mb-2">
                   {{ translate("url") }}
                 </label>
-                <el-form-item>
-                  <el-input
-                    :placeholder="translate('url')"
-                    v-model="slot.item.url"
-                  />
-                </el-form-item>
+                <input
+                  v-model="slot.item.url"
+                  type="text"
+                  class="form-control form-control-solid"
+                  :placeholder="translate('url')"
+                  @change.stop="onChangeList(slot.item)"
+                  @input.stop
+                />
               </div>
             </div>
           </div>
@@ -90,28 +94,25 @@ export default defineComponent({
     const onChangeList = (e) => {
       if (e.length) {
         nestableItems.value = e;
+      } else {
+        ctx.emit("on-item-change", JSON.parse(JSON.stringify(e)));
       }
     };
 
     const changeItem = (value, options) => {
       if (options?.items) {
-        const result: any = [];
-        let itemChanged = Object.assign({}, value);
-        if (options.pathTo.length > 1) {
+        if (options.pathTo?.length > 0) {
           const objTest = findCurrParent(options.pathTo);
-          itemChanged.parent = objTest.id;
-          result.push(itemChanged);
-          // console.log("result: ", result);
-        } else {
-          itemChanged.parent = 0;
+          value.parent = value.id === objTest.id ? 0 : objTest.id;
+          value.depth = options.pathTo.length - 1;
+          // changeParentId(
+          //   nestableItems.value[options.pathTo[0]],
+          //   value,
+          //   objTest
+          // );
         }
-        ctx.emit("on-position-change", JSON.parse(JSON.stringify(result)));
-      } else {
-        ctx.emit(
-          "on-list-change",
-          JSON.parse(JSON.stringify(nestableItems.value))
-        );
       }
+      ctx.emit("on-item-change", JSON.parse(JSON.stringify(value)));
     };
 
     const findCurrParent = (path) => {
@@ -122,9 +123,24 @@ export default defineComponent({
         obj = obj.children[path[i]];
         i++;
       }
-      // console.log("obj: ", obj);
-
       return obj;
+    };
+
+    const changeParentId = (root, item, newParent) => {
+      if (root.id === item.id) {
+        root.parent = 0;
+        return root;
+      } else if (root.children && root.children.length > 0) {
+        for (let child of root.children) {
+          root = changeParentId(child, item, newParent);
+          if (root) {
+            root.parent = newParent.id;
+            return root;
+          }
+        }
+      } else {
+        return null;
+      }
     };
 
     return {

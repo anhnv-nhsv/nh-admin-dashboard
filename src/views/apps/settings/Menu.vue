@@ -7,7 +7,7 @@
             class="col-md-8 d-flex align-items-center position-relative my-1"
           >
             <el-select
-              placeholder="Status"
+              :placeholder="translate('homeMenu')"
               size="large"
               v-model="formSearchData.publish"
               @change="submitSearch"
@@ -105,11 +105,7 @@
               </div>
               <div>
                 <div class="pt-0 container-content">
-                  <NhMenu
-                    @on-list-change="onListChange"
-                    :menuArray="menuVal"
-                    @on-position-change="onPosionChange"
-                  />
+                  <NhMenu @on-item-change="onListChange" :menuArray="menuVal" />
                 </div>
               </div>
               <div class="d-flex justify-content-end py-6">
@@ -232,6 +228,7 @@ export default defineComponent({
     };
 
     const onListChange = (list) => {
+      console.log(list);
       nestableItems.value = list;
       const initVal = JSON.parse(JSON.stringify(menuVal.value));
       const changedFields = getChangedFields(initVal, list);
