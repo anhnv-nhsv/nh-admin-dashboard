@@ -7,7 +7,7 @@ export interface User {
   success: boolean;
   token: string;
   username: string;
-  role: string;
+  role_id: number;
 }
 
 export const useAuthStore = defineStore("auth", () => {
@@ -19,11 +19,10 @@ export const useAuthStore = defineStore("auth", () => {
   function setAuth(authUser: User) {
     isAuthenticated.value = true;
     user.value = authUser;
-    user.value.role = "reporter"; // TODO: remove after having role property in response of API
     errors.value = {};
     JwtService.saveToken(user.value.token);
     window.localStorage.setItem("username", user.value.username);
-    window.localStorage.setItem("role", user.value.role);
+    window.localStorage.setItem("role", user.value.role_id.toString());
   }
 
   function setError(error: any) {
@@ -35,7 +34,9 @@ export const useAuthStore = defineStore("auth", () => {
     window.localStorage.setItem(
       "grantedPermissions",
       JSON.stringify(
-        data.data.filter((x: any) => x.name === localStorage.getItem("role"))[0]
+        data.data.filter(
+          (x: any) => x.idRole === Number(localStorage.getItem("role"))
+        )[0]
       )
     );
   }
