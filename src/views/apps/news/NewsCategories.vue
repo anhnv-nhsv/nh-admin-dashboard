@@ -16,6 +16,19 @@
         </div>
       </div>
       <div class="card-toolbar">
+        <button
+          v-if="isRearrange"
+          type="button"
+          class="btn btn-success me-3"
+          @click="updateNewsOrderId"
+        >
+          <KTIcon
+            icon-name="arrows-circle"
+            icon-type="solid"
+            icon-class="fs-2"
+          />
+          {{ translate("rearrange") }}
+        </button>
         <div
           v-if="selectedIds === 0"
           class="d-flex justify-content-end"
@@ -158,6 +171,7 @@ import Swal from "sweetalert2/dist/sweetalert2.js";
 
 const value = ref("");
 const visible = ref(false);
+const newTableData = ref<any>([]);
 let userRole = ref("all");
 let syncPayload = ref<any[]>([]);
 
@@ -197,6 +211,7 @@ export default defineComponent({
     let rowDetail = ref();
     let abc = ref();
     let syncKLPBtn = ref<HTMLElement | null>(null);
+    const isRearrange = ref<boolean>(false);
     const rowCheck = ref([]);
 
     async function getRequestNewsCategoryManager(
@@ -410,6 +425,69 @@ export default defineComponent({
       );
     };
 
+    const handleDragEnd = (data) => {
+      // if (JSON.parse(JSON.stringify(bannerList.value)) == data.newTableData) {
+      //   isRearrange.value = false;
+      // } else {
+      //   isRearrange.value = true;
+      // }
+      isRearrange.value = true;
+      for (let i = 0; i < data.newTableData.length; i++) {
+        data.newTableData[i].orderId = i + 1;
+      }
+      newTableData.value = data.newTableData;
+    };
+
+    const updateNewsOrderId = async () => {
+      const formData = JSON.parse(JSON.stringify(formSearchData.value));
+      Swal.fire({
+        title: translate("confirmation"),
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: translate("submitBtn"),
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-secondary",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const payload = newTableData.value.map((e) => {
+            return {
+              id: e.id,
+              orderId: e.orderId,
+            };
+          });
+          const params = new URLSearchParams();
+          params.append("data", JSON.stringify(payload));
+          const response = await store.updateNewsOrderId(params);
+          if (response.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: translate("successfully"),
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            isRearrange.value = false;
+            await getRequestNewsCategoryManager(
+              1,
+              formData.name,
+              formData.publish ? formData.publish : "",
+              pagination.value.pageSize
+            );
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: response.data.mess,
+              showConfirmButton: false,
+              timer: 1000,
+            });
+          }
+        }
+      });
+    };
+
     onBeforeMount(() => {
       getRequestNewsCategoryManager(1);
     });
@@ -430,7 +508,10 @@ export default defineComponent({
       rowDetail,
       Search,
       abc,
+      isRearrange,
       addCategory,
+      handleDragEnd,
+      updateNewsOrderId,
       editCategory,
       deleteCategory,
       deleteMutiRow,

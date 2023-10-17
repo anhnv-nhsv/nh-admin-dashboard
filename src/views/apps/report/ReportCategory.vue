@@ -16,6 +16,19 @@
         </div>
       </div>
       <div class="card-toolbar">
+        <button
+          v-if="isRearrange"
+          type="button"
+          class="btn btn-success me-3"
+          @click="updateNewsOrderId"
+        >
+          <KTIcon
+            icon-name="arrows-circle"
+            icon-type="solid"
+            icon-class="fs-2"
+          />
+          {{ translate("rearrange") }}
+        </button>
         <div
           v-if="selectedIds === 0"
           class="d-flex justify-content-end"
@@ -199,7 +212,9 @@ export default defineComponent({
     let pagination = ref();
     let rowDetail = ref();
     let syncKLPBtn = ref<HTMLElement | null>(null);
+    const isRearrange = ref<boolean>(false);
     const rowCheck = ref([]);
+    const newTableData = ref<any>([]);
 
     const getAllReportCategory = async (
       pageNo?: number,
@@ -378,6 +393,68 @@ export default defineComponent({
       );
     };
 
+    const handleDragEnd = (data) => {
+      // if (JSON.parse(JSON.stringify(bannerList.value)) == data.newTableData) {
+      //   isRearrange.value = false;
+      // } else {
+      //   isRearrange.value = true;
+      // }
+      isRearrange.value = true;
+      for (let i = 0; i < data.newTableData.length; i++) {
+        data.newTableData[i].orderId = i + 1;
+      }
+      newTableData.value = data.newTableData;
+    };
+
+    const updateNewsOrderId = async () => {
+      const formData = JSON.parse(JSON.stringify(formSearchData.value));
+      Swal.fire({
+        title: translate("confirmation"),
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: translate("submitBtn"),
+        customClass: {
+          confirmButton: "btn btn-success",
+          cancelButton: "btn btn-secondary",
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          const payload = newTableData.value.map((e) => {
+            return {
+              id: e.id,
+              orderId: e.orderId,
+            };
+          });
+          const params = new URLSearchParams();
+          params.append("data", JSON.stringify(payload));
+          const response = await store.updateNewsOrderId(params);
+          if (response.data.success === true) {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: translate("successfully"),
+              showConfirmButton: false,
+              timer: 1000,
+            });
+            isRearrange.value = false;
+            await getAllReportCategory(
+              1,
+              formData.publish ? formData.publish : "",
+              pagination.value.pageSize
+            );
+          } else {
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: response.data.mess,
+              showConfirmButton: false,
+              timer: 1000,
+            });
+          }
+        }
+      });
+    };
+
     onBeforeMount(() => {
       getAllReportCategory(1);
     });
@@ -396,7 +473,10 @@ export default defineComponent({
       value,
       reportCateAction,
       rowDetail,
+      isRearrange,
       Search,
+      handleDragEnd,
+      updateNewsOrderId,
       addCategory,
       editCategory,
       deleteCategory,

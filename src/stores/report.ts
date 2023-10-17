@@ -76,6 +76,10 @@ export const useReport = defineStore("report", () => {
     return ApiService.post("/reports/publish-report", val);
   }
 
+  function updateNewsOrderId(val) {
+    return ApiService.post("/news/update-order-id", val);
+  }
+
   // END REPORT
 
   return {
@@ -91,6 +95,7 @@ export const useReport = defineStore("report", () => {
     deleteReport,
     createReport,
     editReport,
+    updateNewsOrderId,
     changeReportStatus,
   };
 });
