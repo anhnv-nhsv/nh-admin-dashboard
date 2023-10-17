@@ -208,7 +208,7 @@ const messages = {
     green: "Màu xanh lá",
     black: "Màu đen",
     nameMenu: "Tên Menu",
-    nameMenuValidate: "Vui lòng nhập tên menu",
+    nameMenuValidate: "Tên menu",
     addMenuList: "Tạo mới menu",
     menuStructure: "Cấu trúc menu",
     collocation:
@@ -386,7 +386,7 @@ const messages = {
     userName: "User name",
     userPassword: "Password",
     useNameValidate: "Please input username",
-    nameMenuValidate: "Please input name menu",
+    nameMenuValidate: "Name menu",
     passwordValidate: "Please input password",
     emailValidate: "Please input email",
     emailValidateRule: "Email invalidate",

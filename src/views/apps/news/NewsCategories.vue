@@ -94,13 +94,11 @@
         @change-page-size="changePageSize"
         @single-select="handleSingleSelection"
         @multiple-select="handleMultipleSelection"
-        draggable
-        @on-drag-end="handleDragEnd"
       >
         <template v-slot:indexColumn>
           <el-table-column
             header-align="center"
-            class-name="text-center draggable"
+            class-name="text-center"
             type="selection"
             width="55"
           />

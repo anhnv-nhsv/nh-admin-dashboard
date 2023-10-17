@@ -90,13 +90,14 @@
                 <el-input
                   v-model="editMenu.menuName"
                   class="w-100 mx-3"
+                  disabled="true"
                   :placeholder="translate('nameMenuValidate')"
                   size="large"
                 />
               </div>
-              <el-button type="primary">
+              <!-- <el-button type="primary">
                 {{ translate("btnUpdateNameMenu") }}
-              </el-button>
+              </el-button> -->
             </div>
             <div class="p-1 px-4 my-3 rounded">
               <div class="py-4">
@@ -109,11 +110,11 @@
                 </div>
               </div>
               <div class="d-flex justify-content-end py-6">
-                <button class="btn btn-sm btn-primary mx-4" type="submit">
+                <!-- <button class="btn btn-sm btn-primary mx-4" type="submit">
                   <span class="indicator-label">
                     {{ translate("deleteBtn") }}
                   </span>
-                </button>
+                </button> -->
                 <button
                   class="btn btn-sm btn-primary"
                   type="submit"
@@ -164,6 +165,8 @@ export default defineComponent({
     const menuVal = ref();
     const selectMenu = ref();
     const resChangeItemsMenu = ref();
+    const arr: any = ref([]);
+
     let formSearchData = ref({
       publish: "",
     });
@@ -205,43 +208,60 @@ export default defineComponent({
       }
     };
 
-    const getChangedFields = (startFields, endFields) => {
-      let result: any = [];
-      for (let i = 0; i < startFields.length; i++) {
-        if (
-          startFields[i]?.title !== endFields[i]?.title ||
-          startFields[i]?.url !== endFields[i]?.url
-        ) {
-          result.push(endFields[i]);
+    function searchTree(element, matchingId) {
+      if (element.id == matchingId) {
+        return element;
+      } else if (element.children != null) {
+        let i;
+        let result = null;
+        for (i = 0; result == null && i < element.children.length; i++) {
+          result = searchTree(element.children[i], matchingId);
         }
-        if (endFields[i]?.children) {
-          const childrenFields = getChangedFields(
-            startFields[i]?.children,
-            endFields[i]?.children
-          );
-          if (childrenFields.length) {
-            result = [...result, ...childrenFields];
+        return result;
+      }
+      return null;
+    }
+
+    const onListChange = (list) => {
+      console.log("listChange", list);
+      console.log("qwe: ", JSON.parse(JSON.stringify(menuVal.value)));
+      const initVal = JSON.parse(JSON.stringify(menuVal.value));
+      console.log("initVal: ", initVal);
+
+      let objResult: any = null;
+      for (let i = 0; i < initVal.length; i++) {
+        objResult = searchTree(initVal[i], list.id);
+        if (objResult) {
+          break;
+        }
+      }
+      if (objResult) {
+        for (let i = 0; i < Object.keys(objResult).length; i++) {
+          if (
+            objResult.parent !== list.parent ||
+            objResult.title !== list.title ||
+            objResult.url !== list.url
+          ) {
+            let indexTest = arr.value.findIndex((e) => e.id === list.id);
+            if (indexTest !== -1) {
+              arr.value.splice(indexTest, 1);
+            }
+            arr.value.push(list);
+            console.log("change: ", arr.value);
+
+            break;
+          } else {
+            console.log("no-change: ", arr.value);
+            let indexTest = arr.value.findIndex((e) => e.id === list.id);
+            if (indexTest !== -1) {
+              arr.value.splice(indexTest, 1);
+            }
+            break;
           }
         }
       }
-      return result;
-    };
 
-    const onListChange = (list) => {
-      console.log(list);
-      nestableItems.value = list;
-      const initVal = JSON.parse(JSON.stringify(menuVal.value));
-      const changedFields = getChangedFields(initVal, list);
-
-      resChangeItemsMenu.value = formatItem(changedFields);
-    };
-
-    const onPosionChange = (list) => {
-      const posChanged = list;
-      // console.log("list: ", posChanged);
-
-      delete posChanged?.children;
-      resChangeItemsMenu.value = formatItem(posChanged);
+      resChangeItemsMenu.value = formatItem(arr.value);
     };
 
     const transformData = (data) => {
@@ -287,6 +307,7 @@ export default defineComponent({
     });
 
     const submitSearch = async () => {
+      menuVal.value = [];
       if (formSearchData.value.publish != "") {
         loading.value = true;
         await store.getDetailMenu({
@@ -356,6 +377,8 @@ export default defineComponent({
             title: "Successfully",
             showConfirmButton: false,
             timer: 1500,
+          }).then(() => {
+            submitSearch();
           });
         } else {
           Swal.fire({
@@ -366,7 +389,9 @@ export default defineComponent({
             timer: 1500,
           });
         }
-        submitSearch();
+        // setTimeout(function () {
+        //   location.reload();
+        // }, 1500);
       }
     };
 
@@ -384,7 +409,6 @@ export default defineComponent({
       Search,
       MenuModal,
       submitSearch,
-      onPosionChange,
       handleCloseModal,
       translate,
       onListChange,

@@ -176,14 +176,14 @@ const MainMenuConfig: Array<MenuItem> = [
             heading: "Menu",
             route: "/apps/setting/menu",
           },
-          {
-            heading: "Display",
-            route: "/apps/setting/display",
-          },
-          {
-            heading: "Setting",
-            route: "/apps/setting/custom",
-          },
+          // {
+          //   heading: "Display",
+          //   route: "/apps/setting/display",
+          // },
+          // {
+          //   heading: "Setting",
+          //   route: "/apps/setting/custom",
+          // },
         ],
       },
     ],
