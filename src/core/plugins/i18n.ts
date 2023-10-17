@@ -181,6 +181,7 @@ const messages = {
     discard: "Hủy bỏ",
     reset: "Đặt lại",
     sure: "Đồng ý",
+    homeMenu: "Menu",
   },
   en: {
     home: "Home",
@@ -362,6 +363,7 @@ const messages = {
     discard: "Discard",
     reset: "Reset",
     sure: "Submit",
+    homeMenu: "Menu",
   },
   // es: {
   //   dashboard: "Tablero",
