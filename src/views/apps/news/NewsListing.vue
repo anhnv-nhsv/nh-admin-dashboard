@@ -340,7 +340,6 @@ export default defineComponent({
     }
     const handleSingleSelection = (val) => {
       selectedIds.value += 1;
-      console.log(`handleSingleSelection: ${val}`);
     };
 
     const handleMultipleSelection = (val) => {
@@ -463,7 +462,6 @@ export default defineComponent({
     };
 
     const handleChangeStatus = async (val?: any) => {
-      console.log(JSON.parse(JSON.stringify(val)));
       const Tpublish = JSON.parse(JSON.stringify(val));
       const result = Tpublish.publish === 0 ? 1 : 0;
       const oke = await store.changeStatus({ id: val.id, publish: result });
@@ -500,7 +498,6 @@ export default defineComponent({
     }
 
     const changePageSize = (pageSize) => {
-      console.log("changePageSize");
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       pagination.value.pageSize = pageSize;
       getAllNewsManager(

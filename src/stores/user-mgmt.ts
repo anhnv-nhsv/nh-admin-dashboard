@@ -32,11 +32,16 @@ export const useUserMgmt = defineStore("user-mgmt", () => {
     return ApiService.post("/users/delete-user", id);
   }
 
+  function updateUser(val) {
+    return ApiService.post("/users/update-role-user", val);
+  }
+
   return {
     userList,
     errors,
     getUserList,
     createUser,
     deleteUser,
+    updateUser,
   };
 });

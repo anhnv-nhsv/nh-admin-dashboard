@@ -223,10 +223,7 @@ export default defineComponent({
     }
 
     const onListChange = (list) => {
-      console.log("listChange", list);
-      console.log("qwe: ", JSON.parse(JSON.stringify(menuVal.value)));
       const initVal = JSON.parse(JSON.stringify(menuVal.value));
-      console.log("initVal: ", initVal);
 
       let objResult: any = null;
       for (let i = 0; i < initVal.length; i++) {
@@ -247,11 +244,9 @@ export default defineComponent({
               arr.value.splice(indexTest, 1);
             }
             arr.value.push(list);
-            console.log("change: ", arr.value);
 
             break;
           } else {
-            console.log("no-change: ", arr.value);
             let indexTest = arr.value.findIndex((e) => e.id === list.id);
             if (indexTest !== -1) {
               arr.value.splice(indexTest, 1);
@@ -366,7 +361,6 @@ export default defineComponent({
     const handleUpdateMenu = async () => {
       if (resChangeItemsMenu.value) {
         const temp = JSON.parse(JSON.stringify(resChangeItemsMenu.value));
-        console.log("resChangeItemsMenu.val: ", temp);
         const result = await store.updateItemMenu(
           qs.stringify({ data: JSON.stringify(temp) })
         );

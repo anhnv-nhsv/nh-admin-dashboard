@@ -8,6 +8,7 @@
           class="btn btn-primary"
           data-bs-toggle="modal"
           data-bs-target="#kt_user_action_modal"
+          @click="addUser"
         >
           <KTIcon icon-name="plus" icon-class="fs-2" />
           {{ translate("addUser") }}
@@ -46,7 +47,7 @@
             header-align="center"
             class-name="text-center"
             :label="translate('action')"
-            width="100"
+            width="250"
           >
             <template #default="scope">
               <el-button
@@ -56,13 +57,26 @@
               >
                 {{ translate("deleteBtn") }}
               </el-button>
+              <el-button
+                size="small"
+                type="default"
+                data-bs-toggle="modal"
+                data-bs-target="#kt_user_action_modal"
+                @click.prevent="editUserRole(scope.row)"
+              >
+                {{ translate("changeRole") }}
+              </el-button>
             </template>
           </el-table-column>
         </template>
       </NHDatatable>
     </div>
   </div>
-  <AddUserModal @on-close="handleCloseModal" />
+  <UserManagerModal
+    @on-close="handleCloseModal"
+    :data="rowDetail"
+    :action="userAction"
+  />
 </template>
 
 <script lang="ts">
@@ -70,7 +84,7 @@ import { defineComponent, onBeforeMount, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import { translate } from "@/core/helpers/i18n-translate";
 import NHDatatable from "@/components/nh-datatable/NHDatatable.vue";
-import AddUserModal from "@/components/modals/forms/AddUserModal.vue";
+import UserManagerModal from "@/components/modals/forms/UserManagerModal.vue";
 import Swal from "sweetalert2/dist/sweetalert2.js";
 import { useUserMgmt } from "@/stores/user-mgmt";
 
@@ -78,15 +92,17 @@ export default defineComponent({
   name: "user-management",
   components: {
     NHDatatable,
-    AddUserModal,
+    UserManagerModal,
   },
   setup() {
     const store = useUserMgmt();
+    const rowDetail = ref();
     const tableHeader = ref([
       {
         label: "name",
         prop: "name",
         visible: true,
+        width: 200,
       },
       {
         label: "email",
@@ -97,6 +113,7 @@ export default defineComponent({
         label: "role",
         prop: "role_id",
         visible: true,
+        width: 150,
       },
       {
         label: "Avatar",
@@ -107,6 +124,7 @@ export default defineComponent({
     ]);
     const loading = ref<boolean>(false);
     const userList = ref([]);
+    let userAction = ref("");
 
     const getAllUser = async () => {
       loading.value = true;
@@ -156,15 +174,28 @@ export default defineComponent({
       });
     };
 
+    const addUser = () => {
+      userAction.value = "add";
+    };
+    const editUserRole = (val?: object | undefined) => {
+      userAction.value = "edit";
+      const rawVal = JSON.parse(JSON.stringify(val));
+      rowDetail.value = rawVal;
+    };
+
     const handleCloseModal = () => {
       getAllUser();
     };
 
     return {
       userList,
+      userAction,
       tableHeader,
       loading,
+      rowDetail,
       Search,
+      addUser,
+      editUserRole,
       deleteUser,
       translate,
       handleCloseModal,
