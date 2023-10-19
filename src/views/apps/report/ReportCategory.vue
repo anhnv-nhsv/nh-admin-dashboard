@@ -347,7 +347,6 @@ export default defineComponent({
     };
 
     const handleChangeStatus = async (val?: any) => {
-      console.log(JSON.parse(JSON.stringify(val)));
       const Tpublish = JSON.parse(JSON.stringify(val));
       const result = Tpublish.publish === 0 ? 1 : 0;
       const oke = await store.changeReportCategoryStatus(
@@ -383,7 +382,6 @@ export default defineComponent({
     }
 
     const changePageSize = (pageSize) => {
-      console.log("changePageSize");
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       pagination.value.pageSize = pageSize;
       getAllReportCategory(

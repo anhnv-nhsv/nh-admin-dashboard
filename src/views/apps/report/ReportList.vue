@@ -323,13 +323,10 @@ export default defineComponent({
     };
 
     const handleSingleSelection = (val) => {
-      console.log("val: ", val);
       selectedIds.value += 1;
     };
 
     const handleMultipleSelection = (val) => {
-      console.log("val: ", val);
-
       selectedIds.value = val.length;
       rowCheck.value = JSON.parse(JSON.stringify(val));
     };
@@ -340,8 +337,6 @@ export default defineComponent({
     };
 
     const editCategory = (val?: object | undefined) => {
-      console.log("val: ", val);
-
       reportCateAction.value = "edit";
       const rawVal = JSON.parse(JSON.stringify(val));
 
@@ -443,7 +438,6 @@ export default defineComponent({
     };
 
     const handleChangeStatus = async (val?: any) => {
-      console.log(JSON.parse(JSON.stringify(val)));
       const Tpublish = JSON.parse(JSON.stringify(val));
       const result = Tpublish.publish === 0 ? 1 : 0;
       const res = await store.changeReportStatus(
@@ -481,7 +475,6 @@ export default defineComponent({
     }
 
     const changePageSize = (pageSize) => {
-      console.log("changePageSize");
       const formData = JSON.parse(JSON.stringify(formSearchData.value));
       pagination.value.pageSize = pageSize;
       getAllReportCategory(
@@ -498,11 +491,8 @@ export default defineComponent({
     };
 
     const handleChangeReport = (value) => {
-      console.log("value: ", value);
       const res = JSON.parse(JSON.stringify(value));
       if (res) {
-        console.log("res: ", res);
-
         idSelect.value = res.toString();
       } else {
         idSelect.value = "";
