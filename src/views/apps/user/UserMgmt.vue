@@ -38,8 +38,11 @@
           <span v-if="row['role_id'] === 1">
             <span class="badge badge-light-primary">Admin</span>
           </span>
-          <span v-if="row['role_id'] !== 1">
+          <span v-if="row['role_id'] === 2">
             <span class="badge badge-light-success">User</span>
+          </span>
+          <span v-if="row['role_id'] === 3">
+            <span class="badge badge-light-success">Marketing</span>
           </span>
         </template>
         <template v-slot:actionColumn>

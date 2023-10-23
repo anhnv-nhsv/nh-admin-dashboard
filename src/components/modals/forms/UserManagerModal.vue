@@ -65,6 +65,7 @@
                     >
                       <el-option label="Admin" value="1" />
                       <el-option label="Reporter" value="2" />
+                      <el-option label="Marketing" value="3" />
                     </el-select>
                   </el-form-item>
                 </div>
@@ -76,6 +77,7 @@
                     >
                       <el-option label="Admin" value="1" />
                       <el-option label="Reporter" value="2" />
+                      <el-option label="Marketing" value="3" />
                     </el-select>
                   </el-form-item>
                 </div>
@@ -192,7 +194,14 @@ export default defineComponent({
       (newVal) => {
         if (Object.keys(newVal).length > 0 && newVal.constructor === Object) {
           const newData = JSON.parse(JSON.stringify(newVal));
-          userForm.value.role_id = newData.role_id === 1 ? "1" : "2";
+          userForm.value.role_id =
+            newData.role_id === 1
+              ? "1"
+              : newData.role_id === 2
+              ? "2"
+              : newData.role_id === 3
+              ? "3"
+              : "";
           idRow.value = newData.id;
           idRole.value = newData.role_id;
         }
