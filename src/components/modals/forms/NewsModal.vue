@@ -457,12 +457,19 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
+          const contentValVn = formData.content.replace(/'/g, '"');
+          const contentValEn = formData.content_english.replace(/'/g, '"');
+          const contentValKor = formData.content_korea.replace(/'/g, '"');
+
           const result = await store.createNewsList(
             qs.stringify({
               ...formData,
               status: formData.status === 2 ? "Noi_bat" : "",
               type_post: "page",
               category_id: idSelect.value,
+              content: contentValVn,
+              content_english: contentValEn,
+              content_korea: contentValKor,
               parent_id: idSelect.value,
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
@@ -500,12 +507,18 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
+          const contentValVn = formData.content.replace(/'/g, '"');
+          const contentValEn = formData.content_english.replace(/'/g, '"');
+          const contentValKor = formData.content_korea.replace(/'/g, '"');
           const result = await store.editNewsList(
             qs.stringify({
               ...formData,
               status: formData.status === 2 ? "Noi_bat" : "",
               type_post: typePost.value,
               category_id: idSelect.value || categoryId.value,
+              content: contentValVn,
+              content_english: contentValEn,
+              content_korea: contentValKor,
               parent_id: idSelect.value || categoryId.value,
               publish: formData.publish === false ? 0 : 1,
               id: idRow.value,

@@ -418,6 +418,9 @@ export default defineComponent({
       formEl.validate(async (valid, fields) => {
         if (valid) {
           const rawForm = JSON.parse(JSON.stringify(formData.value));
+          const contentValVn = rawForm.contentVn.replace(/'/g, '"');
+          const contentValEn = rawForm.contentEn.replace(/'/g, '"');
+          const contentValKor = rawForm.contentKr.replace(/'/g, '"');
           const dataReq = {
             name: rawForm.titleVn,
             name_english: rawForm.titleEn,
@@ -425,9 +428,9 @@ export default defineComponent({
             parent_id: idSelect.value || cateID.value,
             category_id: idSelect.value || cateID.value,
             image: rawForm.image,
-            content: rawForm.contentVn,
-            content_english: rawForm.contentEn,
-            content_korea: rawForm.contentKr,
+            content: contentValVn,
+            content_english: contentValEn,
+            content_korea: contentValKor,
             status: "Noi-bat",
             publish: rawForm.publish === false ? 0 : 1,
             slug: resSlug(rawForm.url),

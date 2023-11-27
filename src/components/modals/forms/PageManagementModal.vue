@@ -457,12 +457,19 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
+          const contentValVn = formData.content.replace(/'/g, '"');
+          const contentValEn = formData.content_english.replace(/'/g, '"');
+          const contentValKor = formData.content_korea.replace(/'/g, '"');
+
           const result = await store.createPage(
             qs.stringify({
               ...formData,
               status: "",
               type_post: "page",
               category_id: categoryId.value || 10,
+              content: contentValVn,
+              content_english: contentValEn,
+              content_korea: contentValKor,
               parent_id: idSelect.value,
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
