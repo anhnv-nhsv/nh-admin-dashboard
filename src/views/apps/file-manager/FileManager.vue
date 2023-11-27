@@ -2,7 +2,7 @@
   <div class="card">
     <iframe
       class="rounded w-100 custom-height-100vh"
-      src="http://172.33.30.19:8010/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&akey=YQv5t_7gG2.gu7b7\-xcoW"
+      src="https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN"
       :allowfullscreen="true"
     ></iframe>
   </div>
