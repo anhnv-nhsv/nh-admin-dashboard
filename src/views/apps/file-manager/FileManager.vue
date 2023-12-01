@@ -2,7 +2,7 @@
   <div class="card">
     <iframe
       class="rounded w-100 custom-height-100vh"
-      src="https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN"
+      src="https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&sort_by=date&descending=1"
       :allowfullscreen="true"
     ></iframe>
   </div>

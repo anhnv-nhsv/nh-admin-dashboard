@@ -88,7 +88,7 @@ export default defineComponent({
         image_advtab: true,
         filemanager_crossdomain: true,
         external_filemanager_path:
-          "https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&akey=YQv5t_7gG2.gu7b7\-xcoW",
+          "https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&sort_by=date&descending=1",
         filemanager_title: "Responsive Filemanager",
         external_plugins: {
           responsivefilemanager:
@@ -106,7 +106,7 @@ export default defineComponent({
           }
           const dialog = getTinymce().activeEditor.windowManager.openUrl({
             title: "Responsive Filemanager",
-            url: "https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&akey=YQv5t_7gG2.gu7b7\-xcoW",
+            url: "https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&sort_by=date&descending=1",
             width: width,
             height: height,
           });
