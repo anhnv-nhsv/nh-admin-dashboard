@@ -227,6 +227,7 @@ import { useReport } from "@/stores/report";
 import NhEditor from "@/components/editor/NHEditor.vue";
 import qs from "qs";
 import { hideModal } from "@/core/helpers/dom";
+import { getTinymce } from "@tinymce/tinymce-vue/lib/cjs/main/ts/TinyMCE";
 
 export default defineComponent({
   name: "report-category-action-modal",
@@ -329,9 +330,9 @@ export default defineComponent({
           formData.value.titleVn = newData.titleVn;
           formData.value.titleEn = newData.titleEn;
           formData.value.titleKr = newData.titleKr;
-          formData.value.contentVn = newData.contentVn;
-          formData.value.contentEn = newData.contentEn;
-          formData.value.contentKr = newData.contentKr;
+          formData.value.contentVn = getTinymce().html.Entities.decode(newData.contentVn);
+          formData.value.contentEn = getTinymce().html.Entities.decode(newData.contentEn);
+          formData.value.contentKr = getTinymce().html.Entities.decode(newData.contentKr);
           formData.value.date_report = formatDate(newData.date_report);
           formData.value.parentCategory = newData.category_id;
           cateID.value = newData.category_id;
@@ -418,9 +419,9 @@ export default defineComponent({
       formEl.validate(async (valid, fields) => {
         if (valid) {
           const rawForm = JSON.parse(JSON.stringify(formData.value));
-          const contentValVn = rawForm.contentVn.replace(/'/g, '"');
-          const contentValEn = rawForm.contentEn.replace(/'/g, '"');
-          const contentValKor = rawForm.contentKr.replace(/'/g, '"');
+          const contentValVn = getTinymce().html.Entities.encodeAllRaw(rawForm.contentVn);
+          const contentValEn = getTinymce().html.Entities.encodeAllRaw(rawForm.contentEn);
+          const contentValKor = getTinymce().html.Entities.encodeAllRaw(rawForm.contentKr);
           const dataReq = {
             name: rawForm.titleVn,
             name_english: rawForm.titleEn,
@@ -518,7 +519,7 @@ export default defineComponent({
         html: `<iframe
                     ref="fileManagerIframe"
                     class="rounded h-600px w-100"
-                    src="https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&akey=YQv5t_7gG2.gu7b7\-xcoW"
+                    src="https://nhsv.vn/filemanager/dialog.php?type=0&field_id=imgField&crossdomain=1&lang=en_EN&sort_by=date&descending=1"
                     :allowfullscreen="true"
                ></iframe>`,
         closeButtonAriaLabel: "Close file manager",
