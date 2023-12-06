@@ -217,6 +217,7 @@ const messages = {
     collocation:
       "Sắp xếp item theo thứ tự bạn thích. Nhấp vào mũi tên bên phải mục để hiển thị thêm các tùy chọn cấu hình",
     customLink: "Tùy chỉnh liên kết",
+    expiredToken: "Phiên của bạn đã hết hạn. vui lòng đăng nhập lại",
   },
   en: {
     home: "Home",
@@ -434,6 +435,7 @@ const messages = {
     collocation:
       "Arrange items in the order you prefer. Click the right arrow next to the item to display additional configuration options",
     customLink: "Customize the link",
+    expiredToken: "Your session has expired. Please sign in again",
   },
   // es: {
   //   dashboard: "Tablero",
