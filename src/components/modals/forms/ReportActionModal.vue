@@ -330,9 +330,9 @@ export default defineComponent({
           formData.value.titleVn = newData.titleVn;
           formData.value.titleEn = newData.titleEn;
           formData.value.titleKr = newData.titleKr;
-          formData.value.contentVn = getTinymce().html.Entities.decode(newData.contentVn);
-          formData.value.contentEn = getTinymce().html.Entities.decode(newData.contentEn);
-          formData.value.contentKr = getTinymce().html.Entities.decode(newData.contentKr);
+          formData.value.contentVn = newData.contentVn ? getTinymce().html.Entities.decode(newData.contentVn) : "";
+          formData.value.contentEn = newData.contentEn ? getTinymce().html.Entities.decode(newData.contentEn) : "";
+          formData.value.contentKr = newData.contentKr ? getTinymce().html.Entities.decode(newData.contentKr) : "";
           formData.value.date_report = formatDate(newData.date_report);
           formData.value.parentCategory = newData.category_id;
           cateID.value = newData.category_id;

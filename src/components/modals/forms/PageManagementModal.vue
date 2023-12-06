@@ -376,9 +376,9 @@ export default defineComponent({
           pageForm.value.name_english = rowValue.value.name_english;
           pageForm.value.name_korea = rowValue.value.name_korea;
           pageForm.value.slug = rowValue.value.slug;
-          pageForm.value.content = getTinymce().html.Entities.decode(rowValue.value.content);
-          pageForm.value.content_english = getTinymce().html.Entities.decode(rowValue.value.content_english);
-          pageForm.value.content_korea = getTinymce().html.Entities.decode(rowValue.value.content_korea);
+          pageForm.value.content = rowValue.value.content ? getTinymce().html.Entities.decode(rowValue.value.content) : "";
+          pageForm.value.content_english = rowValue.value.content_english ? getTinymce().html.Entities.decode(rowValue.value.content_english) : "";
+          pageForm.value.content_korea = rowValue.value.content_korea ? getTinymce().html.Entities.decode(rowValue.value.content_korea) : "";
           pageForm.value.image = rowValue.value.image;
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
