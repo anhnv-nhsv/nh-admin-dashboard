@@ -26,7 +26,7 @@
           </div>
         </div>
         <div class="modal-body mx-5 mx-xl-5 my-7">
-          <NhForm seoable>
+          <NhForm seoable @get-modelValue="handleGetSeo" :rowValue="newData">
             <template v-slot:customForm>
               <el-form
                 ref="ruleFormRef"
@@ -262,6 +262,10 @@ export default defineComponent({
     const parents = ref();
     const reportModalRef = ref<null | HTMLElement>(null);
     const formSize = ref("default");
+    const newData = ref();
+    const seoTitle = ref();
+    const seoKeyword = ref();
+    const seoDescription = ref();
     const formData = ref({
       titleVn: "",
       titleEn: "",
@@ -326,20 +330,28 @@ export default defineComponent({
       () => props.data,
       (newVal) => {
         if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
-          const newData = JSON.parse(JSON.stringify(newVal));
-          formData.value.titleVn = newData.titleVn;
-          formData.value.titleEn = newData.titleEn;
-          formData.value.titleKr = newData.titleKr;
-          formData.value.contentVn = newData.contentVn ? getTinymce().html.Entities.decode(newData.contentVn) : "";
-          formData.value.contentEn = newData.contentEn ? getTinymce().html.Entities.decode(newData.contentEn) : "";
-          formData.value.contentKr = newData.contentKr ? getTinymce().html.Entities.decode(newData.contentKr) : "";
-          formData.value.date_report = formatDate(newData.date_report);
-          formData.value.parentCategory = newData.category_id;
-          cateID.value = newData.category_id;
-          formData.value.url = newData.url;
-          formData.value.publish = newData.publish === true ? true : false;
-          idRef.value = newData.id;
+          newData.value = JSON.parse(JSON.stringify(newVal));
+          formData.value.titleVn = newData.value.titleVn;
+          formData.value.titleEn = newData.value.titleEn;
+          formData.value.titleKr = newData.value.titleKr;
+          formData.value.contentVn = newData.value.contentVn
+            ? getTinymce().html.Entities.decode(newData.value.contentVn)
+            : "";
+          formData.value.contentEn = newData.value.contentEn
+            ? getTinymce().html.Entities.decode(newData.value.contentEn)
+            : "";
+          formData.value.contentKr = newData.value.contentKr
+            ? getTinymce().html.Entities.decode(newData.value.contentKr)
+            : "";
+          formData.value.date_report = formatDate(newData.value.date_report);
+          formData.value.parentCategory = newData.value.category_id;
+          cateID.value = newData.value.category_id;
+          formData.value.url = newData.value.url;
+          formData.value.publish =
+            newData.value.publish === true ? true : false;
+          idRef.value = newData.value.id;
         } else {
+          newData.value = {};
           formData.value = {
             titleVn: "",
             titleEn: "",
@@ -419,9 +431,15 @@ export default defineComponent({
       formEl.validate(async (valid, fields) => {
         if (valid) {
           const rawForm = JSON.parse(JSON.stringify(formData.value));
-          const contentValVn = getTinymce().html.Entities.encodeAllRaw(rawForm.contentVn);
-          const contentValEn = getTinymce().html.Entities.encodeAllRaw(rawForm.contentEn);
-          const contentValKor = getTinymce().html.Entities.encodeAllRaw(rawForm.contentKr);
+          const contentValVn = getTinymce().html.Entities.encodeAllRaw(
+            rawForm.contentVn
+          );
+          const contentValEn = getTinymce().html.Entities.encodeAllRaw(
+            rawForm.contentEn
+          );
+          const contentValKor = getTinymce().html.Entities.encodeAllRaw(
+            rawForm.contentKr
+          );
           const dataReq = {
             name: rawForm.titleVn,
             name_english: rawForm.titleEn,
@@ -436,6 +454,9 @@ export default defineComponent({
             publish: rawForm.publish === false ? 0 : 1,
             slug: resSlug(rawForm.url),
             date_report: rawForm.date_report,
+            seo_title: seoTitle.value,
+            seo_description: seoDescription.value,
+            seo_keyword: seoKeyword.value,
           };
           if (props.action === "add") {
             const result = await store.createReport(qs.stringify(dataReq));
@@ -570,6 +591,12 @@ export default defineComponent({
       return desiredDateString;
     };
 
+    const handleGetSeo = (e) => {
+      seoTitle.value = e.title;
+      seoKeyword.value = e.keywords;
+      seoDescription.value = e.description;
+    };
+
     return {
       formData,
       parents,
@@ -579,6 +606,8 @@ export default defineComponent({
       reportModalRef,
       formSize,
       cascaderConfig,
+      newData,
+      handleGetSeo,
       handleChangeReport,
       chooseImage,
       handleRequest,

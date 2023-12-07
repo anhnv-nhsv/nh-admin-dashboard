@@ -26,7 +26,7 @@
           </div>
         </div>
         <div class="modal-body mx-5 mx-xl-5 my-7">
-          <NhForm seoable>
+          <NhForm seoable @get-modelValue="handleGetSeo" :rowValue="rowValue">
             <template v-slot:customForm>
               <el-form
                 ref="ruleFormRef"
@@ -264,6 +264,9 @@ export default defineComponent({
     const qwe = ref(JSON.parse(JSON.stringify(getAllRes.value)));
     const parents = ref();
     const idSelect = ref();
+    const seoTitle = ref();
+    const seoKeyword = ref();
+    const seoDescription = ref();
     const dialogVisible = ref(false);
     const uploadRef = ref<UploadInstance>();
     const formSize = ref("default");
@@ -376,9 +379,15 @@ export default defineComponent({
           pageForm.value.name_english = rowValue.value.name_english;
           pageForm.value.name_korea = rowValue.value.name_korea;
           pageForm.value.slug = rowValue.value.slug;
-          pageForm.value.content = rowValue.value.content ? getTinymce().html.Entities.decode(rowValue.value.content) : "";
-          pageForm.value.content_english = rowValue.value.content_english ? getTinymce().html.Entities.decode(rowValue.value.content_english) : "";
-          pageForm.value.content_korea = rowValue.value.content_korea ? getTinymce().html.Entities.decode(rowValue.value.content_korea) : "";
+          pageForm.value.content = rowValue.value.content
+            ? getTinymce().html.Entities.decode(rowValue.value.content)
+            : "";
+          pageForm.value.content_english = rowValue.value.content_english
+            ? getTinymce().html.Entities.decode(rowValue.value.content_english)
+            : "";
+          pageForm.value.content_korea = rowValue.value.content_korea
+            ? getTinymce().html.Entities.decode(rowValue.value.content_korea)
+            : "";
           pageForm.value.image = rowValue.value.image;
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
@@ -404,8 +413,8 @@ export default defineComponent({
             }
           }
         } else if (Object.keys(newVal).length === 1) {
+          rowValue.value = {};
           parents.value = buildHierarchy(newVal.allPages.data);
-          console.log("parents.value: ", parents.value);
 
           pageForm.value = {
             name: "",
@@ -458,9 +467,15 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const contentValVn = getTinymce().html.Entities.encodeAllRaw(formData.content);
-          const contentValEn = getTinymce().html.Entities.encodeAllRaw(formData.content_english);
-          const contentValKor = getTinymce().html.Entities.encodeAllRaw(formData.content_korea);
+          const contentValVn = getTinymce().html.Entities.encodeAllRaw(
+            formData.content
+          );
+          const contentValEn = getTinymce().html.Entities.encodeAllRaw(
+            formData.content_english
+          );
+          const contentValKor = getTinymce().html.Entities.encodeAllRaw(
+            formData.content_korea
+          );
 
           const result = await store.createPage(
             qs.stringify({
@@ -475,6 +490,9 @@ export default defineComponent({
               slug: resSlug(formData.url),
               publish: formData.publish === false ? 0 : 1,
               image: formData.image || "",
+              seo_title: seoTitle.value,
+              seo_description: seoDescription.value,
+              seo_keyword: seoKeyword.value,
             })
           );
           if (result.data.success === true) {
@@ -507,9 +525,15 @@ export default defineComponent({
       await formEl.validate(async (valid, fields) => {
         if (valid) {
           const formData = JSON.parse(JSON.stringify(pageForm.value));
-          const contentValVn = getTinymce().html.Entities.encodeAllRaw(formData.content);
-          const contentValEn = getTinymce().html.Entities.encodeAllRaw(formData.content_english);
-          const contentValKor = getTinymce().html.Entities.encodeAllRaw(formData.content_korea);
+          const contentValVn = getTinymce().html.Entities.encodeAllRaw(
+            formData.content
+          );
+          const contentValEn = getTinymce().html.Entities.encodeAllRaw(
+            formData.content_english
+          );
+          const contentValKor = getTinymce().html.Entities.encodeAllRaw(
+            formData.content_korea
+          );
           const result = await store.editPage(
             qs.stringify({
               ...formData,
@@ -524,6 +548,9 @@ export default defineComponent({
               id: idRow.value,
               slug: resSlug(formData.url),
               image: formData.image || "",
+              seo_title: seoTitle.value,
+              seo_description: seoDescription.value,
+              seo_keyword: seoKeyword.value,
             })
           );
           if (result.data.success === true) {
@@ -638,6 +665,12 @@ export default defineComponent({
       }
     };
 
+    const handleGetSeo = (e) => {
+      seoTitle.value = e.title;
+      seoKeyword.value = e.keywords;
+      seoDescription.value = e.description;
+    };
+
     return {
       cascaderConfig,
       pageForm,
@@ -656,6 +689,7 @@ export default defineComponent({
       chooseImage,
       handleEdit,
       translate,
+      handleGetSeo,
     };
   },
 });

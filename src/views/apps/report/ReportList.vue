@@ -355,6 +355,9 @@ export default defineComponent({
         contentKr: rawVal.content_korea,
         date_report: rawVal.date_report,
         category_id: rawVal.category_id,
+        seo_title: rawVal.seo_title,
+        seo_keyword: rawVal.seo_keyword,
+        seo_description: rawVal.seo_description,
         id: rawVal.id,
       };
     };

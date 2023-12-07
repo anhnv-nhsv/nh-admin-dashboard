@@ -26,7 +26,7 @@
           </div>
         </div>
         <div class="modal-body mx-5 mx-xl-5 my-7">
-          <NhForm seoable>
+          <NhForm seoable @get-modelValue="handleGetSeo" :rowValue="rowValue">
             <template v-slot:customForm>
               <el-form
                 ref="ruleFormRef"
@@ -218,6 +218,9 @@ export default defineComponent({
     const formSize = ref("default");
     const ruleFormRef = ref<FormInstance>();
     const newsCategoryModalRef = ref<null | HTMLElement>(null);
+    const seoTitle = ref();
+    const seoKeyword = ref();
+    const seoDescription = ref();
     const rules = reactive({
       name: [
         {
@@ -267,6 +270,7 @@ export default defineComponent({
           parentId.value = rowValue.value.parent_id;
           idRow.value = rowValue.value.id;
         } else {
+          rowValue.value = {};
           pageForm.value = {
             name: "",
             name_english: "",
@@ -303,6 +307,9 @@ export default defineComponent({
             parent_id: 0,
             slug: resSlug(formData.url),
             publish: formData.publish === false ? 0 : 1,
+            seo_title: seoTitle.value,
+            seo_description: seoDescription.value,
+            seo_keyword: seoKeyword.value,
           });
           if (result.data.success === true) {
             Swal.fire({
@@ -341,6 +348,9 @@ export default defineComponent({
             publish: formData.publish === false ? 0 : 1,
             id: idRow.value,
             slug: resSlug(formData.url),
+            seo_title: seoTitle.value,
+            seo_description: seoDescription.value,
+            seo_keyword: seoKeyword.value,
           });
           if (result.data.success === true) {
             Swal.fire({
@@ -426,6 +436,12 @@ export default defineComponent({
 
     const handleSave = () => {};
 
+    const handleGetSeo = (e) => {
+      seoTitle.value = e.title;
+      seoKeyword.value = e.keywords;
+      seoDescription.value = e.description;
+    };
+
     return {
       cascaderConfig,
       handleSave,
@@ -444,6 +460,7 @@ export default defineComponent({
       formSize,
       ruleFormRef,
       newsCategoryModalRef,
+      handleGetSeo,
       handleChangeCategory,
       handleAdd,
       generateSlug,

@@ -271,6 +271,7 @@ export default defineComponent({
     const editCategory = (val?: object | undefined) => {
       reportCateAction.value = "edit";
       const rawVal = JSON.parse(JSON.stringify(val));
+
       rowDetail.value = {
         titleVn: rawVal.name,
         titleEn: rawVal.name_english,
@@ -279,6 +280,9 @@ export default defineComponent({
         publish: rawVal.publish !== 0,
         parent_id: rawVal.parent_id,
         id: rawVal.id,
+        seo_title: rawVal.seo_title,
+        seo_keyword: rawVal.seo_keyword,
+        seo_description: rawVal.seo_description,
       };
     };
 

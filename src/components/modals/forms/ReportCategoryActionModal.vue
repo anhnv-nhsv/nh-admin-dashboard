@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="modal-body scroll-y mx-5 mx-xl-5">
-          <NhForm seoable>
+          <NhForm seoable @get-modelValue="handleGetSeo" :rowValue="newData">
             <template v-slot:customForm>
               <el-form
                 ref="ruleFormRef"
@@ -178,7 +178,11 @@ export default defineComponent({
     const ruleFormRef = ref<FormInstance>();
     const reportCategories = ref([]);
     const idRef = ref();
+    const newData = ref();
     const reportCateModalRef = ref<null | HTMLElement>(null);
+    const seoTitle = ref();
+    const seoKeyword = ref();
+    const seoDescription = ref();
     const formData = ref({
       titleVn: "",
       titleEn: "",
@@ -200,14 +204,17 @@ export default defineComponent({
       () => props.data,
       (newVal) => {
         if (Object.keys(newVal).length !== 0 && newVal.constructor === Object) {
-          const newData = JSON.parse(JSON.stringify(newVal));
-          formData.value.titleVn = newData.titleVn;
-          formData.value.titleEn = newData.titleEn;
-          formData.value.titleKr = newData.titleKr;
-          formData.value.url = newData.url;
-          formData.value.publish = newData.publish === true ? true : false;
-          idRef.value = newData.id;
+          newData.value = JSON.parse(JSON.stringify(newVal));
+
+          formData.value.titleVn = newData.value.titleVn;
+          formData.value.titleEn = newData.value.titleEn;
+          formData.value.titleKr = newData.value.titleKr;
+          formData.value.url = newData.value.url;
+          formData.value.publish =
+            newData.value.publish === true ? true : false;
+          idRef.value = newData.value.id;
         } else {
+          newData.value = {};
           formData.value = {
             titleVn: "",
             titleEn: "",
@@ -275,6 +282,9 @@ export default defineComponent({
             parent_id: 0,
             publish: rawForm.publish === false ? 0 : 1,
             slug: resSlug(rawForm.url),
+            seo_title: seoTitle.value,
+            seo_description: seoDescription.value,
+            seo_keyword: seoKeyword.value,
           };
           if (props.action === "add") {
             const result = await store.createReportCategory(
@@ -354,6 +364,12 @@ export default defineComponent({
       }
     };
 
+    const handleGetSeo = (e) => {
+      seoTitle.value = e.title;
+      seoKeyword.value = e.keywords;
+      seoDescription.value = e.description;
+    };
+
     return {
       formData,
       ruleFormRef,
@@ -361,6 +377,8 @@ export default defineComponent({
       loading,
       reportCateModalRef,
       reportCategories,
+      newData,
+      handleGetSeo,
       handleRequest,
       resetForm,
       generateSlug,
