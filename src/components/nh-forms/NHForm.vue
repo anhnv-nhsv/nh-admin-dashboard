@@ -33,7 +33,6 @@
             v-model="seoData.title"
             placeholder="Seo title"
             clearable
-            maxlength="10"
             show-word-limit
           ></el-input>
         </el-form-item>
@@ -42,7 +41,6 @@
             v-model="seoData.keywords"
             placeholder="Seo keyword"
             clearable
-            maxlength="10"
             show-word-limit
           ></el-input>
         </el-form-item>
@@ -52,7 +50,6 @@
             placeholder="Seo description"
             type="textarea"
             clearable
-            maxlength="30"
             show-word-limit
           ></el-input>
         </el-form-item>
@@ -62,12 +59,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, watch } from "vue";
+import { defineComponent, reactive, ref, watch } from "vue";
 export default defineComponent({
   name: "nh-form",
   props: {
     seoable: { type: Boolean, required: false, default: false },
     modelValue: {
+      type: Object,
+      required: false,
+      default: () => {
+        return {};
+      },
+    },
+    rowValue: {
       type: Object,
       required: false,
       default: () => {
@@ -81,16 +85,43 @@ export default defineComponent({
       keywords: "",
       description: "",
     });
+    const seoDataRow = ref(props.rowValue);
+    let seoObj = ref(JSON.parse(JSON.stringify(seoDataRow.value)));
+    watch(
+      () => props.rowValue,
+      (newVal) => {
+        seoObj.value = newVal;
+
+        if (typeof newVal === "object") {
+          seoData.title =
+            seoObj.value.seo_title == "undefined" ||
+            seoObj.value.seo_title == null
+              ? ""
+              : seoObj.value.seo_title;
+          seoData.keywords =
+            seoObj.value.seo_keyword == "undefined" ||
+            seoObj.value.seo_keyword == null
+              ? ""
+              : seoObj.value.seo_keyword;
+          seoData.description =
+            seoObj.value.seo_description == "undefined" ||
+            seoObj.value.seo_description == null
+              ? ""
+              : seoObj.value.seo_description;
+        }
+      }
+    );
     watch(
       () => ({ ...seoData }),
       (newValue) => {
         ctx.emit("update:modelValue", newValue);
+        ctx.emit("get-modelValue", newValue);
       }
     );
     const test = () => {
       return seoData;
     };
-    return { seoData, test };
+    return { seoData, seoObj, test };
   },
 });
 </script>
