@@ -90,7 +90,7 @@
                 <el-input
                   v-model="editMenu.menuName"
                   class="w-100 mx-3"
-                  disabled="true"
+                  :disabled="true"
                   :placeholder="translate('nameMenuValidate')"
                   size="large"
                 />
@@ -106,7 +106,11 @@
               </div>
               <div>
                 <div class="pt-0 container-content">
-                  <NhMenu @on-item-change="onListChange" :menuArray="menuVal" />
+                  <NhMenu
+                    @on-item-change="onItemChange"
+                    @on-list-change="onListChange"
+                    :menuArray="menuVal"
+                  />
                 </div>
               </div>
               <div class="d-flex justify-content-end py-6">
@@ -140,7 +144,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, onMounted, ref, watch } from "vue";
+import { defineComponent, onBeforeMount, ref, watch } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import MenuModal from "@/components/modals/forms/MenuModal.vue";
 import NhMenu from "@/components/menu/NHMenu.vue";
@@ -222,12 +226,33 @@ export default defineComponent({
       return null;
     }
 
-    const onListChange = (list) => {
+    const onListChange = (modifiedTree) => {
+      updateTree(modifiedTree, 0, 0);
+      const initTree = JSON.parse(JSON.stringify(menuVal.value));
+      const initTreeFlatten = [],
+        modifiedTreeFlatten = [];
+      flatten(initTreeFlatten, initTree);
+      flatten(modifiedTreeFlatten, modifiedTree);
+      const onlyInInitTree = onlyInLeft(
+        initTreeFlatten,
+        modifiedTreeFlatten,
+        isSameItem
+      );
+      const onlyInModifiedTree = onlyInLeft(
+        modifiedTreeFlatten,
+        initTreeFlatten,
+        isSameItem
+      );
+      const result = [...onlyInModifiedTree];
+      resChangeItemsMenu.value = formatItem(result);
+    };
+
+    const onItemChange = (modifiedItem) => {
       const initVal = JSON.parse(JSON.stringify(menuVal.value));
 
       let objResult: any = null;
       for (let i = 0; i < initVal.length; i++) {
-        objResult = searchTree(initVal[i], list.id);
+        objResult = searchTree(initVal[i], modifiedItem.id);
         if (objResult) {
           break;
         }
@@ -235,19 +260,25 @@ export default defineComponent({
       if (objResult) {
         for (let i = 0; i < Object.keys(objResult).length; i++) {
           if (
-            objResult.parent !== list.parent ||
-            objResult.title !== list.title ||
-            objResult.url !== list.url
+            objResult.parent !== modifiedItem.parent ||
+            objResult.sort !== modifiedItem.sort ||
+            objResult.depth !== modifiedItem.depth ||
+            objResult.title !== modifiedItem.title ||
+            objResult.url !== modifiedItem.url
           ) {
-            let indexTest = arr.value.findIndex((e) => e.id === list.id);
+            let indexTest = arr.value.findIndex(
+              (e) => e.id === modifiedItem.id
+            );
             if (indexTest !== -1) {
               arr.value.splice(indexTest, 1);
             }
-            arr.value.push(list);
+            arr.value.push(modifiedItem);
 
             break;
           } else {
-            let indexTest = arr.value.findIndex((e) => e.id === list.id);
+            let indexTest = arr.value.findIndex(
+              (e) => e.id === modifiedItem.id
+            );
             if (indexTest !== -1) {
               arr.value.splice(indexTest, 1);
             }
@@ -389,6 +420,39 @@ export default defineComponent({
       }
     };
 
+    const updateTree = (arr, depth, parent) => {
+      if (arr.length > 0) {
+        for (let i = 0; i < arr.length; i++) {
+          let element = arr[i];
+          element.sort = i;
+          element.depth = depth;
+          element.parent = parent;
+          updateTree(element.children, depth + 1, element.id);
+        }
+      }
+    };
+
+    const flatten = (destArray, nodeList) => {
+      nodeList.forEach((node) => {
+        destArray.push(node);
+        flatten(destArray, node.children || []);
+      });
+    };
+
+    const isSameItem = (a, b) =>
+      a.sort === b.sort &&
+      a.depth === b.depth &&
+      a.parent === b.parent &&
+      a.text === b.text &&
+      a.title === b.title &&
+      a.url === b.url;
+
+    const onlyInLeft = (left, right, compareFunction) =>
+      left.filter(
+        (leftValue) =>
+          !right.some((rightValue) => compareFunction(leftValue, rightValue))
+      );
+
     return {
       selectMenu,
       loading,
@@ -405,6 +469,7 @@ export default defineComponent({
       submitSearch,
       handleCloseModal,
       translate,
+      onItemChange,
       onListChange,
       handleAddLink,
       handleUpdateMenu,

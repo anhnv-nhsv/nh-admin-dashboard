@@ -105,12 +105,9 @@ export default defineComponent({
           const objTest = findCurrParent(options.pathTo);
           value.parent = value.id === objTest.id ? 0 : objTest.id;
           value.depth = options.pathTo.length - 1;
-          // changeParentId(
-          //   nestableItems.value[options.pathTo[0]],
-          //   value,
-          //   objTest
-          // );
+          value.sort = options.pathTo.pop();
         }
+        ctx.emit("on-list-change", JSON.parse(JSON.stringify(options.items)));
       }
       ctx.emit("on-item-change", JSON.parse(JSON.stringify(value)));
     };
