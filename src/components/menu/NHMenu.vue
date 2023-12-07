@@ -95,7 +95,7 @@ export default defineComponent({
       if (e.length) {
         nestableItems.value = e;
       } else {
-        ctx.emit("on-item-change", JSON.parse(JSON.stringify(e)));
+        ctx.emit("on-item-change", JSON.parse(JSON.stringify(e)), null);
       }
     };
 
@@ -107,9 +107,14 @@ export default defineComponent({
           value.depth = options.pathTo.length - 1;
           value.sort = options.pathTo.pop();
         }
-        ctx.emit("on-list-change", JSON.parse(JSON.stringify(options.items)));
+        ctx.emit(
+          "on-item-change",
+          JSON.parse(JSON.stringify(value)),
+          JSON.parse(JSON.stringify(options.items))
+        );
+      } else {
+        ctx.emit("on-item-change", JSON.parse(JSON.stringify(value)), null);
       }
-      ctx.emit("on-item-change", JSON.parse(JSON.stringify(value)));
     };
 
     const findCurrParent = (path) => {

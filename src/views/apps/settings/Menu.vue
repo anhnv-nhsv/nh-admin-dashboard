@@ -106,11 +106,7 @@
               </div>
               <div>
                 <div class="pt-0 container-content">
-                  <NhMenu
-                    @on-item-change="onItemChange"
-                    @on-list-change="onListChange"
-                    :menuArray="menuVal"
-                  />
+                  <NhMenu @on-item-change="onItemChange" :menuArray="menuVal" />
                 </div>
               </div>
               <div class="d-flex justify-content-end py-6">
@@ -226,68 +222,65 @@ export default defineComponent({
       return null;
     }
 
-    const onListChange = (modifiedTree) => {
-      updateTree(modifiedTree, 0, 0);
+    const onItemChange = (modifiedItem, modifiedTree) => {
       const initTree = JSON.parse(JSON.stringify(menuVal.value));
-      const initTreeFlatten = [],
-        modifiedTreeFlatten = [];
-      flatten(initTreeFlatten, initTree);
-      flatten(modifiedTreeFlatten, modifiedTree);
-      const onlyInInitTree = onlyInLeft(
-        initTreeFlatten,
-        modifiedTreeFlatten,
-        isSameItem
-      );
-      const onlyInModifiedTree = onlyInLeft(
-        modifiedTreeFlatten,
-        initTreeFlatten,
-        isSameItem
-      );
-      const result = [...onlyInModifiedTree];
-      resChangeItemsMenu.value = formatItem(result);
-    };
-
-    const onItemChange = (modifiedItem) => {
-      const initVal = JSON.parse(JSON.stringify(menuVal.value));
-
-      let objResult: any = null;
-      for (let i = 0; i < initVal.length; i++) {
-        objResult = searchTree(initVal[i], modifiedItem.id);
-        if (objResult) {
-          break;
-        }
-      }
-      if (objResult) {
-        for (let i = 0; i < Object.keys(objResult).length; i++) {
-          if (
-            objResult.parent !== modifiedItem.parent ||
-            objResult.sort !== modifiedItem.sort ||
-            objResult.depth !== modifiedItem.depth ||
-            objResult.title !== modifiedItem.title ||
-            objResult.url !== modifiedItem.url
-          ) {
-            let indexTest = arr.value.findIndex(
-              (e) => e.id === modifiedItem.id
-            );
-            if (indexTest !== -1) {
-              arr.value.splice(indexTest, 1);
-            }
-            arr.value.push(modifiedItem);
-
-            break;
-          } else {
-            let indexTest = arr.value.findIndex(
-              (e) => e.id === modifiedItem.id
-            );
-            if (indexTest !== -1) {
-              arr.value.splice(indexTest, 1);
-            }
+      if (modifiedTree) {
+        updateTree(modifiedTree, 0, 0);
+        const initTreeFlatten = [],
+          modifiedTreeFlatten = [];
+        flatten(initTreeFlatten, initTree);
+        flatten(modifiedTreeFlatten, modifiedTree);
+        const onlyInInitTree = onlyInLeft(
+          initTreeFlatten,
+          modifiedTreeFlatten,
+          isSameItem
+        );
+        const onlyInModifiedTree = onlyInLeft(
+          modifiedTreeFlatten,
+          initTreeFlatten,
+          isSameItem
+        );
+        const result = [...onlyInModifiedTree];
+        resChangeItemsMenu.value = formatItem(result);
+      } else {
+        let objResult: any = null;
+        for (let i = 0; i < initTree.length; i++) {
+          objResult = searchTree(initTree[i], modifiedItem.id);
+          if (objResult) {
             break;
           }
         }
-      }
+        if (objResult) {
+          for (let i = 0; i < Object.keys(objResult).length; i++) {
+            if (
+              objResult.parent !== modifiedItem.parent ||
+              objResult.sort !== modifiedItem.sort ||
+              objResult.depth !== modifiedItem.depth ||
+              objResult.title !== modifiedItem.title ||
+              objResult.url !== modifiedItem.url
+            ) {
+              let indexTest = arr.value.findIndex(
+                (e) => e.id === modifiedItem.id
+              );
+              if (indexTest !== -1) {
+                arr.value.splice(indexTest, 1);
+              }
+              arr.value.push(modifiedItem);
 
-      resChangeItemsMenu.value = formatItem(arr.value);
+              break;
+            } else {
+              let indexTest = arr.value.findIndex(
+                (e) => e.id === modifiedItem.id
+              );
+              if (indexTest !== -1) {
+                arr.value.splice(indexTest, 1);
+              }
+              break;
+            }
+          }
+        }
+        resChangeItemsMenu.value = formatItem(arr.value);
+      }
     };
 
     const transformData = (data) => {
@@ -470,7 +463,6 @@ export default defineComponent({
       handleCloseModal,
       translate,
       onItemChange,
-      onListChange,
       handleAddLink,
       handleUpdateMenu,
     };
