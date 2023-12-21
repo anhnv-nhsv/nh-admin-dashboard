@@ -168,7 +168,6 @@ export default defineComponent({
           content: data.content,
           isPublish: data.isPublish === 1,
         };
-        console.log(bannerForm.value);
       }
     );
 

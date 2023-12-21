@@ -49,7 +49,6 @@ export default {
     const iframeWindow = ref<HTMLIFrameElement | null>(null);
     const fileManagerModalRef = ref<null | HTMLElement>(null);
     const onIframeLoad = () => {
-      console.log("onIframeLoad");
       // const iframeWindow = this.$refs.fileManagerIframe.contentWindow;
       if (iframeWindow.value?.contentWindow) {
         iframeWindow.value.addEventListener("message", onMessage);
@@ -59,7 +58,6 @@ export default {
     const onMessage = (event) => {
       // Handle messages received from the iframe
       if (event.data.sender === "responsivefilemanager") {
-        console.log("event: ", event);
         if (event.data.field_id) {
           var fileUrl = event.data.url;
 
