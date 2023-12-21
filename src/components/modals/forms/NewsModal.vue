@@ -333,7 +333,7 @@ export default defineComponent({
       pageForm.value.url = inputValue.replace(/[^\w\s]/gi, "");
 
       // Replace spaces with "-"
-      pageForm.value.url = removeVietnameseTones(inputValue);
+      pageForm.value.url = removeVietnameseTones(inputValue.toLowerCase());
     };
 
     const rules = reactive({
