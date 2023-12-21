@@ -172,13 +172,16 @@
                     </div>
                   </div>
                 </el-form-item>
-                <el-form-item :label="translate('url')">
+                <el-form-item :label="translate('url')" prop="url">
                   <el-input
                     v-model="pageForm.url"
                     :placeholder="translate('url')"
                     clearable
-                    disabled
-                  />
+                    @input="checkSlug"
+                  >
+                    <template #prepend>/tin-tuc/</template>
+                    <template #append>.html</template>
+                  </el-input>
                 </el-form-item>
                 <el-form-item :label="translate('publish')">
                   <el-switch v-model="pageForm.publish" />
@@ -303,6 +306,36 @@ export default defineComponent({
     const seoTitle = ref();
     const seoKeyword = ref();
     const seoDescription = ref();
+
+    let pageForm = ref({
+      name: "",
+      name_english: "",
+      name_korea: "",
+      slug: "",
+      content: "",
+      content_english: "",
+      content_korea: "",
+      image: "",
+      image_english: "",
+      image_korea: "",
+      featuredImgUrl: "",
+      url: "",
+      parentCategory: [] as any,
+      time_post: "",
+      status: 2,
+      publish: true,
+    });
+
+    const checkSlug = (value?: any) => {
+      let inputValue = value;
+
+      // Remove special characters
+      pageForm.value.url = inputValue.replace(/[^\w\s]/gi, "");
+
+      // Replace spaces with "-"
+      pageForm.value.url = removeVietnameseTones(inputValue);
+    };
+
     const rules = reactive({
       name: [
         {
@@ -346,6 +379,13 @@ export default defineComponent({
           trigger: "change",
         },
       ],
+      url: [
+        {
+          required: true,
+          validator: translate("urlValidate"),
+          trigger: "change",
+        },
+      ],
       content_english: [
         {
           required: true,
@@ -360,25 +400,6 @@ export default defineComponent({
           trigger: "change",
         },
       ],
-    });
-
-    let pageForm = ref({
-      name: "",
-      name_english: "",
-      name_korea: "",
-      slug: "",
-      content: "",
-      content_english: "",
-      content_korea: "",
-      image: "",
-      image_english: "",
-      image_korea: "",
-      featuredImgUrl: "",
-      url: "/tin-tuc/.html",
-      parentCategory: [] as any,
-      time_post: "",
-      status: 2,
-      publish: true,
     });
 
     function buildHierarchy(arr) {
@@ -415,8 +436,7 @@ export default defineComponent({
           pageForm.value.image_english = rowValue.value.image_english;
           pageForm.value.image_korea = rowValue.value.image_korea;
           pageForm.value.featuredImgUrl = rowValue.value.featuredImgUrl;
-          pageForm.value.url =
-            "/tin-tuc/" + toSlug(rowValue.value.name) + ".html";
+          pageForm.value.url = rowValue.value.slug;
           idRow.value = rowValue.value.id;
           pageForm.value.parentCategory = [rowValue.value.category_id];
           pageForm.value.time_post = formatDate(rowValue.value.time_post);
@@ -441,7 +461,7 @@ export default defineComponent({
             image_english: "",
             image_korea: "",
             featuredImgUrl: "",
-            url: "/tin-tuc/.html",
+            url: "",
             parentCategory: [],
             time_post: "",
             status: 2,
@@ -488,7 +508,7 @@ export default defineComponent({
               content_english: contentValEn,
               content_korea: contentValKor,
               parent_id: idSelect.value,
-              slug: resSlug(formData.url),
+              slug: formData.url,
               publish: formData.publish === false ? 0 : 1,
               time_post: formData.time_post,
               image: formData.image || "",
@@ -548,7 +568,7 @@ export default defineComponent({
               parent_id: idSelect.value || categoryId.value,
               publish: formData.publish === false ? 0 : 1,
               id: idRow.value,
-              slug: resSlug(formData.url),
+              slug: formData.url,
               time_post: formData.time_post,
               image: formData.image || "",
               seo_title: seoTitle.value,
@@ -594,7 +614,7 @@ export default defineComponent({
     };
 
     const generateSlug = (title) => {
-      pageForm.value.url = "/tin-tuc/" + toSlug(title) + ".html";
+      pageForm.value.url = toSlug(title);
     };
 
     const toSlug = (str) => {
@@ -623,20 +643,34 @@ export default defineComponent({
         .replace(/-+$/, "");
     };
 
-    const resSlug = (val) => {
-      const newsMatch = val.match(/\/tin-tuc\/([^/]+)\.html/);
-
-      if (newsMatch) {
-        return newsMatch[1];
-      } else {
-        const htmlMatch = val.match(/([^/]+)\.html$/);
-        if (htmlMatch) {
-          return htmlMatch[1];
-        } else {
-          return val;
-        }
-      }
-    };
+    function removeVietnameseTones(str) {
+      str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+      str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+      str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+      str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+      str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+      str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+      str = str.replace(/đ/g, "d");
+      str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+      str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+      str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+      str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+      str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+      str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+      str = str.replace(/Đ/g, "D");
+      // Some system encode vietnamese combining accent as individual utf-8 characters
+      // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+      str = str.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/g, ""); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+      str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+      // Bỏ các khoảng trắng liền nhau
+      str = str.replace(/\s+/g, "-");
+      str = str.trim();
+      str = str.replace(
+        /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|{|}|\||\\/g,
+        "-"
+      );
+      return str;
+    }
 
     const chooseImage = () => {
       window.addEventListener("message", handleMessage);
@@ -729,6 +763,7 @@ export default defineComponent({
       generateSlug,
       handleEdit,
       translate,
+      checkSlug,
     };
   },
 });
